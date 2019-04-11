@@ -5,15 +5,41 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".activities.MainActivity">
 
-    <TextView
+    <Button
+            android:text="Log in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
+            android:id="@+id/Login"
+            android:layout_marginTop="28dp"
+            app:layout_constraintTop_toBottomOf="@+id/PasswoordText"
+            app:layout_constraintStart_toStartOf="@+id/PasswoordText"
+            android:layout_marginStart="140dp"/>
+    <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/EmailText"
+            android:hint="E-mailadres"
+            android:layout_marginTop="265dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/PasswoordText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/PasswoordText"
+            android:hint="Passwoord"
+            app:layout_constraintTop_toBottomOf="@+id/EmailText"
+            android:layout_marginBottom="356dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+    />
 
 </android.support.constraint.ConstraintLayout>
