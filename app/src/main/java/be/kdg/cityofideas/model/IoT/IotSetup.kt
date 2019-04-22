@@ -5,8 +5,8 @@ import be.kdg.cityofideas.model.datatypes.Positions
 import be.kdg.cityofideas.model.ideations.Ideas
 
 data class IotSetup(
-    private val Code:String,
-    private val Position: Positions,
-    private val Idea: Ideas,
-    private val Question: Questions
+     val Code:String,
+     val Position: Positions,
+     val Idea: Ideas,
+     val Question: Questions
 )

@@ -4,14 +4,16 @@ import org.w3c.dom.Text
 import java.util.*
 
 data class Projects(
-    private val ProjectId:Int,
-    private val ProjectName:String,
-    private val Logo: String,
-    private val StartDate: Date,
-    private val EndDate:Date,
-    private val Objective:String,
-    private val Description: String,
-    private val LocationId:Int,
-    private val Satus:String,
-    private val PlatformId:Int
+    val projectId: Int,
+    val projectName: String,
+    val logo: String?,
+    val startDate: String,
+    val endDate: String,
+    val objective: String,
+    val description: String,
+    val locationId: Int?,
+    val status: String,
+    val platformId: Int?,
+    val phases: Phases?,
+    val adminProjects: AdminProjects?
 )

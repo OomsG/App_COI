@@ -6,10 +6,10 @@ import be.kdg.cityofideas.model.projects.AdminProjects
 import java.util.*
 
 data class Persons(
-    private val FirstName:String,
-    private val LastName:String,
-    private val Sex: Sex,
-    private val BirthDate: Date,
+    val FirstName: String,
+    val LastName: String,
+    val Sex: Sex,
+    val BirthDate: Date,
     override val Password: String,
     override val Verified: Boolean,
     override val Zipcode: String,

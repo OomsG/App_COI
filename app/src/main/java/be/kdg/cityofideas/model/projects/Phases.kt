@@ -3,10 +3,10 @@ package be.kdg.cityofideas.model.projects
 import java.util.*
 
 data class Phases(
-    private val PhaseId:Int,
-    private val PhaseNr: Int,
-    private val PhaseName: String,
-    private val Description: String,
-    private val StartDate: Date,
-    private val EndDte:Date
+     val PhaseId:Int,
+     val PhaseNr: Int,
+     val PhaseName: String,
+     val Description: String,
+     val StartDate: Date,
+     val EndDte:Date
 )

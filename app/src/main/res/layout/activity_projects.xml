@@ -5,18 +5,36 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.ProjectsActivity">
+        tools:context=".activities.ProjectsActivity"
+        android:orientation="vertical">
+    <include
+            layout="@layout/toolbar_layout" android:id="@+id/include"/>
+    <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tab"
+            android:minHeight="?attr/actionBarSize"
+            app:tabMode="scrollable"
+
+            app:layout_constraintBottom_toTopOf="@+id/AntwerpenId"
+            tools:layout_editor_absoluteX="0dp"/>
+
+    <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:id="@+id/pager"
+            app:layout_constraintTop_toBottomOf="@+id/AntwerpenId"
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
+
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" tools:srcCompat="@tools:sample/avatars"
-            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="155dp" tools:srcCompat="@tools:sample/avatars"
+            android:id="@+id/AntwerpenId"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="16dp" app:layout_constraintEnd_toEndOf="parent"/>
-    <fragment
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:name="be.kdg.cityofideas.fragments.ProjectFragment"
-            android:id="@+id/ProjectFragment"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="280dp" app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="124dp"/>
+
 </android.support.constraint.ConstraintLayout>
