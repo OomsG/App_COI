@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import be.kdg.cityofideas.R
 import kotlinx.android.synthetic.main.reactions_list.view.*
 
-class ReactionAdapter (val context: Context?) : RecyclerView.Adapter<ReactionAdapter.ReactionsViewHolder>(){
+class ReactionRecyclerAdapter (val context: Context?) : RecyclerView.Adapter<ReactionRecyclerAdapter.ReactionsViewHolder>(){
     class ReactionsViewHolder(view:View):RecyclerView.ViewHolder(view){
         val name = view.NameReaction
         val text = view.TextReaction

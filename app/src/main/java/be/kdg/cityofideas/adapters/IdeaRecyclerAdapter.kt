@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.ideas_list.view.*
 /* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
 
 
-class IdeaAdapter (context: Context? ) : RecyclerView.Adapter<IdeaAdapter.IdeaViewHolder>(){
+class IdeaRecyclerAdapter (context: Context? ) : RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>(){
 
     class IdeaViewHolder(view: View): RecyclerView.ViewHolder(view){
         val name = view.NameIdea

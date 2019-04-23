@@ -8,27 +8,23 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.widget.ImageView
-import android.widget.TableLayout
-import be.kdg.cityofideas.fragments.ProjectFragment
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.adapters.ProjectsAdapter
-import be.kdg.cityofideas.adapters.ProjectsAdapter.ProjectsSelectionListener
-import be.kdg.cityofideas.adapters.ViewPagerAdapter
-import be.kdg.cityofideas.model.projects.getTestProjects
+import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter.ProjectsSelectionListener
+import be.kdg.cityofideas.adapters.ProjectsViewPagerAdapter
 
-const val PROJECT_POSITION: String = "PROJECT_POSITION"
+const val PROJECT_ID: String = "PROJECT_ID"
 
 class ProjectsActivity : AppCompatActivity(), ProjectsSelectionListener {
 
-    private lateinit var image: ImageView
     private lateinit var toolbar: Toolbar
     private lateinit var viewPager: ViewPager
-    private lateinit var pagerAdapter: ViewPagerAdapter
+    private lateinit var pagerAdapter: ProjectsViewPagerAdapter
     private lateinit var tabLayout: TabLayout
 
-    override fun onProjectsSelected(positionProject: Int) {
+    override fun onProjectsSelected(projectID: Int) {
         val intent = Intent(this, IdeationActivity::class.java)
-        intent.putExtra(PROJECT_POSITION, positionProject)
+        intent.putExtra(PROJECT_ID, projectID)
+        Log.d("help",projectID.toString())
         startActivity(intent)
     }
 
@@ -42,12 +38,9 @@ class ProjectsActivity : AppCompatActivity(), ProjectsSelectionListener {
         tabLayout = findViewById(R.id.tab )
         toolbar = findViewById(R.id.include)
         viewPager = findViewById(R.id.pager)
-        pagerAdapter = ViewPagerAdapter(supportFragmentManager)
+        pagerAdapter = ProjectsViewPagerAdapter(supportFragmentManager)
         viewPager.adapter = pagerAdapter
         tabLayout.setupWithViewPager(viewPager)
-        //supportFragmentManager.findFragmentById(R.id.ProjectFragment) as ProjectFragment
-        //image = findViewById(R.id.AntwerpenId)
-        //image.setImageResource(R.drawable.antwerpen)
     }
 
 

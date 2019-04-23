@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.adapters.IdeaAdapter
+import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter
 
 
 class IdeaFragment : Fragment() {
@@ -25,6 +25,6 @@ class IdeaFragment : Fragment() {
     fun initialiseViews(view: View) {
         val rvIdeas = view.findViewById<RecyclerView>(R.id.rvIdeas)
         rvIdeas.layoutManager = LinearLayoutManager(context)
-        rvIdeas.adapter = IdeaAdapter(context)
+        rvIdeas.adapter = IdeaRecyclerAdapter(context)
     }
 }

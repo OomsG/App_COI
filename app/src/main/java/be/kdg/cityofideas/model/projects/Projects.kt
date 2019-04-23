@@ -13,7 +13,5 @@ data class Projects(
     val description: String,
     val locationId: Int?,
     val status: String,
-    val platformId: Int?,
-    val phases: Phases?,
-    val adminProjects: AdminProjects?
+    val platformId: Int?
 )

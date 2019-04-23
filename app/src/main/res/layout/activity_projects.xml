@@ -14,27 +14,18 @@
             android:layout_height="wrap_content"
             android:id="@+id/tab"
             android:minHeight="?attr/actionBarSize"
-            app:tabMode="scrollable"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
 
-            app:layout_constraintBottom_toTopOf="@+id/AntwerpenId"
-            tools:layout_editor_absoluteX="0dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/include"
+            />
 
     <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_height="625dp"
             android:id="@+id/pager"
-            app:layout_constraintTop_toBottomOf="@+id/AntwerpenId"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tab"
     />
 
-
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="155dp" tools:srcCompat="@tools:sample/avatars"
-            android:id="@+id/AntwerpenId"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="124dp"/>
 
 </android.support.constraint.ConstraintLayout>

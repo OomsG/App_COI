@@ -9,7 +9,12 @@ import be.kdg.cityofideas.fragments.ProjectFragment
 import be.kdg.cityofideas.model.projects.Projects
 import kotlin.contracts.contract
 
-class ViewPagerAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
+/* Deze klasse zorg voor de menubar waarbij de verschillende projectfragments worden aangesproken
+afhankelijk van welke status deze hebben (Actief, in de toekomst of al voorbij
+
+ */
+
+class ProjectsViewPagerAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
     override fun getItem(p0: Int): Fragment? {
         return ProjectFragment.newInstance(p0)
     }

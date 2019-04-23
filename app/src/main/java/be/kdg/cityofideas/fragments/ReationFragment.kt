@@ -8,10 +8,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.adapters.ReactionAdapter
+import be.kdg.cityofideas.adapters.ReactionRecyclerAdapter
 
 /* Deze klasse zorgt ervoor dat alle reactions in een lijst getoond worden*/
 
@@ -27,6 +26,6 @@ class ReationFragment : Fragment() {
     fun initialiseViews(view: View) {
      val rvReactions = view.findViewById<RecyclerView>(R.id.rvReactions)
         rvReactions.layoutManager = LinearLayoutManager(context)
-        rvReactions.adapter = ReactionAdapter(context)
+        rvReactions.adapter = ReactionRecyclerAdapter(context)
     }
 }

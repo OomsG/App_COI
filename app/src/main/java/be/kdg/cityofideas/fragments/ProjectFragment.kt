@@ -7,23 +7,18 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import be.kdg.cityofideas.adapters.ProjectsAdapter
+import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
 
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.rest.RestClient
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_project.view.*
 import java.lang.Exception
 
 
-class ProjectFragment() : Fragment() {
+class ProjectFragment : Fragment() {
 
-    private lateinit var listener: ProjectsAdapter.ProjectsSelectionListener
+    private lateinit var listener: ProjectsRecyclerAdapter.ProjectsSelectionListener
     private lateinit var status: String
 
     companion object {
@@ -47,7 +42,7 @@ class ProjectFragment() : Fragment() {
         arguments?.getString("status")?.let {
             status = it
         }
-        if (context is ProjectsAdapter.ProjectsSelectionListener) {
+        if (context is ProjectsRecyclerAdapter.ProjectsSelectionListener) {
             listener = context
         } else throw Exception("context is not Listener")
     }
@@ -60,16 +55,16 @@ class ProjectFragment() : Fragment() {
 
 
     @SuppressLint("CheckResult")
-    fun initialiseViews(view: View, listener: ProjectsAdapter.ProjectsSelectionListener, status: String) {
+    fun initialiseViews(view: View, listener: ProjectsRecyclerAdapter.ProjectsSelectionListener, status: String) {
         val rvProjects = view.findViewById<RecyclerView>(R.id.rvProjects)
         rvProjects.layoutManager = LinearLayoutManager(context)
-        rvProjects.adapter = ProjectsAdapter(context, listener, status)
+        rvProjects.adapter = ProjectsRecyclerAdapter(context, listener, status)
         /*RestClient(context)
             .getProjects()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
-                (rvProjects.adapter as ProjectsAdapter).projects = it
+                (rvProjects.adapter as ProjectsRecyclerAdapter).projects = it
             }*/
 
     }

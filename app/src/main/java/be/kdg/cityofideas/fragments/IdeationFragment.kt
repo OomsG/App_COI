@@ -13,18 +13,31 @@ import android.view.View
 import android.view.ViewGroup
 
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.adapters.IdeationsAdapter
-import be.kdg.cityofideas.adapters.ProjectsAdapter
+import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter
 import java.lang.Exception
 
 
 class IdeationFragment : Fragment() {
 
-    private lateinit var listener: IdeationsAdapter.IdeationsSelectionListener
+    private lateinit var listener: IdeationsRecyclerAdapter.IdeationsSelectionListener
+    private var numberOfTab: Int =0
+
+    companion object {
+        fun newInstance(position: Int): ProjectFragment {
+            val fragment = ProjectFragment()
+            val args = Bundle()
+            args.putInt("position", position)
+            fragment.setArguments(args)
+            return fragment
+        }
+    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is IdeationsAdapter.IdeationsSelectionListener) {
+        arguments?.getInt("position")?.let {
+            numberOfTab = it
+        }
+        if (context is IdeationsRecyclerAdapter.IdeationsSelectionListener) {
             listener = context
         } else throw Exception("context is not Listener")
     }
@@ -37,16 +50,15 @@ class IdeationFragment : Fragment() {
 
     @SuppressLint("CheckResult")
     fun initialiseViews(view: View) {
-        Log.d("help","fragment")
         val rvIdeation = view.findViewById<RecyclerView>(R.id.rvIdeations)
         rvIdeation.layoutManager = LinearLayoutManager(context)
-        rvIdeation.adapter = IdeationsAdapter(context,listener)
+        rvIdeation.adapter = IdeationsRecyclerAdapter(context, listener, numberOfTab)
         /* RestClient(context)
              .getIdeations()
              .observeOn(AndroidSchedulers.mainThread())
              .subscribeOn(Schedulers.io())
              .subscribe {
-                 (rvProjects.adapter as ProjectsAdapter).projects = it
+                 (rvProjects.adapter as ProjectsRecyclerAdapter).projects = it
              }
         */
     }
