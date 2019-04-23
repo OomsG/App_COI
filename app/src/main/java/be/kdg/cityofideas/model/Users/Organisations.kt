@@ -5,8 +5,8 @@ import be.kdg.cityofideas.model.ideations.Reactions
 import be.kdg.cityofideas.model.projects.AdminProjects
 
 data class Organisations(
-    private val OrganisatieName: String,
-    private val TaxNUmber: String,
+    val OrganisatieName: String,
+    val TaxNUmber: String,
     override val Password: String,
     override val Verified: Boolean,
     override val Zipcode: String,
@@ -14,4 +14,4 @@ data class Organisations(
     override val Reaction: Collection<Reactions>,
     override val Idea: Ideas,
     override val AdminProject: AdminProjects
-): LoggedInUsers()
+) : LoggedInUsers()

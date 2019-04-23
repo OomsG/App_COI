@@ -5,27 +5,24 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.ProjectsActivity"
-        android:orientation="vertical">
+        tools:context=".activities.IdeationActivity">
     <include
-            layout="@layout/toolbar_layout" android:id="@+id/include"/>
+            layout="@layout/toolbar_layout" android:id="@+id/IdeationsInclude"/>
     <android.support.design.widget.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tab"
+            android:id="@+id/IdeationsTab"
             android:minHeight="?attr/actionBarSize"
             app:tabMode="fixed"
             app:tabGravity="fill"
 
-            app:layout_constraintTop_toBottomOf="@+id/include"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/IdeationsInclude"
+    />
 
     <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
             android:layout_height="625dp"
-            android:id="@+id/pager"
-            app:layout_constraintTop_toBottomOf="@id/tab"
+            android:id="@+id/IdeationsPager"
+            app:layout_constraintTop_toBottomOf="@id/IdeationsTab"
     />
-
-
 </android.support.constraint.ConstraintLayout>
