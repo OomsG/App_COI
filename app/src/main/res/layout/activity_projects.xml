@@ -8,23 +8,23 @@
         tools:context=".activities.ProjectsActivity"
         android:orientation="vertical">
     <include
-            layout="@layout/toolbar_layout" android:id="@+id/include"/>
+            layout="@layout/toolbar_layout" android:id="@+id/ProjectsInclude"/>
     <android.support.design.widget.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tab"
+            android:id="@+id/ProjectsTab"
             android:minHeight="?attr/actionBarSize"
             app:tabMode="fixed"
             app:tabGravity="fill"
 
-            app:layout_constraintTop_toBottomOf="@+id/include"
+            app:layout_constraintTop_toBottomOf="@+id/ProjectsInclude"
             />
 
     <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
             android:layout_height="625dp"
-            android:id="@+id/pager"
-            app:layout_constraintTop_toBottomOf="@id/tab"
+            android:id="@+id/ProjectsPager"
+            app:layout_constraintTop_toBottomOf="@id/ProjectsTab"
     />
 
 

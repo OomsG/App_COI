@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.listener.SelectionListener
 import be.kdg.cityofideas.model.ideations.Ideations
 import be.kdg.cityofideas.model.ideations.getTestIdeations
 import be.kdg.cityofideas.model.projects.Projects
@@ -16,11 +17,8 @@ import kotlinx.android.synthetic.main.ideations_list.view.*
 
 /* Deze klasse zorgt ervoor dat alle ideations in een lijst getoond worden*/
 
-class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: IdeationsSelectionListener, val phaseID: Int) :
+class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: SelectionListener, val phaseID: Int) :
     RecyclerView.Adapter<IdeationsRecyclerAdapter.IdeationsViewHolder>() {
-    interface IdeationsSelectionListener {
-        fun onIdeationsSelected(positionIdeation: Int)
-    }
 
     class IdeationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.TitleIdeation
@@ -28,16 +26,12 @@ class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: Ide
         val picture = view.smallFotoIdeation
     }
 
-    /*Dit is nodig wanneer de Get werkt
-        var Ideations: Array<Ideations> = arrayOf()
+        var ideations: Array<Ideations> = arrayOf()
             set(ideations) {
                 field = ideations
                 notifyDataSetChanged()
             }
-    */
-    var ideations: List<Ideations> = getTestIdeations().filter {
-        (it.PhaseId.equals(phaseID))
-    }
+
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): IdeationsViewHolder {
         val ideationsView = LayoutInflater.from(p0.context).inflate(R.layout.ideations_list, p0, false)

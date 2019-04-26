@@ -7,15 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.listener.SelectionListener
 import be.kdg.cityofideas.model.projects.Projects
 import be.kdg.cityofideas.model.projects.getTestProjects
 import kotlinx.android.synthetic.main.projects_list.view.*
 
-class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: ProjectsSelectionListener, val status: String) :
+class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: SelectionListener, val status: String) :
     RecyclerView.Adapter<ProjectsRecyclerAdapter.ProjectsViewHolder>() {
-    interface ProjectsSelectionListener {
-        fun onProjectsSelected(projectID: Int)
-    }
 
     class ProjectsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.TitleProject
@@ -23,9 +21,11 @@ class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: Proj
         val picture = view.smallFotoProject
     }
 
-    var projects: List<Projects> = getTestProjects().filter {
-        (it.status.equals(status))
-    }
+    var projects: Array<Projects> = arrayOf()
+        set(projects) {
+            field = projects
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ProjectsViewHolder {
         val projectsView = LayoutInflater.from(p0.context).inflate(R.layout.projects_list, p0, false)
@@ -39,19 +39,7 @@ class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: Proj
         p0.Description.text = projects[p1].description
         p0.picture.setImageResource(R.drawable.antwerpen)
         p0.itemView.setOnClickListener {
-            selectionListener.onProjectsSelected(projects[p1].projectId)
+            selectionListener.onSelected(projects[p1].projectId)
         }
-
-        //Testing
-        /*
-        p0.title.text = "Dit moet wel werken"
-        p0.Description.text =
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis arcu quis nunc venenatis finibus. Cras velit magna, sodales id diam vitae, imperdiet sagittis ex."
-        p0.picture.setImageResource(R.mipmap.ic_launcher_round)
-        p0.itemView.setOnClickListener {
-            selectionListener.onProjectsSelected(p1)
-        }
-        */
     }
-
 }

@@ -13,6 +13,9 @@ import android.view.ViewGroup
 import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
 
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.rest.RestClient
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
 
@@ -59,13 +62,13 @@ class ProjectFragment : Fragment() {
         val rvProjects = view.findViewById<RecyclerView>(R.id.rvProjects)
         rvProjects.layoutManager = LinearLayoutManager(context)
         rvProjects.adapter = ProjectsRecyclerAdapter(context, listener, status)
-        /*RestClient(context)
-            .getProjects()
+        RestClient(context)
+            .getProjects("projects")
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
                 (rvProjects.adapter as ProjectsRecyclerAdapter).projects = it
-            }*/
+            }
 
     }
 }
