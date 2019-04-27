@@ -19,44 +19,42 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-class IdeationActivity(context: Context) : AppCompatActivity(), SelectionListener {
+class IdeationActivity : AppCompatActivity(), SelectionListener {
 
     private lateinit var toolbar: Toolbar
     private lateinit var viewPager: ViewPager
     private lateinit var pagerAdapter: IdeationViewPagerAdapter
     private lateinit var tabLayout: TabLayout
 
-    private val phaseNr = 0
-
     override fun onSelected(id: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("help", "Hello form IdeationActivity")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ideation)
-        initaliseViews(this, phaseNr)
+        initaliseViews(this)
+
     }
 
     @SuppressLint("CheckResult")
-    fun initaliseViews(context: Context, phaseNr: Int) {
+    fun initaliseViews(context: Context) {
         tabLayout = findViewById(R.id.IdeationsTab)
         toolbar = findViewById(R.id.IdeationsInclude)
         viewPager = findViewById(R.id.IdeationsPager)
         pagerAdapter = IdeationViewPagerAdapter(supportFragmentManager, intent.getIntExtra(PROJECT_ID, 1))
         viewPager.adapter = pagerAdapter
+
+        Log.d("help",intent.getIntExtra(PROJECT_ID,3).toString())
         tabLayout.setupWithViewPager(viewPager)
         RestClient(context)
-            .getPhases("phases")
-            .map {
-                it.filter {
-                    it.PhaseNr.equals(phaseNr)
-                }
-            }
+            .getPhases("phases/" + (intent.getIntExtra(PROJECT_ID, 1)))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
                 (pagerAdapter).phases = it
             })
+
     }
 }

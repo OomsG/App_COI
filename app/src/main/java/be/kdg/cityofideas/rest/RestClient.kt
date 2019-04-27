@@ -84,9 +84,10 @@ public class RestClient(private val context: Context?) {
         val observable = Observable.create<Array<Projects>> {
             try {
                 val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
-                val response = getClient()?.newCall(request)?.execute()?.body().toString()
+                val response = getClient()?.newCall(request)?.execute()?.body()
+                val json = InputStreamReader(response?.string()?.byteInputStream())
                 val gson = GsonBuilder().create()
-                val projects = gson.fromJson(response,Array<Projects>::class.java)
+                val projects = gson.fromJson(json,Array<Projects>::class.java)
                 it.onNext(projects)
             }catch (e:IOException){
                 e.printStackTrace();
@@ -99,9 +100,10 @@ public class RestClient(private val context: Context?) {
         val observable = Observable.create<Array<Ideations>> {
             try {
                 val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
-                val response = getClient()?.newCall(request)?.execute()?.body().toString()
+                val response = getClient()?.newCall(request)?.execute()?.body()
+                val json = InputStreamReader(response?.string()?.byteInputStream())
                 val gson = GsonBuilder().create()
-                val ideations = gson.fromJson(response,Array<Ideations>::class.java)
+                val ideations = gson.fromJson(json,Array<Ideations>::class.java)
                 it.onNext(ideations)
             }catch (e:IOException){
                 e.printStackTrace();
@@ -114,9 +116,10 @@ public class RestClient(private val context: Context?) {
         val observable = Observable.create<Array<Phases>> {
             try {
                 val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
-                val response = getClient()?.newCall(request)?.execute()?.body().toString()
+                val response = getClient()?.newCall(request)?.execute()?.body()
+                val json = InputStreamReader(response?.string()?.byteInputStream())
                 val gson = GsonBuilder().create()
-                val phases = gson.fromJson(response,Array<Phases>::class.java)
+                val phases = gson.fromJson(json,Array<Phases>::class.java)
                 it.onNext(phases)
             }catch (e:IOException){
                 e.printStackTrace();

@@ -30,8 +30,8 @@ class IdeationFragment : Fragment() {
     private var projectId: Int = 0
 
     companion object {
-        fun newInstance(phaseNr: Int, projectId: Int): ProjectFragment {
-            val fragment = ProjectFragment()
+        fun newInstance(phaseNr: Int, projectId: Int): IdeationFragment {
+            val fragment = IdeationFragment()
             val args = Bundle()
             args.putInt("phaseNr", phaseNr)
             args.putInt("projectId", projectId)
@@ -55,21 +55,26 @@ class IdeationFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_ideation, container, false)
-        initialiseViews(view,listener,phaseNr)
+        initialiseViews(view, listener, phaseNr, projectId)
         return view
     }
 
     @SuppressLint("CheckResult")
-    fun initialiseViews(view: View,listener: SelectionListener,phaseNr: Int) {
+    fun initialiseViews(view: View, listener: SelectionListener, phaseNr: Int, projectId: Int) {
         val rvIdeation = view.findViewById<RecyclerView>(R.id.rvIdeations)
         rvIdeation.layoutManager = LinearLayoutManager(context)
-        rvIdeation.adapter = IdeationsRecyclerAdapter(context, listener, phaseNr)
+        rvIdeation.adapter = IdeationsRecyclerAdapter(context, listener)
         RestClient(context)
-            .getIdeations("Ideations" + projectId)
+            .getIdeations("ideations/" + projectId)
+            .map {
+                it.filter {
+                    it.Phase.PhaseId.equals(phaseNr)
+                }
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
-                (rvIdeation.adapter as IdeationsRecyclerAdapter).ideations = it
+                (rvIdeation.adapter as IdeationsRecyclerAdapter).ideations = it.toTypedArray()
             }
 
     }

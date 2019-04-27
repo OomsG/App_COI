@@ -9,15 +9,11 @@ import android.view.ViewGroup
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.listener.SelectionListener
 import be.kdg.cityofideas.model.ideations.Ideations
-import be.kdg.cityofideas.model.ideations.getTestIdeations
-import be.kdg.cityofideas.model.projects.Projects
-import be.kdg.cityofideas.model.projects.getTestPhases
-import be.kdg.cityofideas.model.projects.getTestProjects
 import kotlinx.android.synthetic.main.ideations_list.view.*
 
 /* Deze klasse zorgt ervoor dat alle ideations in een lijst getoond worden*/
 
-class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: SelectionListener, val phaseID: Int) :
+class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: SelectionListener) :
     RecyclerView.Adapter<IdeationsRecyclerAdapter.IdeationsViewHolder>() {
 
     class IdeationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -42,7 +38,6 @@ class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: Sel
 
     override fun onBindViewHolder(p0: IdeationsViewHolder, p1: Int) {
         p0.title.text = ideations[p1].CentralQuestion
-        p0.Description.text = ideations[p1].InputIdeation.toString()
         p0.picture.setImageResource(R.mipmap.ic_launcher_round)
     }
 }

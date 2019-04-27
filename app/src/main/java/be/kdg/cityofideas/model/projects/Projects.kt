@@ -1,17 +1,21 @@
 package be.kdg.cityofideas.model.projects
 
+import android.location.Location
 import org.w3c.dom.Text
+import java.time.LocalDate
 import java.util.*
 
 data class Projects(
-    val projectId: Int,
-    val projectName: String,
-    val logo: String?,
-    val startDate: String,
-    val endDate: String,
-    val objective: String,
-    val description: String,
-    val locationId: Int?,
-    val status: String,
-    val platformId: Int?
+    val ProjectId: Int,
+    val ProjectName: String,
+    val Logo: String?,
+    val StartDate: String,
+    val EndDate: String,
+    val Objective: String,
+    val Description: String,
+    val Location: Location,
+    val Status: String,
+    val Platform : Platforms,
+    val Phases: Collection<Phases>,
+    val AdminProjects:Collection<AdminProjects>
 )

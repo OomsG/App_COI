@@ -6,6 +6,5 @@ data class Votes(
      val VoteId: Int,
      val Confirmed: Boolean,
      val VoteType: VoteTypes,
-     val User: Users,
      val Idea: Ideas
 )

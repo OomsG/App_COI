@@ -1,6 +1,8 @@
 package be.kdg.cityofideas.adapters
 
 import android.content.Context
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,8 +11,9 @@ import android.view.ViewGroup
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.listener.SelectionListener
 import be.kdg.cityofideas.model.projects.Projects
-import be.kdg.cityofideas.model.projects.getTestProjects
 import kotlinx.android.synthetic.main.projects_list.view.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: SelectionListener, val status: String) :
     RecyclerView.Adapter<ProjectsRecyclerAdapter.ProjectsViewHolder>() {
@@ -35,11 +38,11 @@ class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: Sele
     override fun getItemCount() = projects.size
 
     override fun onBindViewHolder(p0: ProjectsViewHolder, p1: Int) {
-        p0.title.text = projects[p1].projectName
-        p0.Description.text = projects[p1].description
+        p0.title.text = projects[p1].ProjectName
+        p0.Description.text = projects[p1].Description
         p0.picture.setImageResource(R.drawable.antwerpen)
         p0.itemView.setOnClickListener {
-            selectionListener.onSelected(projects[p1].projectId)
+            selectionListener.onSelected(projects[p1].ProjectId)
         }
     }
 }
