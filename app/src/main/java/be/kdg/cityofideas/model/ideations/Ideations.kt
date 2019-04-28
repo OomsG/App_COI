@@ -6,6 +6,8 @@ import be.kdg.cityofideas.model.projects.Phases
 data class Ideations(
     val IdeationId: Int,
     val CentralQuestion: String,
-    val InputIdeation: Int,
-    val PhaseId: Int
+    val Phase: Phases,
+    val InputIdeation: Boolean,
+    val Reactions: Collection<Reactions>,
+    val Ideas: Collection<Ideas>
 )

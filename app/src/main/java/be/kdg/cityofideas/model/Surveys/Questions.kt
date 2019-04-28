@@ -9,6 +9,6 @@ data class Questions(
     val QuestionType: QuestionType,
     val Survey: Survey,
     val Answer: Collection<Answers>,
-    val IoTSetups: IotSetup
+    val IoTSetups: Collection<IotSetup>
 
 )

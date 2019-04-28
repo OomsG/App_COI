@@ -1,5 +1,6 @@
 package be.kdg.cityofideas.activities
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -7,24 +8,22 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.widget.ImageView
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter.ProjectsSelectionListener
 import be.kdg.cityofideas.adapters.ProjectsViewPagerAdapter
+import be.kdg.cityofideas.listener.SelectionListener
 
 const val PROJECT_ID: String = "PROJECT_ID"
 
-class ProjectsActivity : AppCompatActivity(), ProjectsSelectionListener {
+class ProjectsActivity : AppCompatActivity(), SelectionListener {
 
     private lateinit var toolbar: Toolbar
     private lateinit var viewPager: ViewPager
     private lateinit var pagerAdapter: ProjectsViewPagerAdapter
     private lateinit var tabLayout: TabLayout
 
-    override fun onProjectsSelected(projectID: Int) {
+    override fun onSelected(id: Int) {
         val intent = Intent(this, IdeationActivity::class.java)
-        intent.putExtra(PROJECT_ID, projectID)
-        Log.d("help",projectID.toString())
+        intent.putExtra(PROJECT_ID, id)
         startActivity(intent)
     }
 
@@ -35,13 +34,11 @@ class ProjectsActivity : AppCompatActivity(), ProjectsSelectionListener {
     }
 
     fun initialiseViews() {
-        tabLayout = findViewById(R.id.tab )
-        toolbar = findViewById(R.id.include)
-        viewPager = findViewById(R.id.pager)
+        tabLayout = findViewById(R.id.ProjectsTab)
+        toolbar = findViewById(R.id.ProjectsInclude)
+        viewPager = findViewById(R.id.ProjectsPager)
         pagerAdapter = ProjectsViewPagerAdapter(supportFragmentManager)
         viewPager.adapter = pagerAdapter
         tabLayout.setupWithViewPager(viewPager)
     }
-
-
 }

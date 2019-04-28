@@ -15,10 +15,10 @@ import be.kdg.cityofideas.adapters.ReactionRecyclerAdapter
 /* Deze klasse zorgt ervoor dat alle reactions in een lijst getoond worden*/
 
 
-class ReationFragment : Fragment() {
+class ReactionFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_reation, container, false)
+        val view = inflater.inflate(R.layout.fragment_reaction, container, false)
         initialiseViews(view)
         return view
     }

@@ -14,19 +14,27 @@ import android.view.ViewGroup
 
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter
+import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
+import be.kdg.cityofideas.listener.SelectionListener
+import be.kdg.cityofideas.rest.RestClient
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_project.*
 import java.lang.Exception
 
 
 class IdeationFragment : Fragment() {
 
-    private lateinit var listener: IdeationsRecyclerAdapter.IdeationsSelectionListener
-    private var numberOfTab: Int =0
+    private lateinit var listener: SelectionListener
+    private var phaseNr: Int = 0
+    private var projectId: Int = 0
 
     companion object {
-        fun newInstance(position: Int): ProjectFragment {
-            val fragment = ProjectFragment()
+        fun newInstance(phaseNr: Int, projectId: Int): IdeationFragment {
+            val fragment = IdeationFragment()
             val args = Bundle()
-            args.putInt("position", position)
+            args.putInt("phaseNr", phaseNr)
+            args.putInt("projectId", projectId)
             fragment.setArguments(args)
             return fragment
         }
@@ -34,32 +42,40 @@ class IdeationFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        arguments?.getInt("position")?.let {
-            numberOfTab = it
+        arguments?.getInt("phaseNr")?.let {
+            phaseNr = it
         }
-        if (context is IdeationsRecyclerAdapter.IdeationsSelectionListener) {
+        arguments?.getInt("projectId")?.let {
+            projectId = it
+        }
+        if (context is SelectionListener) {
             listener = context
         } else throw Exception("context is not Listener")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_ideation, container, false)
-        initialiseViews(view)
+        initialiseViews(view, listener, phaseNr, projectId)
         return view
     }
 
     @SuppressLint("CheckResult")
-    fun initialiseViews(view: View) {
+    fun initialiseViews(view: View, listener: SelectionListener, phaseNr: Int, projectId: Int) {
         val rvIdeation = view.findViewById<RecyclerView>(R.id.rvIdeations)
         rvIdeation.layoutManager = LinearLayoutManager(context)
-        rvIdeation.adapter = IdeationsRecyclerAdapter(context, listener, numberOfTab)
-        /* RestClient(context)
-             .getIdeations()
-             .observeOn(AndroidSchedulers.mainThread())
-             .subscribeOn(Schedulers.io())
-             .subscribe {
-                 (rvProjects.adapter as ProjectsRecyclerAdapter).projects = it
-             }
-        */
+        rvIdeation.adapter = IdeationsRecyclerAdapter(context, listener)
+        RestClient(context)
+            .getIdeations("ideations/" + projectId)
+            .map {
+                it.filter {
+                    it.Phase.PhaseId.equals(phaseNr)
+                }
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                (rvIdeation.adapter as IdeationsRecyclerAdapter).ideations = it.toTypedArray()
+            }
+
     }
 }
