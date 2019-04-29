@@ -69,7 +69,7 @@
                 app:layout_constraintLeft_toRightOf="@id/IdeationVoteCount"
                 app:layout_constraintTop_toTopOf="@id/IdeationVoteCount"
         />
-        <TextView
+        <Button
                 android:text="stem"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -79,8 +79,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/IdeationShare"
         />
-        <TextView
-                android:text="Deel"
+        <Button
+                android:text="Share"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/IdeationShare"

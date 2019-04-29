@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter
 class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: projectsSelectionListener, val status: String) :
     RecyclerView.Adapter<ProjectsRecyclerAdapter.ProjectsViewHolder>() {
     interface projectsSelectionListener{
-        fun onProjectsSelected(projects: Projects)
+        fun onProjectsSelected(id:Int)
     }
 
     class ProjectsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -44,7 +44,7 @@ class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: proj
         p0.Description.text = projects[p1].Description
         p0.picture.setImageResource(R.drawable.antwerpen)
         p0.itemView.setOnClickListener {
-            selectionListener.onProjectsSelected(projects[p1])
+            selectionListener.onProjectsSelected(projects[p1].ProjectId)
         }
     }
 }

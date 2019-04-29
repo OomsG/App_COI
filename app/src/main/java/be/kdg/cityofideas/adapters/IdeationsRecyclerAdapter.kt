@@ -14,11 +14,11 @@ import kotlinx.android.synthetic.main.ideations_list.view.*
 
 /* Deze klasse zorgt ervoor dat alle ideations in een lijst getoond worden*/
 
-class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: IdeationsSelectionListener) :
+class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: IdeationsSelectionListener,val projectId: Int) :
     RecyclerView.Adapter<IdeationsRecyclerAdapter.IdeationsViewHolder>() {
 
     interface IdeationsSelectionListener{
-        fun onIdeationSelected(ideations: Ideations)
+        fun onIdeationSelected(ideationid:Int,projectId:Int)
     }
     class IdeationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.TitleIdeation
@@ -37,9 +37,6 @@ class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: Ide
             notifyDataSetChanged()
         }
 
-
-
-
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): IdeationsViewHolder {
         val ideationsView = LayoutInflater.from(p0.context).inflate(R.layout.ideations_list, p0, false)
         return IdeationsViewHolder(ideationsView)
@@ -50,18 +47,18 @@ class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: Ide
     override fun onBindViewHolder(p0: IdeationsViewHolder, p1: Int) {
         p0.title.text = ideations[p1].CentralQuestion
         p0.IdedeationsIdeaCount.text = ideations[p1].Ideas.size.toString()
-        p0.IdeationsVoteCount.text = getVoteCount(ideations).toString()
-        p0.IdeationsShareCount.text = getShareCount(ideations).toString()
+        p0.IdeationsVoteCount.text = getIdeationVoteCount(ideations).toString()
+        p0.IdeationsShareCount.text = getIdeationShareCount(ideations).toString()
         p0.IdeationsShare
         p0.IdeationsVote
-        p0.itemView.setOnClickListener{
-            selectionListener.onIdeationSelected(ideations[p1])
+        p0.button.setOnClickListener{
+            selectionListener.onIdeationSelected(ideations[p1].IdeationId,projectId)
         }
         //p0.Description.text = ideations[p1].
     }
 }
 
-fun getVoteCount(ideations: Array<Ideations>): Int? {
+fun getIdeationVoteCount(ideations: Array<Ideations>): Int? {
     var votes: Int = 0
     ideations.forEach {
         it.Ideas.forEach {
@@ -75,7 +72,7 @@ fun getVoteCount(ideations: Array<Ideations>): Int? {
     return votes
 }
 
-fun getShareCount(ideations: Array<Ideations>): Int? {
+fun getIdeationShareCount(ideations: Array<Ideations>): Int? {
     var votes: Int = 0
     ideations.forEach {
         it.Ideas.forEach {

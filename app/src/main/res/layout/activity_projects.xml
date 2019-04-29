@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="625dp"
             android:id="@+id/ProjectsPager"
-            app:layout_constraintTop_toBottomOf="@id/ProjectsTab"
+            app:layout_constraintTop_toBottomOf="@+id/ProjectsTab"
     />
 
 
