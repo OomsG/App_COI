@@ -9,21 +9,22 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
 import be.kdg.cityofideas.adapters.ProjectsViewPagerAdapter
-import be.kdg.cityofideas.listener.SelectionListener
+import be.kdg.cityofideas.model.projects.Projects
 
-const val PROJECT_ID: String = "PROJECT_ID"
+const val PROJECT: String = "PROJECT"
 
-class ProjectsActivity : AppCompatActivity(), SelectionListener {
+class ProjectsActivity : AppCompatActivity(), ProjectsRecyclerAdapter.projectsSelectionListener {
 
     private lateinit var toolbar: Toolbar
     private lateinit var viewPager: ViewPager
     private lateinit var pagerAdapter: ProjectsViewPagerAdapter
     private lateinit var tabLayout: TabLayout
 
-    override fun onSelected(id: Int) {
+    override fun onProjectsSelected(projects: Projects) {
         val intent = Intent(this, IdeationActivity::class.java)
-        intent.putExtra(PROJECT_ID, id)
+        intent.putExtra(PROJECT, projects)
         startActivity(intent)
     }
 

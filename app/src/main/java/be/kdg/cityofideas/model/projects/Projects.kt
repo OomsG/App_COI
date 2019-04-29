@@ -2,6 +2,7 @@ package be.kdg.cityofideas.model.projects
 
 import android.location.Location
 import org.w3c.dom.Text
+import java.io.Serializable
 import java.time.LocalDate
 import java.util.*
 
@@ -18,4 +19,4 @@ data class Projects(
     val Platform : Platforms,
     val Phases: Collection<Phases>,
     val AdminProjects:Collection<AdminProjects>
-)
+) :Serializable

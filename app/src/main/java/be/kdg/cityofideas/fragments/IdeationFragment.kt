@@ -15,7 +15,9 @@ import android.view.ViewGroup
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter
 import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
-import be.kdg.cityofideas.listener.SelectionListener
+
+import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter.IdeationsSelectionListener
+
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,7 +27,7 @@ import java.lang.Exception
 
 class IdeationFragment : Fragment() {
 
-    private lateinit var listener: SelectionListener
+    private lateinit var listener: IdeationsSelectionListener
     private var phaseNr: Int = 0
     private var projectId: Int = 0
 
@@ -48,7 +50,7 @@ class IdeationFragment : Fragment() {
         arguments?.getInt("projectId")?.let {
             projectId = it
         }
-        if (context is SelectionListener) {
+        if (context is IdeationsSelectionListener) {
             listener = context
         } else throw Exception("context is not Listener")
     }
@@ -60,7 +62,7 @@ class IdeationFragment : Fragment() {
     }
 
     @SuppressLint("CheckResult")
-    fun initialiseViews(view: View, listener: SelectionListener, phaseNr: Int, projectId: Int) {
+    fun initialiseViews(view: View, listener: IdeationsSelectionListener, phaseNr: Int, projectId: Int) {
         val rvIdeation = view.findViewById<RecyclerView>(R.id.rvIdeations)
         rvIdeation.layoutManager = LinearLayoutManager(context)
         rvIdeation.adapter = IdeationsRecyclerAdapter(context, listener)
