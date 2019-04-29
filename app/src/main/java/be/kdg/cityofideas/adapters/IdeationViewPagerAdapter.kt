@@ -17,6 +17,7 @@ class IdeationViewPagerAdapter(fm: FragmentManager?, val projectId: Int) : Fragm
         }
 
     override fun getItem(p0: Int): Fragment? {
+        Log.d("help", "from Viewpager")
         return IdeationFragment.newInstance((p0 + 1), projectId)
     }
 

@@ -12,17 +12,20 @@ import android.view.View
 import android.view.ViewGroup
 import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
 
+
+import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter.projectsSelectionListener
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.listener.SelectionListener
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
 
+const val PLATFORM_ID : Int = 1
+
 class ProjectFragment : Fragment() {
 
-    private lateinit var listener: SelectionListener
+    private lateinit var listener: projectsSelectionListener
     private var status: String = ""
 
     companion object {
@@ -46,7 +49,7 @@ class ProjectFragment : Fragment() {
         arguments?.getString("status")?.let {
             status = it
         }
-        if (context is SelectionListener) {
+        if (context is projectsSelectionListener) {
             listener = context
         } else throw Exception("context is not Listener")
     }
@@ -59,12 +62,12 @@ class ProjectFragment : Fragment() {
 
 
     @SuppressLint("CheckResult")
-    fun initialiseViews(view: View, listener: SelectionListener, status: String) {
+    fun initialiseViews(view: View, listener: projectsSelectionListener, status: String) {
         val rvProjects = view.findViewById<RecyclerView>(R.id.rvProjects)
         rvProjects.layoutManager = LinearLayoutManager(context)
         rvProjects.adapter = ProjectsRecyclerAdapter(context, listener, status)
         RestClient(context)
-            .getProjects("projects")
+            .getProjects("projects"+ PLATFORM_ID)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {

@@ -1,5 +1,6 @@
 package be.kdg.cityofideas.rest
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.AsyncTask
@@ -31,13 +32,15 @@ public class RestClient(private val context: Context?) {
     private val HTTP_PREFIX = "http://"
     private val HTTPS_PREFIX = "https://"
 
-
+    //region Connection
     private fun getUnsafeOkHttpClient(): OkHttpClient {
         try {
             val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                @SuppressLint("TrustAllX509TrustManager")
                 override fun checkClientTrusted(chain: Array<java.security.cert.X509Certificate>, authType: String) {
                 }
 
+                @SuppressLint("TrustAllX509TrustManager")
                 override fun checkServerTrusted(chain: Array<java.security.cert.X509Certificate>, authType: String) {
                 }
 
@@ -78,53 +81,92 @@ public class RestClient(private val context: Context?) {
         return null;
     }
 
+    //endregion
 
+    //region Projects
+    //region GET
     fun getProjects(url: String): Observable<Array<Projects>> {
-        val prefix: String = if (https) { HTTPS_PREFIX } else HTTP_PREFIX
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
         val observable = Observable.create<Array<Projects>> {
             try {
                 val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
                 val response = getClient()?.newCall(request)?.execute()?.body()
                 val json = InputStreamReader(response?.string()?.byteInputStream())
                 val gson = GsonBuilder().create()
-                val projects = gson.fromJson(json,Array<Projects>::class.java)
+                val projects = gson.fromJson(json, Array<Projects>::class.java)
                 it.onNext(projects)
-            }catch (e:IOException){
+            } catch (e: IOException) {
                 e.printStackTrace();
             }
         }
         return observable
     }
+    //endregion
+
+    //endregion
+
+    //region Ideations
+    //region GET
     fun getIdeations(url: String): Observable<Array<Ideations>> {
-        val prefix: String = if (https) { HTTPS_PREFIX } else HTTP_PREFIX
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
         val observable = Observable.create<Array<Ideations>> {
             try {
                 val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
                 val response = getClient()?.newCall(request)?.execute()?.body()
                 val json = InputStreamReader(response?.string()?.byteInputStream())
                 val gson = GsonBuilder().create()
-                val ideations = gson.fromJson(json,Array<Ideations>::class.java)
+                val ideations = gson.fromJson(json, Array<Ideations>::class.java)
                 it.onNext(ideations)
-            }catch (e:IOException){
+            } catch (e: IOException) {
                 e.printStackTrace();
             }
         }
         return observable
     }
+
+    fun getIdeation(url: String):Observable<Ideations>{
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Ideations> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()
+                val json = InputStreamReader(response?.string()?.byteInputStream())
+                val gson = GsonBuilder().create()
+                val ideation = gson.fromJson(json, Ideations::class.java)
+                it.onNext(ideation)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
     fun getPhases(url: String): Observable<Array<Phases>> {
-        val prefix: String = if (https) { HTTPS_PREFIX } else HTTP_PREFIX
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
         val observable = Observable.create<Array<Phases>> {
             try {
                 val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
                 val response = getClient()?.newCall(request)?.execute()?.body()
                 val json = InputStreamReader(response?.string()?.byteInputStream())
                 val gson = GsonBuilder().create()
-                val phases = gson.fromJson(json,Array<Phases>::class.java)
+                val phases = gson.fromJson(json, Array<Phases>::class.java)
                 it.onNext(phases)
-            }catch (e:IOException){
+            } catch (e: IOException) {
                 e.printStackTrace();
             }
         }
         return observable
     }
+    //endregion
+    //endregion
+
+
 }
