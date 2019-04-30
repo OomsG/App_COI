@@ -2,16 +2,22 @@ package be.kdg.cityofideas.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter
+import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.ideaSelectionListener
 import be.kdg.cityofideas.fragments.IdeaFragment
 import be.kdg.cityofideas.model.ideations.Ideas
+import be.kdg.cityofideas.model.ideations.Ideations
+import be.kdg.cityofideas.rest.RestClient
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-class IdeaActivity : AppCompatActivity(), IdeaRecyclerAdapter.ideaSelectionListener {
+class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
 
 
     private lateinit var toolbar: Toolbar
@@ -28,7 +34,7 @@ class IdeaActivity : AppCompatActivity(), IdeaRecyclerAdapter.ideaSelectionListe
     }
 
     @SuppressLint("CheckResult")
-    fun initialiseViews(context:Context) {
+    fun initialiseViews(context: Context) {
         toolbar = findViewById(R.id.IdeaToolbar)
         val fragment = supportFragmentManager.findFragmentById(R.id.IdeaFragment) as IdeaFragment
         /*RestClient(context)
@@ -36,8 +42,9 @@ class IdeaActivity : AppCompatActivity(), IdeaRecyclerAdapter.ideaSelectionListe
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
-                (fragment).ideation = it
+                (fragment).ideations = it
             })
-            */
+        */
+        fragment.setId(intent.getIntExtra(IDEATION_ID,1),intent.getIntExtra(PROJECT_ID,1))
     }
 }
