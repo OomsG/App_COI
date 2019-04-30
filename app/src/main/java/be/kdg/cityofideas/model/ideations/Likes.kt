@@ -4,6 +4,5 @@ import be.kdg.cityofideas.model.Users.LoggedInUsers
 
 data class Likes(
     val LikeId: Int,
-    val Reaction: Reactions,
-    val LoggedInUser: LoggedInUsers
+    val Reaction: Reactions
 )

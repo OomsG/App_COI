@@ -11,6 +11,5 @@ data class Platforms(
      val Address:Adress,
      val PhoneNumber: String,
      val Description: String,
-     val Projects: Collection<Projects>,
-     val Users: Collection<Users>
+     val Projects: Collection<Projects>
 )
