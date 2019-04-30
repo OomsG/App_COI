@@ -66,7 +66,6 @@ class IdeationFragment : Fragment() {
         val rvIdeation = view.findViewById<RecyclerView>(R.id.rvIdeations)
         rvIdeation.layoutManager = LinearLayoutManager(context)
         rvIdeation.adapter = IdeationsRecyclerAdapter(context, listener,projectId)
-        Log.d("help", projectId.toString())
         RestClient(context)
             .getIdeations("ideations/" + projectId)
             .map {

@@ -21,9 +21,9 @@ const val IDEATION_ID :String = "IdeationId"
 
 
 class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
-    override fun onIdeationSelected(ideationId: Int, projectId:Int ) {
+    override fun onIdeationSelected(ideationid: Int, projectId:Int ) {
         val intent = Intent(this,IdeaActivity::class.java)
-        intent.putExtra(IDEATION_ID,ideationId)
+        intent.putExtra(IDEATION_ID,ideationid)
         intent.putExtra(PROJECT_ID,projectId)
         startActivity(intent)
     }
