@@ -15,33 +15,24 @@ import kotlinx.android.synthetic.main.ideas_list.view.*
 /* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
 
 
-class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectionListener, val ideationId: Int) :
+class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
 
     interface ideaSelectionListener {
         fun onIdeaSelected(idea: Ideas)
     }
 
-
-    var ideations: Array<Ideations> = arrayOf()
-        set(ideations) {
-            field = ideations
+    var ideas: Array<Ideas> = arrayOf()
+        set(ideas) {
+            field = ideas
             notifyDataSetChanged()
         }
-
-    fun getIdeas(ideations: Array<Ideations>, ideationId: Int): Array<Ideas> {
-        val ideation = ideations.filter {
-            it.IdeationId.equals(ideationId)
-        }
-        return ideation[0].Ideas.toTypedArray()
-    }
-
 
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name = view.IdeaUserName
         val description = view.IdeaDescription
         val voteCount = view.IdeaVoteCount
-        val ideaCount = view.IdeaReactionCount
+        val reactionCount = view.IdeaReactionCount
         val shareCount = view.IdeaShareCount
         val voteButton = view.IdeaVoteButton
         val shareButton = view.IdeaShareButton
@@ -53,15 +44,15 @@ class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectio
         return IdeaViewHolder(ideaView)
     }
 
-    override fun getItemCount() = getIdeas(ideations,ideationId).size
+    override fun getItemCount() = ideas.size
 
 
     override fun onBindViewHolder(p0: IdeaViewHolder, p1: Int) {
         //p0.name.text = ideas[p1].
         //p0.description.text = ideas[p1].
-        p0.ideaCount.text = getIdeas(ideations,ideationId)[p1].Reactions.size.toString()
-        p0.shareCount.text = getIdeaShareCount(getIdeas(ideations,ideationId)[p1]).toString()
-        p0.voteCount.text = getIdeaVoteCount(getIdeas(ideations,ideationId)[p1]).toString()
+        p0.reactionCount.text = ideas[p1].Reactions.size.toString() + " Reacties"
+        p0.shareCount.text = getIdeaShareCount(ideas[p1]).toString() + " keer gedeeld"
+        p0.voteCount.text = getIdeaVoteCount(ideas[p1]).toString()+ " stemmen"
         p0.voteButton.setOnClickListener { }
         p0.shareButton.setOnClickListener { }
     }
