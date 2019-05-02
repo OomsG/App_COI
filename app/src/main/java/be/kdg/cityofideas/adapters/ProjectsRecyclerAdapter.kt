@@ -1,23 +1,25 @@
 package be.kdg.cityofideas.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
-import android.support.annotation.RequiresApi
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.model.projects.Projects
 import kotlinx.android.synthetic.main.projects_list.view.*
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.*
 
-class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: projectsSelectionListener, val status: String) :
+class ProjectsRecyclerAdapter(
+    val context: Context?,
+    private val selectionListener: ProjectsSelectionListener,
+    private val status: String
+) :
     RecyclerView.Adapter<ProjectsRecyclerAdapter.ProjectsViewHolder>() {
-    interface projectsSelectionListener{
-        fun onProjectsSelected(id:Int)
+    interface ProjectsSelectionListener {
+        fun onProjectsSelected(id: Int)
     }
 
     class ProjectsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -37,14 +39,34 @@ class ProjectsRecyclerAdapter(val context: Context?, val selectionListener: proj
         return ProjectsViewHolder(projectsView)
     }
 
-    override fun getItemCount() = projects.size
+    override fun getItemCount() = getProjectsOfStatus(projects, status).size
 
     override fun onBindViewHolder(p0: ProjectsViewHolder, p1: Int) {
-        p0.title.text = projects[p1].ProjectName
-        p0.Description.text = projects[p1].Description
+        p0.title.text = getProjectsOfStatus(projects, status)[p1].ProjectName
+        p0.Description.text = getProjectsOfStatus(projects, status)[p1].Description
         p0.picture.setImageResource(R.drawable.antwerpen)
         p0.itemView.setOnClickListener {
-            selectionListener.onProjectsSelected(projects[p1].ProjectId)
+            selectionListener.onProjectsSelected(getProjectsOfStatus(projects, status)[p1].ProjectId)
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getProjectsOfStatus(projects: Array<Projects>, status: String): Array<Projects> {
+        val today = Date()
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        when (status) {
+            "active" -> return projects.filter {
+                format.parse(it.StartDate).before(today) && format.parse(it.EndDate).after(today)
+            }.toTypedArray()
+
+            "future" -> return projects.filter {
+                format.parse(it.StartDate).after(today)
+            }.toTypedArray()
+
+            "past" -> return projects.filter {
+                format.parse(it.EndDate).before(today)
+            }.toTypedArray()
+        }
+        return projects
     }
 }

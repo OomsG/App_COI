@@ -16,7 +16,7 @@ data class Projects(
     val Description: String,
     val Location: Location,
     val Status: String,
-    val Platform : Platforms,
+    val Platform: Platforms,
     val Phases: Collection<Phases>,
-    val AdminProjects:Collection<AdminProjects>
-) :Serializable
+    val AdminProjects: Collection<AdminProjects>
+) : Serializable

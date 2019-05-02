@@ -3,30 +3,21 @@ package be.kdg.cityofideas.rest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
-import android.os.AsyncTask
-import android.util.Log
-import be.kdg.cityofideas.model.ideations.IdeaObjects.IdeaObject
 import be.kdg.cityofideas.model.ideations.Ideations
 import be.kdg.cityofideas.model.projects.Phases
 import be.kdg.cityofideas.model.projects.Projects
-import com.google.gson.*
+import com.google.gson.GsonBuilder
 import io.reactivex.Observable
-import io.reactivex.internal.schedulers.IoScheduler
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
-import java.io.DataInputStream
 import java.io.IOException
 import java.io.InputStreamReader
-import java.lang.reflect.Type
-import java.net.HttpURLConnection
-import java.net.URL
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
-import kotlin.reflect.KParameter
 
-public class RestClient(private val context: Context?)  {
+public class RestClient(private val context: Context?) {
+    //private val host = "35.187.121.148"
     private val host = "10.0.2.2"
     private val port = 5001
     private val apistring = "/Api/"
@@ -65,7 +56,7 @@ public class RestClient(private val context: Context?)  {
         }
     }
 
-    fun getClient(): OkHttpClient? {
+    private fun getClient(): OkHttpClient? {
         val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -76,14 +67,13 @@ public class RestClient(private val context: Context?)  {
                 } else {
                     client = OkHttpClient()
                 }
-                return client;
+                return client
             } catch (e: IOException) {
                 e.printStackTrace();
             }
         }
         return null;
     }
-
 
 
     //endregion

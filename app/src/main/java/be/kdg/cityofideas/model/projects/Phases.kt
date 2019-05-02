@@ -12,7 +12,7 @@ data class Phases(
     val PhaseName: String,
     val Description: String,
     val StartDate: String,
-    val EndDte: String,
+    val EndDate: String,
     val Project: Projects,
     val Ideations: Collection<Ideations>,
     val Surveys: Collection<Survey>
