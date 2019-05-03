@@ -3,8 +3,13 @@ package be.kdg.cityofideas.rest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
+import android.os.AsyncTask
+import android.util.Log
+import be.kdg.cityofideas.model.ideations.IdeaObjects.IdeaObject
+import be.kdg.cityofideas.model.ideations.Ideas
 import be.kdg.cityofideas.model.Users.Users
 import be.kdg.cityofideas.model.ideations.Ideations
+import be.kdg.cityofideas.model.ideations.Reactions
 import be.kdg.cityofideas.model.projects.Phases
 import be.kdg.cityofideas.model.projects.Projects
 import com.google.gson.GsonBuilder
@@ -124,6 +129,25 @@ public class RestClient(private val context: Context?) {
         return observable
     }
 
+    fun getIdeation(url: String):Observable<Ideations>{
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Ideations> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()
+                val json = InputStreamReader(response?.string()?.byteInputStream())
+                val gson = GsonBuilder().create()
+                val ideation = gson.fromJson(json, Ideations::class.java)
+                it.onNext(ideation)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
     fun getPhases(url: String): Observable<Array<Phases>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
@@ -142,9 +166,27 @@ public class RestClient(private val context: Context?) {
         }
         return observable
     }
-    //endregion
-    //endregion
 
+    fun getIdeas(url: String): Observable<Array<Ideas>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Ideas>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()
+                val json = InputStreamReader(response?.string()?.byteInputStream())
+                val gson = GsonBuilder().create()
+                val ideas = gson.fromJson(json, Array<Ideas>::class.java)
+                it.onNext(ideas)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+    //endregion
+    //endregion
     //region Users
     fun getUser(url: String) : Observable<Users> {
         val prefix: String = if (https) {
@@ -165,4 +207,6 @@ public class RestClient(private val context: Context?) {
         return observable
     }
     //endregion
+
+
 }

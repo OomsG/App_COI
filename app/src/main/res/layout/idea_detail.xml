@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+            android:text="Glenn Ooms"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/IdeaUserName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus posuere vitae nunc at suscipit. Donec ac ante nec magna interdum aliquet non ac urna. Nulla orci lacus, rhoncus eu pulvinar eget, pulvinar non lorem. Vestibulum placerat eget libero eget dignissim. Praesent ipsum est, dignissim sit amet ipsum  finibus nec tempor quis, iaculis at leo. Curabitur eu nisl elit. Nunc sodales lacus mauris, vitae pretium erat posuere a."
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/IdeaDescription"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/IdeaUserName"/>
+    <TextView
+            android:text="5 Reacties"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/IdeaReactionCount"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/IdeaDescription"
+            app:layout_constraintRight_toLeftOf="@+id/IdeaVoteCount"/>
+    <TextView
+            android:text="20 Stemmen"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/IdeaVoteCount"
+            app:layout_constraintLeft_toRightOf="@+id/IdeaReactionCount"
+            app:layout_constraintRight_toLeftOf="@+id/IdeaShareCount"
+            app:layout_constraintTop_toTopOf="@id/IdeaReactionCount"/>
+    <TextView
+            android:text="10 keer gedeeld"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/IdeaShareCount"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/IdeaVoteCount"
+            app:layout_constraintTop_toTopOf="@+id/IdeaReactionCount"/>
+
+    <Button
+            android:text="Stem"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/IdeaVoteButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/IdeaShareButton"
+            app:layout_constraintTop_toBottomOf="@+id/IdeaReactionCount"/>
+    <Button
+            android:text="Share"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/IdeaShareButton"
+            app:layout_constraintLeft_toRightOf="@+id/IdeaVoteButton"
+            app:layout_constraintTop_toTopOf="@id/IdeaVoteButton"
+            app:layout_constraintRight_toRightOf="parent"/>
+</android.support.constraint.ConstraintLayout>

@@ -7,16 +7,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.fragments.IdeaFragment
+import be.kdg.cityofideas.fragments.ReactionFragment
 import be.kdg.cityofideas.model.ideations.Ideas
 import be.kdg.cityofideas.model.ideations.Ideations
+import be.kdg.cityofideas.model.ideations.Reactions
 import be.kdg.cityofideas.model.ideations.VoteTypes
+import kotlinx.android.synthetic.main.idea_detail.view.*
 import kotlinx.android.synthetic.main.ideas_list.view.*
+import java.lang.Error
 
 /* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
 
 
 class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
+
+    private lateinit var BestReaction: Reactions
 
     interface ideaSelectionListener {
         fun onIdeaSelected(idea: Ideas)
@@ -28,14 +35,23 @@ class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectio
             notifyDataSetChanged()
         }
 
+    fun getIdeas(ideations: Array<Ideations>, ideationId: Int): Array<Ideas> {
+        val ideation = ideations.filter {
+            it.IdeationId.equals(ideationId)
+        }
+        return ideation[0].Ideas.toTypedArray()
+    }
+
+
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name = view.IdeaUserName
-        val description = view.IdeaDescription
         val voteCount = view.IdeaVoteCount
         val reactionCount = view.IdeaReactionCount
         val shareCount = view.IdeaShareCount
         val voteButton = view.IdeaVoteButton
         val shareButton = view.IdeaShareButton
+        val reactionName = view.IdeaReactionNameFirst
+        val reactionText = view.IdeaReactionTextFirst
     }
 
 
@@ -48,13 +64,16 @@ class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectio
 
 
     override fun onBindViewHolder(p0: IdeaViewHolder, p1: Int) {
-        //p0.name.text = ideas[p1].
-        //p0.description.text = ideas[p1].
+        //p0.name.text = ideas[p1].User.Name
         p0.reactionCount.text = ideas[p1].Reactions.size.toString() + " Reacties"
         p0.shareCount.text = getIdeaShareCount(ideas[p1]).toString() + " keer gedeeld"
-        p0.voteCount.text = getIdeaVoteCount(ideas[p1]).toString()+ " stemmen"
-        p0.voteButton.setOnClickListener { }
+        p0.voteCount.text = getIdeaVoteCount(ideas[p1]).toString() + " stemmen"
+        p0.voteButton.setOnClickListener {}
         p0.shareButton.setOnClickListener { }
+        p0.reactionText.text = getBestReaction(ideas[p1])
+        p0.itemView.setOnClickListener {
+            selectionListener.onIdeaSelected(ideas[p1])
+        }
     }
 
     fun getIdeaShareCount(ideas: Ideas): Int {
@@ -75,5 +94,27 @@ class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectio
             }
         }
         return counter
+    }
+
+    fun getBestReaction(ideas: Ideas): String {
+        /* var a: Int = 0
+         ideas.Reactions.forEach {
+             try {
+                 val b = it.Like.size
+                 if (b.compareTo(a) < 0) {
+                     a = b
+                     BestReaction = it
+                 }
+             } catch (e: Error) {
+                 e.printStackTrace()
+             }
+
+         }*/
+        val reactions: Array<Reactions> = ideas.Reactions.toTypedArray()
+        if (reactions.isEmpty()) {
+            return "Er zijn geen reacties om weer te geven"
+        } else {
+            return ideas.Reactions.first().ReactionText
+        }
     }
 }
