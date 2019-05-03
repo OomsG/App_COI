@@ -14,10 +14,12 @@ import android.view.ViewGroup
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.*
+import be.kdg.cityofideas.adapters.ReactionRecyclerAdapter
 import be.kdg.cityofideas.model.ideations.Ideations
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_reaction.*
 import java.lang.Exception
 
 
@@ -38,18 +40,16 @@ class IdeaFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_idea, container, false)
         view1 = view
-        //initialiseViews(view1,projectId,ideationId)
         return view
     }
 
-
     @SuppressLint("CheckResult")
-    fun initialiseViews(view: View, projectId:Int, ideationId:Int) {
+    fun initialiseViews(view: View, ideationId: Int, project: Int) {
         val rvIdeas = view.findViewById<RecyclerView>(R.id.rvIdeas)
         rvIdeas.layoutManager = LinearLayoutManager(context)
         rvIdeas.adapter = IdeaRecyclerAdapter(context, listener)
         RestClient(context)
-            .getIdeations("ideations/" + projectId)
+            .getIdeations("ideations/" + project)
             .map {
                 it.filter {
                     it.IdeationId.equals(ideationId)
@@ -61,13 +61,14 @@ class IdeaFragment : Fragment() {
             .subscribeOn(Schedulers.io())
             .subscribe({
                 (rvIdeas.adapter as IdeaRecyclerAdapter).ideas = it.toTypedArray()
+                //(rvReactions.adapter as ReactionRecyclerAdapter).ideas = it.toTypedArray()
             })
     }
 
     fun setId(ideation: Int, project: Int) {
         ideationId = ideation
         projectId = project
-        initialiseViews(view1,project,ideation)
+        initialiseViews(view1, ideation, project)
     }
 
 }

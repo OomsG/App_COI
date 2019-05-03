@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.widget.HorizontalScrollView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeationViewPagerAdapter
 import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter.IdeationsSelectionListener
@@ -47,7 +48,6 @@ class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
         viewPager = findViewById(R.id.IdeationsPager)
         pagerAdapter = IdeationViewPagerAdapter(supportFragmentManager, id)
         viewPager.adapter = pagerAdapter
-
         tabLayout.setupWithViewPager(viewPager)
         RestClient(context)
             .getPhases("phases/" + id)

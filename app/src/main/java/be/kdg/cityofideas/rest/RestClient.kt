@@ -6,7 +6,9 @@ import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.util.Log
 import be.kdg.cityofideas.model.ideations.IdeaObjects.IdeaObject
+import be.kdg.cityofideas.model.ideations.Ideas
 import be.kdg.cityofideas.model.ideations.Ideations
+import be.kdg.cityofideas.model.ideations.Reactions
 import be.kdg.cityofideas.model.projects.Phases
 import be.kdg.cityofideas.model.projects.Projects
 import com.google.gson.*
@@ -145,6 +147,25 @@ public class RestClient(private val context: Context?)  {
                 val gson = GsonBuilder().create()
                 val phases = gson.fromJson(json, Array<Phases>::class.java)
                 it.onNext(phases)
+            } catch (e: IOException) {
+
+            }
+        }
+        return observable
+    }
+
+    fun getIdeas(url: String): Observable<Array<Ideas>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Ideas>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()
+                val json = InputStreamReader(response?.string()?.byteInputStream())
+                val gson = GsonBuilder().create()
+                val ideas = gson.fromJson(json, Array<Ideas>::class.java)
+                it.onNext(ideas)
             } catch (e: IOException) {
                 e.printStackTrace();
             }

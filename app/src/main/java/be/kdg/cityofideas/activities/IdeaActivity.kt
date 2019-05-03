@@ -18,6 +18,8 @@ import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
+const val IDEA : String = "idea"
+
 class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
 
 
@@ -25,7 +27,9 @@ class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
     private lateinit var Title: TextView
 
     override fun onIdeaSelected(idea: Ideas) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val intent = Intent(this, ReactionActivity::class.java)
+        //intent.putExtra(IDEA,idea)
+        startActivity(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

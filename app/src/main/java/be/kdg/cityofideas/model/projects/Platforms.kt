@@ -1,6 +1,5 @@
 package be.kdg.cityofideas.model.projects
 
-import be.kdg.cityofideas.model.Users.Users
 import be.kdg.cityofideas.model.datatypes.Adress
 
 data class Platforms(
