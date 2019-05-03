@@ -129,18 +129,18 @@ public class RestClient(private val context: Context?) {
         return observable
     }
 
-    fun getIdeation(url: String):Observable<Ideations>{
+    fun getReactions(url: String): Observable<Array<Reactions>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
         } else HTTP_PREFIX
-        val observable = Observable.create<Ideations> {
+        val observable = Observable.create<Array<Reactions>> {
             try {
                 val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
                 val response = getClient()?.newCall(request)?.execute()?.body()
                 val json = InputStreamReader(response?.string()?.byteInputStream())
                 val gson = GsonBuilder().create()
-                val ideation = gson.fromJson(json, Ideations::class.java)
-                it.onNext(ideation)
+                val reactions = gson.fromJson(json, Array<Reactions>::class.java)
+                it.onNext(reactions)
             } catch (e: IOException) {
                 e.printStackTrace();
             }

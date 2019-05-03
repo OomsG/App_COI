@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter
@@ -28,7 +29,7 @@ class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
 
     override fun onIdeaSelected(idea: Ideas) {
         val intent = Intent(this, ReactionActivity::class.java)
-        //intent.putExtra(IDEA,idea)
+        intent.putExtra(IDEA,idea)
         startActivity(intent)
     }
 

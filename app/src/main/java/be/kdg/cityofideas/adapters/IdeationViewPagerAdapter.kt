@@ -25,6 +25,6 @@ class IdeationViewPagerAdapter(fm: FragmentManager?, val projectId:Int) : Fragme
     override fun getCount(): Int = phases.size
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return "Fase " + (position +1)
+        return phases[position].PhaseName
     }
 }

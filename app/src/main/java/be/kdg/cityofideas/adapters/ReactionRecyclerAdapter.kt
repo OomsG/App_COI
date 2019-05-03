@@ -10,16 +10,19 @@ import be.kdg.cityofideas.model.ideations.Ideas
 import be.kdg.cityofideas.model.ideations.Reactions
 import kotlinx.android.synthetic.main.reactions_list.view.*
 
-class ReactionRecyclerAdapter(val context: Context?, val idea: Ideas) :
+class ReactionRecyclerAdapter(val context: Context?) :
     RecyclerView.Adapter<ReactionRecyclerAdapter.ReactionsViewHolder>() {
+
+    var reactions: Array<Reactions> = arrayOf()
+        set(reactions) {
+            field = reactions
+            notifyDataSetChanged()
+        }
 
     class ReactionsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name = view.NameReaction
         val text = view.TextReaction
     }
-
-
-    var reactions: Array<Reactions> = idea.Reactions.toTypedArray()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ReactionsViewHolder {
         val reactionsView = LayoutInflater.from(p0.context).inflate(R.layout.reactions_list, p0, false)

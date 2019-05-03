@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
 import be.kdg.cityofideas.adapters.ReactionRecyclerAdapter
 import be.kdg.cityofideas.model.ideations.Ideas
 import be.kdg.cityofideas.rest.RestClient
@@ -21,7 +22,6 @@ import io.reactivex.schedulers.Schedulers
 
 
 class ReactionFragment : Fragment() {
-    private lateinit var CurrentIdea: Ideas
     private lateinit var view1 : View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -30,13 +30,20 @@ class ReactionFragment : Fragment() {
     }
 
     @SuppressLint("CheckResult")
-    fun initialiseViews(view: View, ideas: Ideas) {
+    fun initialiseViews(view: View, id:Int) {
         val rvReactions = view.findViewById<RecyclerView>(R.id.rvReactions)
         rvReactions.layoutManager = LinearLayoutManager(context)
-        rvReactions.adapter = ReactionRecyclerAdapter(context,ideas)
+        rvReactions.adapter = ReactionRecyclerAdapter(context)
+        RestClient(context)
+            .getReactions("reactions/"+ id)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                (rvReactions.adapter as ReactionRecyclerAdapter).reactions = it
+            }
     }
 
-    fun setIdea(idea: Ideas){
-        initialiseViews(view1, idea)
+    fun setId(ideaId: Int){
+        initialiseViews(view1,ideaId)
     }
 }

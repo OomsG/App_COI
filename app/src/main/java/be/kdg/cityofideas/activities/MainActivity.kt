@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         initialiseViews()
         addEventHandlers()
     }
@@ -41,37 +40,37 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n", "CheckResult")
     private fun addEventHandlers() {
         login.setOnClickListener {
-            if (!registering) {
-                RestClient(this).getUser("users/" + email.text.toString() + "/" + password.text.toString())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.newThread())
-                    .subscribe{
-                        user = it
-                    }
-
-                Thread.sleep(1000)
-
-                if (user != null) {
+//            if (!registering) {
+//                RestClient(this).getUser("users/" + email.text.toString() + "/" + password.text.toString())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribeOn(Schedulers.newThread())
+//                    .subscribe{
+//                        user = it
+//                    }
+//
+//                Thread.sleep(1000)
+//
+//                if (user != null) {
                     val intent = Intent(it.context, ProjectsActivity::class.java)
                     startActivity(intent)
-                } else {
-                    Toast.makeText(this, "Foutieve login, probeer opnieuw...", Toast.LENGTH_SHORT).show()
-                }
-            } else {
+//                } else {
+//                    Toast.makeText(this, "Foutieve login, probeer opnieuw...", Toast.LENGTH_SHORT).show()
+//                }
+//            } else {
 
             }
         }
 
-        noAccount.setOnClickListener {
-            if (!registering) {
-                login.text = "Register"
-                noAccount.text = "Al een account? Log in!"
-                registering = true
-            } else {
-                login.text = getString(R.string.log_in)
-                noAccount.text = getString(R.string.no_account)
-                registering = false
-            }
-        }
-    }
+//        noAccount.setOnClickListener {
+//            if (!registering) {
+//                login.text = "Register"
+//                noAccount.text = "Al een account? Log in!"
+//                registering = true
+//            } else {
+//                login.text = getString(R.string.log_in)
+//                noAccount.text = getString(R.string.no_account)
+//                registering = false
+//            }
+//        }
+//    }
 }
