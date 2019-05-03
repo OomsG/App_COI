@@ -3,6 +3,7 @@ package be.kdg.cityofideas.rest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
+import be.kdg.cityofideas.model.Users.Users
 import be.kdg.cityofideas.model.ideations.Ideations
 import be.kdg.cityofideas.model.projects.Phases
 import be.kdg.cityofideas.model.projects.Projects
@@ -144,5 +145,24 @@ public class RestClient(private val context: Context?) {
     //endregion
     //endregion
 
-
+    //region Users
+    fun getUser(url: String) : Observable<Users> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Users> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()
+                val json = InputStreamReader(response?.string()?.byteInputStream())
+                val gson = GsonBuilder().create()
+                val user = gson.fromJson(json, Users::class.java)
+                it.onNext(user)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+    //endregion
 }
