@@ -5,6 +5,6 @@ data class Reactions(
     val ReactionText: String,
     val Reported: Boolean,
     val Ideation: Ideations,
-    val Idea: Ideas,
+    val Idea: Ideas?,
     val Like: Collection<Likes>
 )

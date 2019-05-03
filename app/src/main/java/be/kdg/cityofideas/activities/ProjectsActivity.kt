@@ -7,13 +7,12 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter.projectsSelectionListener
+import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter.ProjectsSelectionListener
 import be.kdg.cityofideas.adapters.ProjectsViewPagerAdapter
-import be.kdg.cityofideas.model.projects.Projects
 
 const val PROJECT_ID: String = "projectid"
 
-class ProjectsActivity : AppCompatActivity(), projectsSelectionListener {
+class ProjectsActivity : AppCompatActivity(), ProjectsSelectionListener {
 
     private lateinit var toolbar: Toolbar
     private lateinit var viewPager: ViewPager
@@ -32,7 +31,7 @@ class ProjectsActivity : AppCompatActivity(), projectsSelectionListener {
         initialiseViews()
     }
 
-    fun initialiseViews() {
+    private fun initialiseViews() {
         tabLayout = findViewById(R.id.ProjectsTab)
         toolbar = findViewById(R.id.ProjectsInclude)
         viewPager = findViewById(R.id.ProjectsPager)

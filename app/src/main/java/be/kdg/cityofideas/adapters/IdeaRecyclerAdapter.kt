@@ -35,6 +35,14 @@ class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectio
             notifyDataSetChanged()
         }
 
+    fun getIdeas(ideations: Array<Ideations>, ideationId: Int): Array<Ideas> {
+        val ideation = ideations.filter {
+            it.IdeationId.equals(ideationId)
+        }
+        return ideation[0].Ideas.toTypedArray()
+    }
+
+
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name = view.IdeaUserName
         val voteCount = view.IdeaVoteCount

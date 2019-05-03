@@ -4,9 +4,11 @@ import be.kdg.cityofideas.model.ideations.Votes
 import be.kdg.cityofideas.model.projects.Platforms
 
 data class Users(
-    val UserId: String,
+    val Id: String,
     val Name: String,
     val Email: String,
-    val Votes: Collection<Votes>,
     val Platform: Platforms
+    val PasswordHash: String,
+    val Vote: Collection<Votes>
+
 )

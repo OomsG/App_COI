@@ -3,4 +3,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_account">Geen account? Maak er nu een aan!</string>
+    <string name="password">Passwoord</string>
+    <string name="email">E-mailadres</string>
+    <string name="log_in">Log in</string>
 </resources>

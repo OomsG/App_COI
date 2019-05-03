@@ -68,9 +68,7 @@ class IdeationsRecyclerAdapter(
         ideations.forEach {
             it.Ideas.forEach {
                 it.Votes.forEach {
-                    //Log.d("vote",it.VoteType.toString())
                     if (it.VoteType == VoteTypes.VOTE) {
-
                         votes++
                     }
                 }
