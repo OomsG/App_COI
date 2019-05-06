@@ -44,7 +44,7 @@ class ProjectsRecyclerAdapter(
     override fun onBindViewHolder(p0: ProjectsViewHolder, p1: Int) {
         p0.title.text = getProjectsOfStatus(projects, status)[p1].ProjectName
         p0.Description.text = getProjectsOfStatus(projects, status)[p1].Description
-        p0.picture.setImageResource(R.drawable.antwerpen)
+        p0.picture.setImageBitmap( getProjectsOfStatus(projects, status)[p1].BackgroundImg)
         p0.itemView.setOnClickListener {
             selectionListener.onProjectsSelected(getProjectsOfStatus(projects, status)[p1].ProjectId)
         }

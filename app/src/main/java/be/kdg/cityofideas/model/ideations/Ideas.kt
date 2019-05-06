@@ -17,6 +17,6 @@ data class Ideas(
     var Ideation : Ideations,
     var User: Users,
     var IoTSetup: Collection<IotSetup>,
-    var Votes: Collection<Votes>,
+    var Votes: ArrayList<Votes>,
     var Reactions : Collection<Reactions>
 ):Serializable

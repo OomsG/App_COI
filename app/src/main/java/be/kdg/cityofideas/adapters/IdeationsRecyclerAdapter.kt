@@ -10,6 +10,7 @@ import be.kdg.cityofideas.R
 import be.kdg.cityofideas.model.ideations.Ideas
 import be.kdg.cityofideas.model.ideations.Ideations
 import be.kdg.cityofideas.model.ideations.VoteTypes
+import be.kdg.cityofideas.rest.RestClient
 import kotlinx.android.synthetic.main.ideations_list.view.*
 
 /* Deze klasse zorgt ervoor dat alle ideations in een lijst getoond worden*/
@@ -27,7 +28,6 @@ class IdeationsRecyclerAdapter(
 
     class IdeationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.TitleIdeation
-        val Description = view.SmallDescriptionIdeation
         val button = view.giveIdea
         val IdedeationsIdeaCount = view.IdeationIdeaCount
         val IdeationsVoteCount = view.IdeationVoteCount
@@ -55,11 +55,12 @@ class IdeationsRecyclerAdapter(
         p0.IdeationsVoteCount.text = getIdeationVoteCount(ideations)
         p0.IdeationsShareCount.text = getIdeationShareCount(ideations)
         p0.IdeationsShare
-        p0.IdeationsVote
+        p0.IdeationsVote.setOnClickListener {
+        }
         p0.button.setOnClickListener {
             selectionListener.onIdeationSelected(ideations[p1].IdeationId, projectId)
         }
-        //p0.Description.text = ideations[p1].
+       Log.d("object",ideations[p1].InputIdeation.toString())
     }
 
 
