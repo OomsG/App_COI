@@ -11,6 +11,7 @@ import be.kdg.cityofideas.R
 import be.kdg.cityofideas.activities.IdeaActivity
 import be.kdg.cityofideas.fragments.IdeaFragment
 import be.kdg.cityofideas.fragments.ReactionFragment
+import be.kdg.cityofideas.listener.VoteListener
 import be.kdg.cityofideas.model.ideations.Ideas
 import be.kdg.cityofideas.model.ideations.Ideations
 import be.kdg.cityofideas.model.ideations.Reactions
@@ -25,6 +26,7 @@ import java.lang.Error
 class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
 
+    private lateinit var voteListener: VoteListener
     private lateinit var BestReaction: Reactions
 
     interface ideaSelectionListener {
@@ -63,14 +65,15 @@ class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectio
         p0.reactionCount.text = getReactionCount(ideas[p1])
         p0.shareCount.text = getIdeaShareCount(ideas[p1])
         p0.voteCount.text = getIdeaVoteCount(ideas[p1])
-        p0.voteButton.setOnClickListener {}
+        p0.voteButton.setOnClickListener {
+        }
         p0.shareButton.setOnClickListener { }
         p0.reactionText.text = getBestReaction(ideas[p1])
         p0.itemView.setOnClickListener {
-            if (ideas[p1].Reactions.size !=0) {
+            if (ideas[p1].Reactions.size != 0) {
                 selectionListener.onIdeaSelected(ideas[p1])
-            }else
-                Log.d("reaction", "Geen reactions")
+            } else
+                Toast.makeText(it.context, "Er zijn geen reacties om te tonen", Toast.LENGTH_LONG).show()
         }
     }
 

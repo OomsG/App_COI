@@ -17,6 +17,7 @@ data class Projects(
     val Location: Location,
     val Status: String,
     val Platform: Platforms,
+    val BackgroundImage : String,
     val Phases: Collection<Phases>,
     val AdminProjects: Collection<AdminProjects>
 ) : Serializable

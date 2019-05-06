@@ -20,9 +20,11 @@ class ReactionActivity : AppCompatActivity() {
     private var idea: Ideas = intent.getSerializableExtra(IDEA) as Ideas
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("reactionActivity", idea.Title)
         super.onCreate(savedInstanceState)
         initialiseViews()
         setContentView(R.layout.activity_reaction)
+
     }
 
     fun initialiseViews() {
@@ -32,11 +34,7 @@ class ReactionActivity : AppCompatActivity() {
         shareCount
         voteButton.setOnClickListener { }
         shareButton.setOnClickListener { }
-
-
         val fragment = supportFragmentManager.findFragmentById(R.id.ReactionFragment) as ReactionFragment
         fragment.setId(idea.IdeaId)
-
-
     }
 }

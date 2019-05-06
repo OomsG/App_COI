@@ -7,8 +7,7 @@ data class Users(
     val Id: String,
     val Name: String,
     val Email: String,
-    val Platform: Platforms,
+    val Platform: Platforms ,
     val PasswordHash: String,
     val Vote: Collection<Votes>
-
 )

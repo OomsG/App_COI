@@ -107,7 +107,6 @@ public class RestClient(private val context: Context?) {
     //endregion
 
     //endregion
-
     //region Ideations
     //region GET
     fun getIdeations(url: String): Observable<Array<Ideations>> {
@@ -200,6 +199,25 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val user = gson.fromJson(json, Users::class.java)
                 it.onNext(user)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
+    fun getUsers(url: String) : Observable<Array<Users>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Users>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()
+                val json = InputStreamReader(response?.string()?.byteInputStream())
+                val gson = GsonBuilder().create()
+                val users = gson.fromJson(json, Array<Users>::class.java)
+                it.onNext(users)
             } catch (e: IOException) {
                 e.printStackTrace();
             }
