@@ -14,10 +14,12 @@ import android.view.ViewGroup
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.*
+import be.kdg.cityofideas.adapters.ReactionRecyclerAdapter
 import be.kdg.cityofideas.model.ideations.Ideations
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_reaction.*
 import java.lang.Exception
 
 
@@ -38,10 +40,8 @@ class IdeaFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_idea, container, false)
         view1 = view
-        //initialiseViews(view1,projectId,ideationId)
         return view
     }
-
 
     @SuppressLint("CheckResult")
     fun initialiseViews(view: View, projectId:Int, ideationId:Int) {
