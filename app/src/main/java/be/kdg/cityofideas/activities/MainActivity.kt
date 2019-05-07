@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
 //                    .subscribe {
 //                        user = it
 //                    }
-//
+//                Handler gebruiken ipv Thread.sleep
 //                Thread.sleep(1000)
 //
 //                if (user != null) {
