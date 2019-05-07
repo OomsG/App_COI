@@ -35,8 +35,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         initialiseViews()
         addEventHandlers()
+        initialiseDatabase()
     }
 
     private fun initialiseViews() {
@@ -44,7 +46,6 @@ class MainActivity : AppCompatActivity() {
         email = findViewById(R.id.EmailText)
         password = findViewById(R.id.PasswoordText)
         noAccount = findViewById(R.id.tvCreateAccount)
-//        initialiseDatabase()
     }
 
     @SuppressLint("CheckResult")
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity() {
                             put(helper.PROJECT_STATUS, it.Status)
                         }
                         manager.openDatabase()
+//                        manager.delete(helper.TBL_PROJECT)
                         manager.insert(helper.TBL_PROJECT, contentValues)
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -83,7 +85,6 @@ class MainActivity : AppCompatActivity() {
                     //endregion
                     it.Phases.forEach {
                         //region Phases
-                        val phaseId = it.PhaseId
                         try {
                             val contentValues = ContentValues().apply {
                                 put(helper.PHASE_ID, it.PhaseId)
@@ -92,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                                 put(helper.PHASE_DESCRIPTION, it.Description)
                                 put(helper.PHASE_STARTDATE, it.StartDate)
                                 put(helper.PHASE_ENDDATE, it.EndDate)
-                                put(helper.PROJECT_ID, projectId)
+                                put(helper.PROJECT_ID, it.Project.ProjectId)
                             }
                             manager.openDatabase()
                             manager.insert(helper.TBL_PHASE, contentValues)
@@ -107,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                                     put(helper.IDEATION_ID, it.IdeationId)
                                     put(helper.IDEATION_CENTRALQUESTION, it.CentralQuestion)
                                     put(helper.IDEATION_INPUTIDEATION, it.InputIdeation)
-                                    put(helper.PHASE_ID, phaseId)
+                                    put(helper.PHASE_ID, it.Phase.PhaseId)
                                 }
                                 manager.openDatabase()
                                 manager.insert(helper.TBL_IDEATION, contentValues)
@@ -170,7 +171,7 @@ class MainActivity : AppCompatActivity() {
 //                    .subscribe {
 //                        user = it
 //                    }
-//
+//                Handler gebruiken ipv Thread.sleep
 //                Thread.sleep(1000)
 //
 //                if (user != null) {
