@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         initialiseViews()
         addEventHandlers()
         initialiseDatabase()
@@ -46,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         email = findViewById(R.id.EmailText)
         password = findViewById(R.id.PasswoordText)
         noAccount = findViewById(R.id.tvCreateAccount)
+//        initialiseDatabase()
     }
 
     @SuppressLint("CheckResult")
@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         manager.openDatabase()
 //                        manager.delete(helper.TBL_PROJECT)
+
                         manager.insert(helper.TBL_PROJECT, contentValues)
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -94,6 +95,7 @@ class MainActivity : AppCompatActivity() {
                                 put(helper.PHASE_STARTDATE, it.StartDate)
                                 put(helper.PHASE_ENDDATE, it.EndDate)
                                 put(helper.PROJECT_ID, it.Project.ProjectId)
+
                             }
                             manager.openDatabase()
                             manager.insert(helper.TBL_PHASE, contentValues)

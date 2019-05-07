@@ -11,4 +11,4 @@ data class Ideations(
     val InputIdeation: Boolean,
     val Reactions: Collection<Reactions>,
     val Ideas: Collection<Ideas>
-) : Serializable
+)

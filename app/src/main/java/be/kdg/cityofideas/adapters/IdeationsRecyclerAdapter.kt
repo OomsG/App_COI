@@ -14,12 +14,17 @@ import kotlinx.android.synthetic.main.ideations_list.view.*
 
 /* Deze klasse zorgt ervoor dat alle ideations in een lijst getoond worden*/
 
-class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: IdeationsSelectionListener,val projectId: Int) :
+class IdeationsRecyclerAdapter(
+    val context: Context?,
+    val selectionListener: IdeationsSelectionListener,
+    val projectId: Int
+) :
     RecyclerView.Adapter<IdeationsRecyclerAdapter.IdeationsViewHolder>() {
 
-    interface IdeationsSelectionListener{
-        fun onIdeationSelected(ideationid:Int,projectId:Int)
+    interface IdeationsSelectionListener {
+        fun onIdeationSelected(ideationid: Int, projectId: Int)
     }
+
     class IdeationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.TitleIdeation
         val Description = view.SmallDescriptionIdeation
@@ -46,44 +51,55 @@ class IdeationsRecyclerAdapter(val context: Context?, val selectionListener: Ide
 
     override fun onBindViewHolder(p0: IdeationsViewHolder, p1: Int) {
         p0.title.text = ideations[p1].CentralQuestion
-        p0.IdedeationsIdeaCount.text = ideations[p1].Ideas.size.toString()
-        p0.IdeationsVoteCount.text = getIdeationVoteCount(ideations).toString()
-        p0.IdeationsShareCount.text = getIdeationShareCount(ideations).toString()
+        p0.IdedeationsIdeaCount.text = getIdeaCount(ideations[p1])
+        p0.IdeationsVoteCount.text = getIdeationVoteCount(ideations)
+        p0.IdeationsShareCount.text = getIdeationShareCount(ideations)
         p0.IdeationsShare
         p0.IdeationsVote
-        p0.button.setOnClickListener{
-            selectionListener.onIdeationSelected(ideations[p1].IdeationId,projectId)
+        p0.button.setOnClickListener {
+            selectionListener.onIdeationSelected(ideations[p1].IdeationId, projectId)
         }
         //p0.Description.text = ideations[p1].
     }
-}
 
-fun getIdeationVoteCount(ideations: Array<Ideations>): Int? {
-    var votes: Int = 0
-    ideations.forEach {
-        it.Ideas.forEach {
-            it.Votes.forEach {
-                //Log.d("vote",it.VoteType.toString())
-                if (it.VoteType == VoteTypes.VOTE) {
 
-                    votes++
+    fun getIdeationVoteCount(ideations: Array<Ideations>): String? {
+        var votes: Int = 0
+        ideations.forEach {
+            it.Ideas.forEach {
+                it.Votes.forEach {
+                    if (it.VoteType == VoteTypes.VOTE) {
+                        votes++
+                    }
                 }
             }
         }
+        return votes.toString() + " Stemmen"
     }
-    return votes
-}
 
-fun getIdeationShareCount(ideations: Array<Ideations>): Int? {
-    var votes: Int = 0
-    ideations.forEach {
-        it.Ideas.forEach {
-            it.Votes.forEach {
-                if (it.VoteType == VoteTypes.SHARE_FB || it.VoteType == VoteTypes.SHARE_TW) {
-                    votes++
+    fun getIdeationShareCount(ideations: Array<Ideations>): String? {
+        var votes: Int = 0
+        ideations.forEach {
+            it.Ideas.forEach {
+                it.Votes.forEach {
+                    if (it.VoteType == VoteTypes.SHARE_FB || it.VoteType == VoteTypes.SHARE_TW) {
+                        votes++
+                    }
                 }
             }
         }
+        return votes.toString() + " keer gedeeld"
     }
-    return votes
+
+    fun getIdeaCount(ideation: Ideations): String? {
+        val size = ideation.Ideas.size
+        if (size == 0) {
+            return "Geen ideeën"
+        } else if (size == 0) {
+            return "1 idee"
+        } else if (size > 1) {
+            return size.toString() + " ideeën"
+        }
+        return null
+    }
 }
