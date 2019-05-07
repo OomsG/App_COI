@@ -1,24 +1,18 @@
 package be.kdg.cityofideas.activities
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.database.DatabaseManager
-import be.kdg.cityofideas.fragments.PLATFORM_ID
-import be.kdg.cityofideas.model.Users.Users
-import be.kdg.cityofideas.model.projects.Projects
+import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     private lateinit var login: Button
@@ -26,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var password: EditText
     private lateinit var noAccount: TextView
     private var registering = false
-    private var user: Users? = null
+    private var user: User? = null
 
     private val manager = DatabaseManager(this)
     private val helper = manager.dbHelper
@@ -51,89 +45,99 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("CheckResult")
     private fun initialiseDatabase() {
         RestClient(this)
+            .getUsers("users")
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                it.forEach {
+                    manager.insert(
+                        helper.getUserTable(),
+                        helper.getUserContentValues(
+                            it.Id,
+                            it.Email,
+                            it.Name,
+                            it.PasswordHash
+                        )
+                    )
+                }
+            }
+
+        RestClient(this)
             .getProjects("projects/" + 1)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
                 it.forEach {
                     val projectId = it.ProjectId
+
                     //region Project
-                    try {
-                        val contentValues = ContentValues().apply {
-                            put(helper.PROJECT_ID, it.ProjectId)
-                            put(helper.PROJECT_NAME, it.ProjectName)
-                            put(helper.PROJECT_STARTDATE, it.StartDate)
-                            put(helper.PROJECT_ENDDATE, it.EndDate)
-                            put(helper.PROJECT_OBJECTIVE, it.Objective)
-                            put(helper.PROJECT_DESCRIPTION, it.Description)
-                            put(helper.PROJECT_STATUS, it.Status)
-                        }
-                        manager.openDatabase()
-//                        manager.delete(helper.TBL_PROJECT)
-                        manager.insert(helper.TBL_PROJECT, contentValues)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    } //endregion
-                    //region Location
-                    try {
-                        val contentValues = ContentValues().apply {
-
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    manager.insert(
+                        helper.getProjectTable(),
+                        helper.getProjectContentValues(
+                            it.ProjectId,
+                            it.ProjectName,
+                            it.StartDate,
+                            it.EndDate,
+                            it.Objective,
+                            it.Description,
+                            it.Status
+                        )
+                    )
                     //endregion
-                    it.Phases.forEach {
-                        //region Phases
-                        try {
-                            val contentValues = ContentValues().apply {
-                                put(helper.PHASE_ID, it.PhaseId)
-                                put(helper.PHASE_NAME, it.PhaseName)
-                                put(helper.PHASE_NR, it.PhaseNr)
-                                put(helper.PHASE_DESCRIPTION, it.Description)
-                                put(helper.PHASE_STARTDATE, it.StartDate)
-                                put(helper.PHASE_ENDDATE, it.EndDate)
-                                put(helper.PROJECT_ID, it.Project.ProjectId)
-                            }
-                            manager.openDatabase()
-                            manager.insert(helper.TBL_PHASE, contentValues)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                        //endregion
-                        it.Ideations.forEach {
-                            //region Ideation
-                            try {
-                                val contentValues = ContentValues().apply {
-                                    put(helper.IDEATION_ID, it.IdeationId)
-                                    put(helper.IDEATION_CENTRALQUESTION, it.CentralQuestion)
-                                    put(helper.IDEATION_INPUTIDEATION, it.InputIdeation)
-                                    put(helper.PHASE_ID, it.Phase.PhaseId)
-                                }
-                                manager.openDatabase()
-                                manager.insert(helper.TBL_IDEATION, contentValues)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
 
+                    //region Location
+
+                    //endregion
+
+                    it.Phases?.forEach {
+                        val phaseId = it.PhaseId
+
+                        //region Phase
+                        manager.insert(
+                            helper.getPhaseTable(),
+                            helper.getPhaseContentValues(
+                                it.PhaseId,
+                                it.PhaseName,
+                                it.PhaseNr,
+                                it.Description,
+                                it.StartDate,
+                                it.EndDate,
+                                projectId
+                            )
+                        )
+                        //endregion
+
+                        it.Ideations?.forEach {
+                            val ideationId = it.IdeationId
+
+                            //region Ideation
+                            manager.insert(
+                                helper.getIdeationTable(),
+                                helper.getIdeationContentValues(
+                                    it.IdeationId,
+                                    it.CentralQuestion,
+                                    it.InputIdeation,
+                                    phaseId
+                                )
+                            )
                             //endregion
 
-                            it.Ideas.forEach {
-                                try {
-                                    Log.d("help", it.IdeaId.toString())
-                                    val contentValues = ContentValues().apply {
-                                        put(helper.IDEA_ID, it.IdeaId)
-                                        put(helper.IDEA_REPORTED, it.Reported)
-                                        put(helper.IDEA_TITLE, it.Title)
-                                    }
-                                    manager.insert(helper.TBL_IDEA, contentValues)
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
+                            it.Ideas?.forEach {
+                                //region Idea
+                                manager.insert(
+                                    helper.getIdeaTable(),
+                                    helper.getIdeaContentValues(
+                                        it.IdeaId,
+                                        it.Reported,
+                                        it.Title,
+                                        ideationId
+                                    )
+                                )
+                                //endregion
                             }
                         }
 
-                        it.Surveys.forEach {
+                        it.Surveys?.forEach {
 
                         }
                     }
@@ -164,7 +168,7 @@ class MainActivity : AppCompatActivity() {
                  e.printStackTrace()
              }*/
 
-//            if (!registering) {
+            if (!registering) {
 //                RestClient(this).getUser("users/" + email.text.toString() + "/" + password.text.toString())
 //                    .observeOn(AndroidSchedulers.mainThread())
 //                    .subscribeOn(Schedulers.newThread())
@@ -173,28 +177,73 @@ class MainActivity : AppCompatActivity() {
 //                    }
 //                Handler gebruiken ipv Thread.sleep
 //                Thread.sleep(1000)
+
+//                val result = manager.getDetails(
+//                    "SELECT * FROM " + helper.TBL_USER +
+//                            " WHERE " + helper.USER_EMAIL + " = " + email.text.toString()
+//                )
 //
+//                val args = arrayOf(email.text.toString())
+//
+////                manager.openDatabase()
+//
+//                val query = manager.getDetails(
+//                    helper.TBL_USER,
+//                    null,
+//                    "${helper.USER_EMAIL} = ?",
+//                    args,
+//                    null,
+//                    null,
+//                    null
+//                )
+//
+//                with(query) {
+//                    query.moveToFirst()
+//                    user = User(
+//                        getString(getColumnIndexOrThrow(helper.USER_ID)),
+//                        getString(getColumnIndexOrThrow(helper.USER_NAME)),
+//                        getString(getColumnIndexOrThrow(helper.USER_EMAIL)),
+//                        null,
+//                        getString(getColumnIndexOrThrow(helper.USER_PASSWORD)),
+//                        null
+//                    )
+//                }
+//
+//                Log.d("user", user.toString())
+
+//                manager.closeDatabase()
+
+//                result?.moveToFirst()
+//                user = User(
+//                    result!!.getString(0),
+//                    result.getString(1),
+//                    result.getString(2),
+//                    null,
+//                    result.getString(3),
+//                    null
+//                )
+
 //                if (user != null) {
-            val intent = Intent(it.context, ProjectsActivity::class.java)
-            startActivity(intent)
+                    val intent = Intent(it.context, ProjectsActivity::class.java)
+                    startActivity(intent)
 //                } else {
 //                    Toast.makeText(this, "Foutieve login, probeer opnieuw...", Toast.LENGTH_SHORT).show()
 //                }
-//            } else {
-//
-//            }
+            } else {
+
+            }
         }
 
-//        noAccount.setOnClickListener {
-//            if (!registering) {
-//                login.text = "Register"
-//                noAccount.text = "Al een account? Log in!"
-//                registering = true
-//            } else {
-//                login.text = getString(R.string.log_in)
-//                noAccount.text = getString(R.string.no_account)
-//                registering = false
-//            }
-//        }
+        noAccount.setOnClickListener {
+            if (!registering) {
+                login.text = "Register"
+                noAccount.text = "Al een account? Log in!"
+                registering = true
+            } else {
+                login.text = getString(R.string.log_in)
+                noAccount.text = getString(R.string.no_account)
+                registering = false
+            }
+        }
     }
 }

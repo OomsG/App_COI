@@ -5,29 +5,20 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.widget.TextView
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.ideaSelectionListener
 import be.kdg.cityofideas.fragments.IdeaFragment
-import be.kdg.cityofideas.model.ideations.Ideas
-import be.kdg.cityofideas.model.ideations.Ideations
-import be.kdg.cityofideas.rest.RestClient
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import be.kdg.cityofideas.model.ideations.Idea
 
 const val IDEA : String = "idea"
 
 class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
-
-
     private lateinit var toolbar: Toolbar
     private lateinit var Title: TextView
 
-    override fun onIdeaSelected(idea: Ideas) {
+    override fun onIdeaSelected(idea: Idea) {
         val intent = Intent(this, ReactionActivity::class.java)
         intent.putExtra(IDEA,idea)
         startActivity(intent)

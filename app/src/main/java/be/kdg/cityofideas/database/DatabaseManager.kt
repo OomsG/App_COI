@@ -25,9 +25,20 @@ class DatabaseManager(context: Context) {
         return db.rawQuery(query, null)
     }
 
+    fun getDetails(table: String,
+                   projection: Array<String>? = null,
+                   selection: String,
+                   selectionArgs: Array<String>,
+                   group: String? = null,
+                   filter: String? = null,
+                   order: String? = null) : Cursor {
+        return db.query(table, projection, selection, selectionArgs, group, filter, order)
+    }
+
     fun insert(tblName: String, values: ContentValues): Boolean {
         var inserted: Long = -1;
         try {
+            openDatabase()
             inserted = db.insert(tblName, null, values)
             closeDatabase()
         } catch (e: SQLiteException) {

@@ -8,12 +8,9 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
-import android.util.Log
-import android.widget.HorizontalScrollView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeationViewPagerAdapter
 import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter.IdeationsSelectionListener
-import be.kdg.cityofideas.model.ideations.Ideations
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

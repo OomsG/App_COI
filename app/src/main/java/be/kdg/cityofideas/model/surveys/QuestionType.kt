@@ -1,4 +1,4 @@
-package be.kdg.cityofideas.model.Surveys
+package be.kdg.cityofideas.model.surveys
 
 enum class QuestionType() {
     OPEN,

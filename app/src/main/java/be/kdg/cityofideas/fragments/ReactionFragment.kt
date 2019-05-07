@@ -11,9 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
 import be.kdg.cityofideas.adapters.ReactionRecyclerAdapter
-import be.kdg.cityofideas.model.ideations.Ideas
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
