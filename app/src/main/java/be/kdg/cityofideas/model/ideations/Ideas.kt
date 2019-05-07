@@ -19,4 +19,4 @@ data class Ideas(
     var IoTSetup: Collection<IotSetup>,
     var Votes: Collection<Votes>,
     var Reactions : Collection<Reactions>
-)
+):Serializable

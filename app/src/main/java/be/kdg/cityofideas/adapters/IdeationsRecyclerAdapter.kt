@@ -51,9 +51,9 @@ class IdeationsRecyclerAdapter(
 
     override fun onBindViewHolder(p0: IdeationsViewHolder, p1: Int) {
         p0.title.text = ideations[p1].CentralQuestion
-        p0.IdedeationsIdeaCount.text = ideations[p1].Ideas.size.toString() + " Ideeën"
-        p0.IdeationsVoteCount.text = getIdeationVoteCount(ideations).toString() + " Stemmen"
-        p0.IdeationsShareCount.text = getIdeationShareCount(ideations).toString() + " keer gedeeld"
+        p0.IdedeationsIdeaCount.text = getIdeaCount(ideations[p1])
+        p0.IdeationsVoteCount.text = getIdeationVoteCount(ideations)
+        p0.IdeationsShareCount.text = getIdeationShareCount(ideations)
         p0.IdeationsShare
         p0.IdeationsVote
         p0.button.setOnClickListener {
@@ -63,7 +63,7 @@ class IdeationsRecyclerAdapter(
     }
 
 
-    fun getIdeationVoteCount(ideations: Array<Ideations>): Int? {
+    fun getIdeationVoteCount(ideations: Array<Ideations>): String? {
         var votes: Int = 0
         ideations.forEach {
             it.Ideas.forEach {
@@ -74,10 +74,10 @@ class IdeationsRecyclerAdapter(
                 }
             }
         }
-        return votes
+        return votes.toString() + " Stemmen"
     }
 
-    fun getIdeationShareCount(ideations: Array<Ideations>): Int? {
+    fun getIdeationShareCount(ideations: Array<Ideations>): String? {
         var votes: Int = 0
         ideations.forEach {
             it.Ideas.forEach {
@@ -88,6 +88,18 @@ class IdeationsRecyclerAdapter(
                 }
             }
         }
-        return votes
+        return votes.toString() + " keer gedeeld"
+    }
+
+    fun getIdeaCount(ideation: Ideations): String? {
+        val size = ideation.Ideas.size
+        if (size == 0) {
+            return "Geen ideeën"
+        } else if (size == 0) {
+            return "1 idee"
+        } else if (size > 1) {
+            return size.toString() + " ideeën"
+        }
+        return null
     }
 }

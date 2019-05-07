@@ -28,7 +28,7 @@ class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
 
     override fun onIdeaSelected(idea: Ideas) {
         val intent = Intent(this, ReactionActivity::class.java)
-        //intent.putExtra(IDEA,idea)
+        intent.putExtra(IDEA,idea)
         startActivity(intent)
     }
 
