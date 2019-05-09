@@ -1,5 +1,6 @@
 package be.kdg.cityofideas.model.projects
 
+import android.graphics.Bitmap
 import be.kdg.cityofideas.model.datatypes.Location
 import java.io.Serializable
 
@@ -15,6 +16,7 @@ data class Project(
     val Status: String?,
     val Platform: Platform?,
     val BackgroundImage : String?,
+    var BackgroundIMG : Bitmap?,
     val Phases: Collection<Phase>?,
     val AdminProjects: Collection<AdminProject>?
 ) : Serializable
