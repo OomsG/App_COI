@@ -38,9 +38,7 @@ class DatabaseManager(context: Context) {
     fun insert(tblName: String, values: ContentValues): Boolean {
         var inserted: Long = -1;
         try {
-            openDatabase()
             inserted = db.insert(tblName, null, values)
-            closeDatabase()
         } catch (e: SQLiteException) {
             e.printStackTrace()
         }
@@ -56,9 +54,8 @@ class DatabaseManager(context: Context) {
         return true
     }
 
-//    fun update(tblName: String, values: ContentValues, selection: String, selectionargs: Array<String>): Int {
-//
-//        val count = db!!.update(tblName, values, selection, selectionargs)
-//        return count
-//    }
+    fun update(tblName: String, values: ContentValues, selection: String, selectionargs: Array<String>): Int {
+        val count = db.update(tblName, values, selection, selectionargs)
+        return count
+    }
 }

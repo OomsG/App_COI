@@ -5,11 +5,14 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import android.util.Log
+import be.kdg.cityofideas.model.ideations.Reaction
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
+        // increment when you changed db schema
+        private const val DB_VERSION: Int = 2
         private const val DB_NAME: String = "CityOfIdeasApp"
-        private const val DB_VERSION: Int = 1
 
         //region Datatypes
         //region Address
@@ -154,7 +157,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         //endregion
         //endregion
 
-        //region user
+        //region User
         object UserEntry : BaseColumns {
             const val TBL_USER = "user_table"
             const val USER_ID = "Id"
@@ -333,13 +336,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.execSQL(TABLE_CREATE_SURVEY)
         db.execSQL(TABLE_CREATE_QUESTION)
         db.execSQL(TABLE_CREATE_ANSWER)
+        Log.d("onCreate", "true")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        dropDb(db)
-    }
-
-    fun dropDb(db: SQLiteDatabase?) {
+        Log.d("onUpgrade", "true")
         db!!.execSQL(TABLE_DROP_ADDRESS)
         db.execSQL(TABLE_DROP_POSITION)
         db.execSQL(TABLE_DROP_LOCATION)
@@ -354,20 +355,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.execSQL(TABLE_DROP_SURVEY)
         db.execSQL(TABLE_DROP_QUESTION)
         db.execSQL(TABLE_DROP_ANSWER)
-        db.execSQL(TABLE_CREATE_ADDRESS)
-        db.execSQL(TABLE_CREATE_POSITION)
-        db.execSQL(TABLE_CREATE_LOCATION)
-        db.execSQL(TABLE_CREATE_PLATFORM)
-        db.execSQL(TABLE_CREATE_PROJECTS)
-        db.execSQL(TABLE_CREATE_PHASE)
-        db.execSQL(TABLE_CREATE_USER)
-        db.execSQL(TABLE_CREATE_IDEA)
-        db.execSQL(TABLE_CREATE_IDEATION)
-        db.execSQL(TABLE_CREATE_REACTION)
-        db.execSQL(TABLE_CREATE_VOTE)
-        db.execSQL(TABLE_CREATE_SURVEY)
-        db.execSQL(TABLE_CREATE_QUESTION)
-        db.execSQL(TABLE_CREATE_ANSWER)
+        onCreate(db)
     }
 
     //region User
@@ -380,8 +368,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         }
     }
 
-    fun getUserTable(): String {
-        return UserEntry.TBL_USER
+    fun getUserEntry(): UserEntry {
+        return UserEntry
     }
     //endregion
 
@@ -406,8 +394,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         }
     }
 
-    fun getProjectTable(): String {
-        return ProjectEntry.TBL_PROJECT
+    fun getProjectEntry(): ProjectEntry {
+        return ProjectEntry
     }
     //endregion
 
@@ -432,8 +420,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         }
     }
 
-    fun getPhaseTable(): String {
-        return PhaseEntry.TBL_PHASE
+    fun getPhaseEntry(): PhaseEntry {
+        return PhaseEntry
     }
     //endregion
 
@@ -447,8 +435,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         }
     }
 
-    fun getIdeationTable(): String {
-        return IdeationEntry.TBL_IDEATION
+    fun getIdeationEntry(): IdeationEntry {
+        return IdeationEntry
     }
     //endregion
 
@@ -462,8 +450,137 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         }
     }
 
-    fun getIdeaTable(): String {
-        return IdeaEntry.TBL_IDEA
+    fun getIdeaEntry(): IdeaEntry {
+        return IdeaEntry
+    }
+    //endregion
+
+    //region Vote
+    fun getVoteContentValues(id: Int, confirmed: Boolean?, type: Int?, ideaId: Int?): ContentValues {
+        return ContentValues().apply {
+            put(VoteEntry.VOTE_ID, id)
+            put(VoteEntry.VOTE_CONFIRMED, confirmed)
+            put(VoteEntry.VOTE_VOTE_TYPE, type)
+            put(IdeaEntry.IDEA_ID, ideaId)
+        }
+    }
+
+    fun getVoteEntry(): VoteEntry {
+        return VoteEntry
+    }
+    //endregion
+
+    //region Reaction
+    fun getReactionContentValues(id: Int, text: String?, reported: Boolean?): ContentValues {
+        return ContentValues().apply {
+            put(ReactionEntry.REACTION_ID, id)
+            put(ReactionEntry.REACTION_TEXT, text)
+            put(ReactionEntry.REACTION_REPORTED, reported)
+        }
+    }
+
+    fun getReactionEntry(): ReactionEntry {
+        return ReactionEntry
+    }
+    //endregion
+
+    //region Like
+    fun getLikeContentValues(id: Int, reactionId: Int?): ContentValues {
+        return ContentValues().apply {
+
+        }
+    }
+
+    fun getLikeEntry() {
+
+    }
+    //endregion
+
+    //region Location
+    fun getLocationContentValues(id: Int, name: String?): ContentValues {
+        return ContentValues().apply {
+            put(LocationEntry.LOCATION_ID, id)
+            put(LocationEntry.LOCATION_NAME, name)
+        }
+    }
+
+    fun getLocationEntry(): LocationEntry {
+        return LocationEntry
+    }
+    //endregion
+
+    //region Address
+    fun getAddressContentValues(id: Int, street: String?, houseNr: String?, city: String?, zip: String?): ContentValues {
+        return ContentValues().apply {
+            put(AddressEntry.ADDRESS_ID, id)
+            put(AddressEntry.ADDRESS_STREET, street)
+            put(AddressEntry.ADDRESS_HOUSENR, houseNr)
+            put(AddressEntry.ADDRESS_CITY, city)
+            put(AddressEntry.ADDRESS_ZIPCODE, zip)
+        }
+    }
+
+    fun getAddressEntry(): AddressEntry {
+        return AddressEntry
+    }
+    //endregion
+
+    //region Position
+    fun getPositionContentValues(id: Int, long: String?, lat: String?): ContentValues {
+        return ContentValues().apply {
+            put(PositionEntry.POSITION_ID, id)
+            put(PositionEntry.POSITION_LONG, long)
+            put(PositionEntry.POSITION_LAT, lat)
+        }
+    }
+
+    fun getPositionEntry(): PositionEntry {
+        return PositionEntry
+    }
+    //endregion
+
+    //region Survey
+    fun getSurveyContentValues(id: Int, title: String?, phaseId: Int?): ContentValues {
+        return ContentValues().apply {
+            put(SurveyEntry.SURVEY_ID, id)
+            put(SurveyEntry.SURVEY_TITLE, title)
+            put(PhaseEntry.PHASE_ID, phaseId)
+        }
+    }
+
+    fun getSurveyEntry(): SurveyEntry {
+        return SurveyEntry
+    }
+    //endregion
+
+    //region Question
+    fun getQuestionContentValues(id: Int, nr: Int?, text: String?, type: Int?, surveyId: Int?): ContentValues {
+        return ContentValues().apply {
+            put(QuestionEntry.QUESTION_ID, id)
+            put(QuestionEntry.QUESTION_NR, nr)
+            put(QuestionEntry.QUESTION_TEXT, text)
+            put(QuestionEntry.QUESTION_TYPE, type)
+            put(SurveyEntry.SURVEY_ID, surveyId)
+        }
+    }
+
+    fun getQuestionEntry(): QuestionEntry {
+        return QuestionEntry
+    }
+    //endregion
+
+    //region Answer
+    fun getAnswerContentValues(id: Int, text: String?, totalTimesChosen: Int?, questionId: Int?): ContentValues {
+        return ContentValues().apply {
+            put(AnswerEntry.ANSWER_ID, id)
+            put(AnswerEntry.ANSWER_TEXT, text)
+            put(AnswerEntry.ANSWER_TOTAL_TIMES_CHOSEN, totalTimesChosen)
+            put(QuestionEntry.QUESTION_ID, questionId)
+        }
+    }
+
+    fun getAnswerEntry(): AnswerEntry {
+        return AnswerEntry
     }
     //endregion
 }

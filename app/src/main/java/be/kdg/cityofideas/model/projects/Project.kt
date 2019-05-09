@@ -1,6 +1,6 @@
 package be.kdg.cityofideas.model.projects
 
-import android.location.Location
+import be.kdg.cityofideas.model.datatypes.Location
 import java.io.Serializable
 
 data class Project(

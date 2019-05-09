@@ -3,7 +3,7 @@ package be.kdg.cityofideas.model.datatypes
 import java.io.Serializable
 
 data class Position(
-    val PositionsId: Int,
-    val Longitude: Double?,
-    val Latitude: Double?
+    val PositionId: Int,
+    val Longitude: String?,
+    val Latitude: String?
 ) : Serializable
