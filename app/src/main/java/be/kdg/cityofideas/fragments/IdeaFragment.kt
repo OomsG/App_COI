@@ -7,19 +7,15 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.*
-import be.kdg.cityofideas.adapters.ReactionRecyclerAdapter
-import be.kdg.cityofideas.model.ideations.Ideations
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_reaction.*
 import java.lang.Exception
 
 
@@ -60,7 +56,7 @@ class IdeaFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
-                (rvIdeas.adapter as IdeaRecyclerAdapter).ideas = it.toTypedArray()
+                (rvIdeas.adapter as IdeaRecyclerAdapter).ideas = it!!.toTypedArray()
             })
     }
 

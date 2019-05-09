@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.fragments.ReactionFragment
-import be.kdg.cityofideas.model.ideations.Ideas
+import be.kdg.cityofideas.model.ideations.Idea
 
 class ReactionActivity : AppCompatActivity() {
 
@@ -17,7 +17,7 @@ class ReactionActivity : AppCompatActivity() {
     private var shareCount: TextView = findViewById(R.id.IdeaShareCount)
     private var voteButton: Button = findViewById(R.id.IdeaVoteButton)
     private var shareButton: Button = findViewById(R.id.IdeaShareButton)
-    private var idea: Ideas = intent.getSerializableExtra(IDEA) as Ideas
+    private var idea: Idea = intent.getSerializableExtra(IDEA) as Idea
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("reactionActivity", idea.Title)
