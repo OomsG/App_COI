@@ -10,11 +10,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.model.ideations.Ideas
-import be.kdg.cityofideas.model.ideations.Reactions
-import be.kdg.cityofideas.model.ideations.VoteTypes
-import be.kdg.cityofideas.rest.RestClient
-import com.google.api.services.youtube.YouTube
+import be.kdg.cityofideas.listener.VoteListener
+import be.kdg.cityofideas.model.ideations.Idea
+import be.kdg.cityofideas.model.ideations.Reaction
+import be.kdg.cityofideas.model.ideations.VoteType
 import kotlinx.android.synthetic.main.idea_detail.view.*
 import kotlinx.android.synthetic.main.ideas_list.view.*
 import java.lang.NullPointerException
@@ -22,31 +21,23 @@ import java.lang.NullPointerException
 
 /* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
 
-
 class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
 
-    private lateinit var BestReaction: Reactions
     private var shareCount = 0;
     private var voteCount = 0;
     private lateinit var view: View
+    private lateinit var bestReaction: Reaction
 
     interface ideaSelectionListener {
-        fun onIdeaSelected(idea: Ideas)
+        fun onIdeaSelected(idea: Idea)
     }
 
-    var ideas: Array<Ideas> = arrayOf()
+    var ideas: Array<Idea> = arrayOf()
         set(ideas) {
             field = ideas
             notifyDataSetChanged()
         }
-
-    fun getIdeas(ideations: Array<Ideations>, ideationId: Int): Array<Ideas> {
-        val ideation = ideations.filter {
-            it.IdeationId.equals(ideationId)
-        }
-        return ideation[0].Ideas.toTypedArray()
-    }
 
 
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -72,7 +63,7 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
 
 
     override fun onBindViewHolder(p0: IdeaViewHolder, p1: Int) {
-        //p0.name.text = ideas[p1].User.Name
+        //p0.name.text = ideas[p1].user.Name
         getIdeaDetails(ideas[p1], context, p0.layout)
         p0.reactionCount.text = getReactionCount(ideas[p1])
         p0.shareCount.text = getIdeaShareCount(ideas[p1])
@@ -96,14 +87,13 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
 
         }
         p0.reactionText.text = getBestReaction(ideas[p1])
-        p0.reactionCount.setOnClickListener {
-            if (ideas[p1].Reactions.size != 0) {
+        p0.itemView.setOnClickListener {
+            if (ideas[p1].Reactions?.size != 0) {
                 selectionListener.onIdeaSelected(ideas[p1])
             } else
                 Toast.makeText(it.context, "Er zijn geen reacties om te tonen", Toast.LENGTH_LONG).show()
         }
     }
-
     fun getIdeaDetails(idea: Ideas, context: Context?, layout: LinearLayout) {
         idea.IdeaObjects.forEach {
             try {
@@ -145,23 +135,23 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
                 e.printStackTrace()
             }
 
-    }
+        }
 
-    fun getIdeaShareCount(ideas: Ideas): String? {
+    fun getIdeaShareCount(idea: Idea): String? {
         var counter = 0
-        ideas.Votes.forEach {
-            if (it.VoteType == VoteTypes.SHARE_FB || it.VoteType == VoteTypes.SHARE_TW) {
-                shareCounter++
+        idea.Votes?.forEach {
+            if (it.VoteType == VoteType.SHARE_FB || it.VoteType == VoteType.SHARE_TW) {
+                counter++
             }
         }
         shareCounter = shareCounter + shareCount
         return shareCounter.toString() + " keer gedeeld"
     }
 
-    fun getIdeaVoteCount(ideas: Ideas): String? {
+    fun getIdeaVoteCount(idea: Idea): String? {
         var counter = 0
-        ideas.Votes.forEach {
-            if (it.VoteType == VoteTypes.VOTE) {
+        idea.Votes?.forEach {
+            if (it.VoteType == VoteType.VOTE) {
                 counter++
             }
         }
@@ -169,9 +159,9 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         return counter.toString() + " Stemmen"
     }
 
-    fun getBestReaction(ideas: Ideas): String? {
+    fun getBestReaction(idea: Idea): String? {
         /* var a: Int = 0
-         ideas.Reactions.forEach {
+         idea.Reaction.forEach {
              try {
                  val b = it.Like.size
                  if (b.compareTo(a) < 0) {
@@ -183,22 +173,24 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
              }
 
          }*/
-        val reactions: Array<Reactions> = ideas.Reactions.toTypedArray()
+        val reactions: Array<Reaction> = idea.Reactions!!.toTypedArray()
         if (reactions.isEmpty()) {
             return "Er zijn geen reacties om weer te geven"
         } else {
-            return ideas.Reactions.first().ReactionText
+            return idea.Reactions?.first()?.ReactionText
         }
     }
 
-    fun getReactionCount(idea: Ideas): String? {
-        val size = idea.Reactions.size
+    fun getReactionCount(idea: Idea): String? {
+        val size = idea.Reactions?.size
         if (size == 0) {
             return "Geen reacties"
         } else if (size == 1) {
             return "1 reactie"
-        } else if (size > 1) {
-            return size.toString() + " reacties"
+        } else if (size != null) {
+            if (size > 1) {
+                return size.toString() + " reacties"
+            }
         }
         return null
     }

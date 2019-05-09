@@ -25,11 +25,20 @@ class DatabaseManager(context: Context) {
         return db.rawQuery(query, null)
     }
 
+    fun getDetails(table: String,
+                   projection: Array<String>? = null,
+                   selection: String,
+                   selectionArgs: Array<String>,
+                   group: String? = null,
+                   filter: String? = null,
+                   order: String? = null) : Cursor {
+        return db.query(table, projection, selection, selectionArgs, group, filter, order)
+    }
+
     fun insert(tblName: String, values: ContentValues): Boolean {
         var inserted: Long = -1;
         try {
             inserted = db.insert(tblName, null, values)
-            closeDatabase()
         } catch (e: SQLiteException) {
             e.printStackTrace()
         }
@@ -45,9 +54,8 @@ class DatabaseManager(context: Context) {
         return true
     }
 
-//    fun update(tblName: String, values: ContentValues, selection: String, selectionargs: Array<String>): Int {
-//
-//        val count = db!!.update(tblName, values, selection, selectionargs)
-//        return count
-//    }
+    fun update(tblName: String, values: ContentValues, selection: String, selectionargs: Array<String>): Int {
+        val count = db.update(tblName, values, selection, selectionargs)
+        return count
+    }
 }
