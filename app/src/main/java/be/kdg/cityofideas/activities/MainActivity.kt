@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.model.users.User
@@ -175,7 +176,7 @@ class MainActivity : AppCompatActivity() {
 //                    .subscribe {
 //                        user = it
 //                    }
-//                Handler gebruiken ipv Thread.sleep
+//
 //                Thread.sleep(1000)
 
 //                val result = manager.getDetails(
