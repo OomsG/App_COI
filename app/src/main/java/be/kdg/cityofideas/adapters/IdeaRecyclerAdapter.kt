@@ -25,6 +25,7 @@ import java.lang.NullPointerException
 
 class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
+
     private lateinit var BestReaction: Reactions
     private var shareCount = 0;
     private var voteCount = 0;
@@ -39,6 +40,13 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
             field = ideas
             notifyDataSetChanged()
         }
+
+    fun getIdeas(ideations: Array<Ideations>, ideationId: Int): Array<Ideas> {
+        val ideation = ideations.filter {
+            it.IdeationId.equals(ideationId)
+        }
+        return ideation[0].Ideas.toTypedArray()
+    }
 
 
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -69,6 +77,12 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         p0.reactionCount.text = getReactionCount(ideas[p1])
         p0.shareCount.text = getIdeaShareCount(ideas[p1])
         p0.voteCount.text = getIdeaVoteCount(ideas[p1])
+        p0.itemView.setOnClickListener {
+            if (ideas[p1].Reactions.size != 0) {
+                selectionListener.onIdeaSelected(ideas[p1])
+            } else
+                Toast.makeText(it.context, "Er zijn geen reacties om te tonen", Toast.LENGTH_LONG).show()
+        }
         p0.voteButton.setOnClickListener {
             RestClient(context).createVote(ideas[p1].IdeaId, "VOTE", "A")
             voteCount++
@@ -130,11 +144,11 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
             } catch (e: NullPointerException) {
                 e.printStackTrace()
             }
-        }
+
     }
 
     fun getIdeaShareCount(ideas: Ideas): String? {
-        var shareCounter = 0
+        var counter = 0
         ideas.Votes.forEach {
             if (it.VoteType == VoteTypes.SHARE_FB || it.VoteType == VoteTypes.SHARE_TW) {
                 shareCounter++

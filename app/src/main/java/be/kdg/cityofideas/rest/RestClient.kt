@@ -115,6 +115,7 @@ public class RestClient(private val context: Context?) {
     //endregion
 
     //endregion
+
     //region Ideations
     //region GET
     fun getIdeations(url: String): Observable<Array<Ideations>> {
