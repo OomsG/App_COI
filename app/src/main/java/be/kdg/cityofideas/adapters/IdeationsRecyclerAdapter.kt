@@ -25,7 +25,6 @@ class IdeationsRecyclerAdapter(
 
     class IdeationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.TitleIdeation
-        val Description = view.SmallDescriptionIdeation
         val button = view.giveIdea
         val IdedeationsIdeaCount = view.IdeationIdeaCount
         val IdeationsVoteCount = view.IdeationVoteCount
@@ -53,7 +52,8 @@ class IdeationsRecyclerAdapter(
         p0.IdeationsVoteCount.text = getIdeationVoteCount(ideations)
         p0.IdeationsShareCount.text = getIdeationShareCount(ideations)
         p0.IdeationsShare
-        p0.IdeationsVote
+        p0.IdeationsVote.setOnClickListener {
+        }
         p0.button.setOnClickListener {
             selectionListener.onIdeationSelected(ideations[p1].IdeationId, projectId)
         }
@@ -93,7 +93,7 @@ class IdeationsRecyclerAdapter(
         val size = ideation.Ideas?.size
         if (size == 0) {
             return "Geen ideeën"
-        } else if (size == 0) {
+        } else if (size == 1) {
             return "1 idee"
         } else if (size != null) {
             if (size > 1) {

@@ -4,24 +4,105 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         style="@style/CardView.Light"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp">
 
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+
         <include
-                layout="@layout/idea_detail" android:id="@+id/ReactionInclude"/>
+                layout="@layout/toolbar_layout"
+                android:id="@+id/ReactionToolbar"
+                />
+
+        <TextView
+                android:text="Glenn Ooms"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ReactionIdeaUserName"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ReactionToolbar" />
+        <TextView
+                android:text="Titel"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/ReactionIdeaTitle"
+                app:layout_constraintLeft_toRightOf="@+id/ReactionIdeaUserName"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ReactionIdeaUserName"/>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:id="@+id/LinearLayoutReactionIdea"
+                app:layout_constraintTop_toBottomOf="@+id/ReactionIdeaUserName"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:orientation="vertical">
+        </LinearLayout>
+        <TextView
+                android:text="5 Reacties"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ReactionIdeaReactionCount"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/LinearLayoutReactionIdea"
+                app:layout_constraintRight_toLeftOf="@+id/ReactionIdeaVoteCount"/>
+        <TextView
+                android:text="20 Stemmen"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ReactionIdeaVoteCount"
+                app:layout_constraintLeft_toRightOf="@+id/ReactionIdeaReactionCount"
+                app:layout_constraintRight_toLeftOf="@+id/ReactionIdeaShareCount"
+                app:layout_constraintTop_toTopOf="@id/ReactionIdeaReactionCount"/>
+        <TextView
+                android:text="10 keer gedeeld"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ReactionIdeaShareCount"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/ReactionIdeaVoteCount"
+                app:layout_constraintTop_toTopOf="@+id/ReactionIdeaReactionCount"/>
+
+        <Button
+                android:text="Stem"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/ReactionIdeaVoteButton"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/ReactionIdeaShareButton"
+                app:layout_constraintTop_toBottomOf="@+id/ReactionIdeaReactionCount"/>
+        <Button
+                android:text="Share"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/ReactionIdeaShareButton"
+                app:layout_constraintLeft_toRightOf="@+id/ReactionIdeaVoteButton"
+                app:layout_constraintTop_toTopOf="@id/ReactionIdeaVoteButton"
+                app:layout_constraintRight_toRightOf="parent"/>
 
         <fragment
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:name="be.kdg.cityofideas.fragments.ReactionFragment"
                 android:id="@+id/ReactionFragment"
-                app:layout_constraintTop_toBottomOf="@+id/ReactionInclude"
+                app:layout_constraintTop_toBottomOf="@+id/ReactionIdeaVoteButton"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
         />
+
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
