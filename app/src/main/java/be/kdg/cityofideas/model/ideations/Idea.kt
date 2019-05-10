@@ -3,7 +3,6 @@ package be.kdg.cityofideas.model.ideations
 import be.kdg.cityofideas.model.IoT.IotSetup
 import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.model.datatypes.Position
-import be.kdg.cityofideas.model.ideations.ideaObjects.IdeaObject
 import java.io.Serializable
 
 data class Idea(
