@@ -12,7 +12,6 @@ import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Reaction
 import be.kdg.cityofideas.model.ideations.VoteType
 import be.kdg.cityofideas.rest.RestClient
-import kotlinx.android.synthetic.main.idea_detail.view.*
 import kotlinx.android.synthetic.main.ideas_list.view.*
 import java.lang.NullPointerException
 
@@ -138,10 +137,8 @@ fun getReactionCount(idea: Idea): String? {
 //endregion
 
 class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSelectionListener) :
-class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
 
-    private lateinit var voteListener: VoteListener
     private lateinit var bestReaction: Reaction
     private lateinit var view: View
     private var VoteCounter = 0
