@@ -35,12 +35,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initialiseViews()
         addEventHandlers()
-       // initialiseDatabase()
-    }
-
-    override fun onDestroy() {
-        manager.closeDatabase()
-        super.onDestroy()
+        initialiseDatabase()
     }
 
     override fun onDestroy() {
@@ -72,8 +67,13 @@ class MainActivity : AppCompatActivity() {
                         helper.getUserContentValues(
                             it.Id,
                             it.Email,
+                            it.UserName,
+                            it.PasswordHash,
+                            it.Surname,
                             it.Name,
-                            it.PasswordHash
+                            it.Sex,
+                            it.Age,
+                            it.Zipcode
                         )
                     )
                     //endregion
@@ -331,7 +331,7 @@ class MainActivity : AppCompatActivity() {
                                             ideaId,
                                             it.Discriminator,
                                             it.ImageName,
-//                                            it.ImagePath,
+                                            it.ImagePath,
                                             it.Image?.let {
                                                 getBytes(it)
                                             },

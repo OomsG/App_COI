@@ -24,7 +24,7 @@ data class IdeaObject(
     val OrderNr: Int,
     val Discriminator: String?,
     val ImageName: String?,
-//    val ImagePath: String?,
+    val ImagePath: String?,
     val ImageData: ByteArray?,
     var Image: Bitmap?,
     val Url: String?,

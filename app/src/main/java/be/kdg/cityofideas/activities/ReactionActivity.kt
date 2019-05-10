@@ -14,7 +14,6 @@ import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.*
 import be.kdg.cityofideas.fragments.ReactionFragment
 import be.kdg.cityofideas.model.ideations.Idea
-import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.VoteType
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -38,8 +37,8 @@ class ReactionActivity : AppCompatActivity() {
     private var shareCounter = 0
 
     var idea: Idea = Idea(
-        0, null, null, null, "hello", null, null
-        , null, null, null
+        0, null, null, null, null, null, null
+        , null, null, null, null
     )
         set(idea) {
             field = idea

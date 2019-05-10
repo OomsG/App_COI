@@ -12,7 +12,7 @@ import be.kdg.cityofideas.model.ideations.Reaction
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
         // increment when you changed db schema
-        private const val DB_VERSION: Int = 3
+        private const val DB_VERSION: Int = 10
         private const val DB_NAME: String = "CityOfIdeasApp"
 
         //region Datatypes
@@ -159,10 +159,15 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         //region User
         object UserEntry : BaseColumns {
             const val TBL_USER = "user_table"
-            const val USER_ID = "Id"
+            const val USER_ID = "UserId"
             const val USER_NAME = "Name"
             const val USER_EMAIL = "Email"
             const val USER_PASSWORD = "PasswordHash"
+            const val USER_SURNAME = "Surname"
+            const val USER_LAST_NAME = "LastName"
+            const val USER_SEX = "Sex"
+            const val USER_AGE = "Age"
+            const val USER_ZIP = "ZipCode"
         }
 
         private const val TABLE_DROP_USER = "DROP TABLE IF EXISTS ${UserEntry.TBL_USER}"
@@ -173,6 +178,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                     "${UserEntry.USER_NAME} TEXT," +
                     "${UserEntry.USER_EMAIL} TEXT UNIQUE," +
                     "${UserEntry.USER_PASSWORD} TEXT," +
+                    "${UserEntry.USER_SURNAME} TEXT," +
+                    "${UserEntry.USER_LAST_NAME} TEXT," +
+                    "${UserEntry.USER_SEX} TEXT," +
+                    "${UserEntry.USER_AGE} INTEGER," +
+                    "${UserEntry.USER_ZIP} TEXT," +
                     "${PlatformEntry.PLATFORM_ID} INTEGER)"
 
         //endregion
@@ -197,6 +207,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                     "${IdeaEntry.IDEA_TITLE} TEXT," +
                     "${UserEntry.USER_ID} TEXT," +
                     "${IdeationEntry.IDEATION_ID} INTEGER)"
+        //endregion
 
         //region IdeaObject
         object IdeaObjectEntry : BaseColumns {
@@ -205,7 +216,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
             const val IDEA_OBJECT_ORDERNR = "OrderNr"
             const val IDEA_OBJECT_DISCRIMINATOR = "Discriminator"
             const val IDEA_OBJECT_IMAGE_NAME = "ImageName"
-            //            const val IDEA_OBJECT_IMAGE_PATH = "ImagePath"
+            const val IDEA_OBJECT_IMAGE_PATH = "ImagePath"
             const val IDEA_OBJECT_IMAGE_DATA = "ImageData"
             const val IDEA_OBJECT_TEXT = "Text"
             const val IDEA_OBJECT_URL = "Url"
@@ -214,18 +225,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         private const val TABLE_DROP_IDEA_OBJECT = "DROP TABLE IF EXISTS ${IdeaObjectEntry.TBL_IDEA_OBJECT}"
 
         private const val TABLE_CREATE_IDEA_OBJECT =
-            "CREATE TABLE ${IdeaObjectEntry.TBL_IDEA_OBJECT} {" +
+            "CREATE TABLE ${IdeaObjectEntry.TBL_IDEA_OBJECT} (" +
                     "${IdeaObjectEntry.IDEA_OBJECT_ID} INTEGER PRIMARY KEY," +
                     "${IdeaObjectEntry.IDEA_OBJECT_ORDERNR} INTEGER," +
                     "${IdeaEntry.IDEA_ID} INTEGER," +
                     "${IdeaObjectEntry.IDEA_OBJECT_DISCRIMINATOR} TEXT," +
                     "${IdeaObjectEntry.IDEA_OBJECT_IMAGE_NAME} TEXT," +
-//                    "${IdeaObjectEntry.IDEA_OBJECT_IMAGE_PATH} TEXT," +
+                    "${IdeaObjectEntry.IDEA_OBJECT_IMAGE_PATH} TEXT," +
                     "${IdeaObjectEntry.IDEA_OBJECT_IMAGE_DATA} BLOB," +
                     "${IdeaObjectEntry.IDEA_OBJECT_TEXT} TEXT," +
-                    "${IdeaObjectEntry.IDEA_OBJECT_URL} TEXT,"
-        //endregion
-
+                    "${IdeaObjectEntry.IDEA_OBJECT_URL} TEXT)"
         //endregion
 
         //region Tag
@@ -428,12 +437,26 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
     }
 
     //region User
-    fun getUserContentValues(id: String, email: String, name: String?, password: String): ContentValues {
+    fun getUserContentValues(
+        id: String,
+        email: String,
+        name: String?,
+        password: String,
+        surname: String?,
+        lastName: String?,
+        sex: String?,
+        age: Int?,
+        zip: String?): ContentValues {
         return ContentValues().apply {
             put(UserEntry.USER_ID, id)
             put(UserEntry.USER_EMAIL, email)
             put(UserEntry.USER_NAME, name)
             put(UserEntry.USER_PASSWORD, password)
+            put(UserEntry.USER_SURNAME, surname)
+            put(UserEntry.USER_LAST_NAME, lastName)
+            put(UserEntry.USER_SEX, sex)
+            put(UserEntry.USER_AGE, age)
+            put(UserEntry.USER_ZIP, zip)
         }
     }
 
@@ -531,7 +554,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         ideaId: Int?,
         discriminator: String?,
         imageName: String?,
-//        imagePath: String?,
+        imagePath: String?,
         imageData: ByteArray?,
         text: String?,
         url: String?
@@ -542,7 +565,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
             put(IdeaEntry.IDEA_ID, ideaId)
             put(IdeaObjectEntry.IDEA_OBJECT_DISCRIMINATOR, discriminator)
             put(IdeaObjectEntry.IDEA_OBJECT_IMAGE_NAME, imageName)
-//            put(IdeaObjectEntry.IDEA_OBJECT_IMAGE_PATH, imagePath)
+            put(IdeaObjectEntry.IDEA_OBJECT_IMAGE_PATH, imagePath)
             put(IdeaObjectEntry.IDEA_OBJECT_IMAGE_DATA, imageData)
             put(IdeaObjectEntry.IDEA_OBJECT_TEXT, text)
             put(IdeaObjectEntry.IDEA_OBJECT_URL, url)
