@@ -70,7 +70,7 @@ class IdeationFragment : Fragment() {
             .getIdeations("ideations/" + projectId)
             .map {
                 it.filter {
-                    it.Phase.PhaseNr.equals(phaseNr)
+                    it.Phase!!.PhaseNr!!.equals(phaseNr)
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())

@@ -6,14 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.model.ideations.Ideas
-import be.kdg.cityofideas.model.ideations.Reactions
+import be.kdg.cityofideas.model.ideations.Reaction
 import kotlinx.android.synthetic.main.reactions_list.view.*
 
 class ReactionRecyclerAdapter(val context: Context?) :
     RecyclerView.Adapter<ReactionRecyclerAdapter.ReactionsViewHolder>() {
 
-    var reactions: Array<Reactions> = arrayOf()
+    var reactions: Array<Reaction> = arrayOf()
         set(reactions) {
             field = reactions
             notifyDataSetChanged()

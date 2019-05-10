@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.model.projects.Projects
+import be.kdg.cityofideas.model.projects.Project
 import kotlinx.android.synthetic.main.projects_list.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,7 +28,7 @@ class ProjectsRecyclerAdapter(
         val picture = view.smallFotoProject
     }
 
-    var projects: Array<Projects> = arrayOf()
+    var projects: Array<Project> = arrayOf()
         set(projects) {
             field = projects
             notifyDataSetChanged()
@@ -44,14 +44,14 @@ class ProjectsRecyclerAdapter(
     override fun onBindViewHolder(p0: ProjectsViewHolder, p1: Int) {
         p0.title.text = getProjectsOfStatus(projects, status)[p1].ProjectName
         p0.Description.text = getProjectsOfStatus(projects, status)[p1].Description
-        p0.picture.setImageResource(R.drawable.antwerpen)
+        p0.picture.setImageBitmap( getProjectsOfStatus(projects, status)[p1].BackgroundIMG)
         p0.itemView.setOnClickListener {
             selectionListener.onProjectsSelected(getProjectsOfStatus(projects, status)[p1].ProjectId)
         }
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun getProjectsOfStatus(projects: Array<Projects>, status: String): Array<Projects> {
+    private fun getProjectsOfStatus(projects: Array<Project>, status: String): Array<Project> {
         val today = Date()
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         when (status) {

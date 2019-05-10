@@ -3,16 +3,13 @@ package be.kdg.cityofideas.adapters
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.util.Log
 import be.kdg.cityofideas.fragments.IdeationFragment
-import be.kdg.cityofideas.model.ideations.Ideations
-import be.kdg.cityofideas.model.projects.Phases
-import be.kdg.cityofideas.model.projects.Projects
+import be.kdg.cityofideas.model.projects.Phase
 
 class IdeationViewPagerAdapter(fm: FragmentManager?, val projectId:Int) : FragmentPagerAdapter(fm) {
 
 
-    var phases: Array<Phases> = arrayOf()
+    var phases: Array<Phase> = arrayOf()
         set(phases) {
             field = phases
             notifyDataSetChanged()
