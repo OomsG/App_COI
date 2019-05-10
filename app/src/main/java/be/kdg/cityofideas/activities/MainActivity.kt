@@ -12,6 +12,7 @@ import android.widget.Toast
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.model.datatypes.Location
+import be.kdg.cityofideas.model.ideations.getBytes
 import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -76,6 +77,24 @@ class MainActivity : AppCompatActivity() {
             }
         //endregion
 
+        //region RestClient getTags
+        RestClient(this)
+            .getTags("tags")
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                it.forEach {
+                    manager.insert(
+                        helper.getTagEntry().TBL_TAG,
+                        helper.getTagContentValues(
+                            it.TagId,
+                            it.TagName
+                        )
+                    )
+                }
+            }
+        //endregion
+
         //region RestClient getProjects
         RestClient(this)
             .getProjects("projects/" + 1)
@@ -89,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                     manager.insert(
                         helper.getProjectEntry().TBL_PROJECT,
                         helper.getProjectContentValues(
-                            it.ProjectId,
+                            projectId,
                             it.ProjectName,
                             it.StartDate,
                             it.EndDate,
@@ -108,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                         manager.insert(
                             helper.getLocationEntry().TBL_LOCATION,
                             helper.getLocationContentValues(
-                                it.LocationId,
+                                locationId,
                                 it.LocationName
                             )
                         )
@@ -182,7 +201,7 @@ class MainActivity : AppCompatActivity() {
                         manager.insert(
                             helper.getPhaseEntry().TBL_PHASE,
                             helper.getPhaseContentValues(
-                                it.PhaseId,
+                                phaseId,
                                 it.PhaseName,
                                 it.PhaseNr,
                                 it.Description,
@@ -200,7 +219,7 @@ class MainActivity : AppCompatActivity() {
                             manager.insert(
                                 helper.getIdeationEntry().TBL_IDEATION,
                                 helper.getIdeationContentValues(
-                                    it.IdeationId,
+                                    ideationId,
                                     it.CentralQuestion,
                                     it.InputIdeation,
                                     phaseId
@@ -216,7 +235,7 @@ class MainActivity : AppCompatActivity() {
                                 manager.insert(
                                     helper.getReactionEntry().TBL_REACTION,
                                     helper.getReactionContentValues(
-                                        it.ReactionId,
+                                        reactionId,
                                         it.ReactionText,
                                         it.Reported
                                     )
@@ -231,15 +250,44 @@ class MainActivity : AppCompatActivity() {
                                     "${helper.getReactionEntry().REACTION_ID} = ?",
                                     arrayOf(reactionId.toString())
                                 )
-                                //endregion
+
+                                // update Reaction with userId
+                                it.User?.let {
+                                    manager.update(
+                                        helper.getReactionEntry().TBL_REACTION,
+                                        ContentValues().apply {
+                                            put(helper.getUserEntry().USER_ID, it.Id)
+                                        },
+                                        "${helper.getReactionEntry().REACTION_ID} = ?",
+                                        arrayOf(reactionId.toString())
+                                    )
+                                }
 
                                 it.Likes?.forEach {
+                                    val likeId = it.LikeId
+
                                     //region insert Like
-//                                    manager.insert(
-//
-//                                    )
+                                    manager.insert(
+                                        helper.getLikeEntry().TBL_LIKE,
+                                        helper.getLikeContentValues(
+                                            it.LikeId,
+                                            reactionId
+                                        )
+                                    )
+
+                                    it.User?.let {
+                                        manager.update(
+                                            helper.getLikeEntry().TBL_LIKE,
+                                            ContentValues().apply {
+                                                put(helper.getUserEntry().USER_ID, it.Id)
+                                            },
+                                            "${helper.getLikeEntry().LIKE_ID} = ?",
+                                            arrayOf(likeId.toString())
+                                        )
+                                    }
                                     //endregion
                                 }
+                                //endregion
                             }
 
                             it.Ideas?.forEach {
@@ -249,40 +297,111 @@ class MainActivity : AppCompatActivity() {
                                 manager.insert(
                                     helper.getIdeaEntry().TBL_IDEA,
                                     helper.getIdeaContentValues(
-                                        it.IdeaId,
+                                        ideaId,
                                         it.Reported,
                                         it.Title,
                                         ideationId
                                     )
                                 )
+
+                                // update Idea with userId
+                                it.User?.let {
+                                    manager.update(
+                                        helper.getIdeaEntry().TBL_IDEA,
+                                        ContentValues().apply {
+                                            put(helper.getUserEntry().USER_ID, it.Id)
+                                        },
+                                        "${helper.getIdeaEntry().IDEA_ID} = ?",
+                                        arrayOf(ideaId.toString())
+                                    )
+                                }
                                 //endregion
 
                                 it.IdeaObjects?.forEach {
                                     //region insert IdeaObject
-                                    //endregion
-                                }
-
-                                it.Votes?.forEach {
-                                    //region insert Vote
                                     manager.insert(
-                                        helper.getVoteEntry().TBL_VOTE,
-                                        helper.getVoteContentValues(
-                                            it.VoteId,
-                                            it.Confirmed,
-                                            it.VoteType?.ordinal,
-                                            ideaId
+                                        helper.getIdeaObjectEntry().TBL_IDEA_OBJECT,
+                                        helper.getIdeaObjectContentValues(
+                                            it.IdeaObjectId,
+                                            it.OrderNr,
+                                            ideaId,
+                                            it.Discriminator,
+                                            it.ImageName,
+//                                            it.ImagePath,
+                                            it.Image?.let {
+                                                getBytes(it)
+                                            },
+                                            it.Text,
+                                            it.Url
                                         )
                                     )
                                     //endregion
                                 }
 
+                                it.IdeaTags?.forEach {
+                                    val ideaTagId = it.IdeaTagId
+
+                                    //region insert IdeaTag
+                                    // insert IdeaTag
+                                    manager.insert(
+                                        helper.getTagEntry().TBL_IDEA_TAG,
+                                        helper.getIdeaTagContentValues(
+                                            ideaTagId,
+                                            ideaId
+                                        )
+                                    )
+
+                                    // update IdeaTag with tagId
+                                    it.Tag?.let {
+                                        manager.update(
+                                            helper.getTagEntry().TBL_IDEA_TAG,
+                                            ContentValues().apply {
+                                                put(helper.getTagEntry().TAG_ID, it.TagId)
+                                            },
+                                            "${helper.getTagEntry().IDEA_TAG_ID} = ?",
+                                            arrayOf(ideaTagId.toString())
+                                        )
+                                    }
+                                    //endregion
+                                }
+
+                                it.Votes?.forEach {
+                                    val voteId = it.VoteId
+
+                                    //region insert Vote
+                                    manager.insert(
+                                        helper.getVoteEntry().TBL_VOTE,
+                                        helper.getVoteContentValues(
+                                            voteId,
+                                            it.Confirmed,
+                                            it.VoteType?.ordinal,
+                                            ideaId
+                                        )
+                                    )
+
+                                    // update Vote with userId
+                                    it.User?.let {
+                                        manager.update(
+                                            helper.getVoteEntry().TBL_VOTE,
+                                            ContentValues().apply {
+                                                put(helper.getUserEntry().USER_ID, it.Id)
+                                            },
+                                            "${helper.getVoteEntry().VOTE_ID} = ?",
+                                            arrayOf(voteId.toString())
+                                        )
+                                    }
+                                    //endregion
+                                }
+
                                 it.Reactions?.forEach {
+                                    val reactionId = it.ReactionId
+
                                     //region insert Reaction (Ideas)
                                     // insert Reaction
                                     manager.insert(
                                         helper.getReactionEntry().TBL_REACTION,
                                         helper.getReactionContentValues(
-                                            it.ReactionId,
+                                            reactionId,
                                             it.ReactionText,
                                             it.Reported
                                         )
@@ -297,15 +416,46 @@ class MainActivity : AppCompatActivity() {
                                         "${helper.getReactionEntry().REACTION_ID} = ?",
                                         arrayOf(it.ReactionId.toString())
                                     )
-                                    //endregion
+
+                                    // update Reaction with userId
+                                    it.User?.let {
+                                        manager.update(
+                                            helper.getReactionEntry().TBL_REACTION,
+                                            ContentValues().apply {
+                                                put(helper.getUserEntry().USER_ID, it.Id)
+                                            },
+                                            "${helper.getReactionEntry().REACTION_ID} = ?",
+                                            arrayOf(reactionId.toString())
+                                        )
+                                    }
 
                                     it.Likes?.forEach {
+                                        val likeId = it.LikeId
+
                                         //region insert Like
-//                                    manager.insert(
-//
-//                                    )
+                                        // insert Like
+                                        manager.insert(
+                                            helper.getLikeEntry().TBL_LIKE,
+                                            helper.getLikeContentValues(
+                                                it.LikeId,
+                                                reactionId
+                                            )
+                                        )
+
+                                        // update Like with userId
+                                        it.User?.let {
+                                            manager.update(
+                                                helper.getLikeEntry().TBL_LIKE,
+                                                ContentValues().apply {
+                                                    put(helper.getUserEntry().USER_ID, it.Id)
+                                                },
+                                                "${helper.getLikeEntry().LIKE_ID} = ?",
+                                                arrayOf(likeId.toString())
+                                            )
+                                        }
                                         //endregion
                                     }
+                                    //endregion
                                 }
                             }
                         }
@@ -317,7 +467,7 @@ class MainActivity : AppCompatActivity() {
                             manager.insert(
                                 helper.getSurveyEntry().TBL_SURVEY,
                                 helper.getSurveyContentValues(
-                                    it.SurveyId,
+                                    surveyId,
                                     it.Title,
                                     phaseId
                                 )
@@ -331,7 +481,7 @@ class MainActivity : AppCompatActivity() {
                                 manager.insert(
                                     helper.getQuestionEntry().TBL_QUESTION,
                                     helper.getQuestionContentValues(
-                                        it.QuestionId,
+                                        questionId,
                                         it.QuestionNr,
                                         it.QuestionText,
                                         it.QuestionType?.ordinal,
