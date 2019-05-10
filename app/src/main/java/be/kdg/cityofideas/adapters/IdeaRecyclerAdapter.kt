@@ -138,8 +138,10 @@ fun getReactionCount(idea: Idea): String? {
 //endregion
 
 class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSelectionListener) :
+class IdeaRecyclerAdapter(context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
 
+    private lateinit var voteListener: VoteListener
     private lateinit var bestReaction: Reaction
     private lateinit var view: View
     private var VoteCounter = 0
@@ -156,7 +158,7 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         }
 
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-//        val title = view.IdeaTitle
+        val title = view.IdeaTitle
         val name = view.IdeaUserName
         val voteCount = view.IdeaVoteCount
         val reactionCount = view.IdeaReactionCount
@@ -165,7 +167,7 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         val shareButton = view.IdeaShareButton
         val reactionName = view.IdeaReactionNameFirst
         val reactionText = view.IdeaReactionTextFirst
-//        val layout = view.LinearLayoutIdea
+        val layout = view.LinearLayoutIdea
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): IdeaViewHolder {
@@ -178,14 +180,14 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
 
     override fun onBindViewHolder(p0: IdeaViewHolder, p1: Int) {
         //p0.name.text = ideas[p1].user.Name
-//        p0.title.text = ideas[p1].Title
-//        getIdeaDetails(ideas[p1], context, p0.layout)
+        p0.title.text = ideas[p1].Title
+        getIdeaDetails(ideas[p1], context, p0.layout)
         p0.reactionCount.text = getReactionCount(ideas[p1])
         p0.shareCount.text = getIdeaShareCount(ideas[p1], ShareCounter)
         p0.voteCount.text = getIdeaVoteCount(ideas[p1], VoteCounter)
         p0.voteButton.setOnClickListener {
             Thread({
-//                RestClient(context).createVote(ideas[p1].IdeaId, "VOTE", "A")
+                RestClient(context).createVote(ideas[p1].IdeaId, "VOTE", "A")
 
             }).start()
             VoteCounter++
@@ -193,7 +195,7 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         }
         p0.shareButton.setOnClickListener {
             Thread({
-//                RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB.toString(), "A")
+                RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB.toString(), "A")
             }).start()
            ShareCounter++
             notifyDataSetChanged()

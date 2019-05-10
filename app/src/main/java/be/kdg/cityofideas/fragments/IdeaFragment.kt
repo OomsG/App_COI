@@ -40,7 +40,7 @@ class IdeaFragment : Fragment() {
     }
 
     @SuppressLint("CheckResult")
-    fun initialiseViews(view: View, projectId:Int, ideationId:Int) {
+    fun initialiseViews(view: View, projectId: Int, ideationId: Int) {
         val rvIdeas = view.findViewById<RecyclerView>(R.id.rvIdeas)
         rvIdeas.layoutManager = LinearLayoutManager(context)
         rvIdeas.adapter = IdeaRecyclerAdapter(context, listener)
@@ -63,7 +63,7 @@ class IdeaFragment : Fragment() {
     fun setId(ideation: Int, project: Int) {
         ideationId = ideation
         projectId = project
-        initialiseViews(view1,project,ideation)
+        initialiseViews(view1, project, ideation)
     }
 
 }
