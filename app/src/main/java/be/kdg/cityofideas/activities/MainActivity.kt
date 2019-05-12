@@ -5,36 +5,33 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.login.LoginActivity
 import be.kdg.cityofideas.database.DatabaseManager
-import be.kdg.cityofideas.model.datatypes.Location
+import be.kdg.cityofideas.model.ideations.getBytes
 import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var login: Button
-    private lateinit var email: EditText
-    private lateinit var password: EditText
-    private lateinit var noAccount: TextView
-    private var registering = false
-    private var user: User? = null
-
     private val manager = DatabaseManager(this)
     private val helper = manager.dbHelper
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initialiseViews()
-        addEventHandlers()
-       // initialiseDatabase()
+
+        initialiseDatabase()
+        startProjectsActivity()
     }
 
     override fun onDestroy() {
@@ -42,11 +39,26 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun initialiseViews() {
-        login = findViewById(R.id.Login)
-        email = findViewById(R.id.EmailText)
-        password = findViewById(R.id.PasswoordText)
-        noAccount = findViewById(R.id.tvCreateAccount)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.login -> {
+                signIn()
+                true
+            }
+            R.id.search -> {
+                search()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -66,11 +78,34 @@ class MainActivity : AppCompatActivity() {
                         helper.getUserContentValues(
                             it.Id,
                             it.Email,
+                            it.UserName,
+                            it.PasswordHash,
+                            it.Surname,
                             it.Name,
-                            it.PasswordHash
+                            it.Sex,
+                            it.Age,
+                            it.Zipcode
                         )
                     )
                     //endregion
+                }
+            }
+        //endregion
+
+        //region RestClient getTags
+        RestClient(this)
+            .getTags("tags")
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                it.forEach {
+                    manager.insert(
+                        helper.getTagEntry().TBL_TAG,
+                        helper.getTagContentValues(
+                            it.TagId,
+                            it.TagName
+                        )
+                    )
                 }
             }
         //endregion
@@ -88,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                     manager.insert(
                         helper.getProjectEntry().TBL_PROJECT,
                         helper.getProjectContentValues(
-                            it.ProjectId,
+                            projectId,
                             it.ProjectName,
                             it.StartDate,
                             it.EndDate,
@@ -107,7 +142,7 @@ class MainActivity : AppCompatActivity() {
                         manager.insert(
                             helper.getLocationEntry().TBL_LOCATION,
                             helper.getLocationContentValues(
-                                it.LocationId,
+                                locationId,
                                 it.LocationName
                             )
                         )
@@ -181,7 +216,7 @@ class MainActivity : AppCompatActivity() {
                         manager.insert(
                             helper.getPhaseEntry().TBL_PHASE,
                             helper.getPhaseContentValues(
-                                it.PhaseId,
+                                phaseId,
                                 it.PhaseName,
                                 it.PhaseNr,
                                 it.Description,
@@ -199,7 +234,7 @@ class MainActivity : AppCompatActivity() {
                             manager.insert(
                                 helper.getIdeationEntry().TBL_IDEATION,
                                 helper.getIdeationContentValues(
-                                    it.IdeationId,
+                                    ideationId,
                                     it.CentralQuestion,
                                     it.InputIdeation,
                                     phaseId
@@ -215,7 +250,7 @@ class MainActivity : AppCompatActivity() {
                                 manager.insert(
                                     helper.getReactionEntry().TBL_REACTION,
                                     helper.getReactionContentValues(
-                                        it.ReactionId,
+                                        reactionId,
                                         it.ReactionText,
                                         it.Reported
                                     )
@@ -230,15 +265,44 @@ class MainActivity : AppCompatActivity() {
                                     "${helper.getReactionEntry().REACTION_ID} = ?",
                                     arrayOf(reactionId.toString())
                                 )
-                                //endregion
+
+                                // update Reaction with userId
+                                it.User?.let {
+                                    manager.update(
+                                        helper.getReactionEntry().TBL_REACTION,
+                                        ContentValues().apply {
+                                            put(helper.getUserEntry().USER_ID, it.Id)
+                                        },
+                                        "${helper.getReactionEntry().REACTION_ID} = ?",
+                                        arrayOf(reactionId.toString())
+                                    )
+                                }
 
                                 it.Likes?.forEach {
+                                    val likeId = it.LikeId
+
                                     //region insert Like
-//                                    manager.insert(
-//
-//                                    )
+                                    manager.insert(
+                                        helper.getLikeEntry().TBL_LIKE,
+                                        helper.getLikeContentValues(
+                                            it.LikeId,
+                                            reactionId
+                                        )
+                                    )
+
+                                    it.User?.let {
+                                        manager.update(
+                                            helper.getLikeEntry().TBL_LIKE,
+                                            ContentValues().apply {
+                                                put(helper.getUserEntry().USER_ID, it.Id)
+                                            },
+                                            "${helper.getLikeEntry().LIKE_ID} = ?",
+                                            arrayOf(likeId.toString())
+                                        )
+                                    }
                                     //endregion
                                 }
+                                //endregion
                             }
 
                             it.Ideas?.forEach {
@@ -248,40 +312,111 @@ class MainActivity : AppCompatActivity() {
                                 manager.insert(
                                     helper.getIdeaEntry().TBL_IDEA,
                                     helper.getIdeaContentValues(
-                                        it.IdeaId,
+                                        ideaId,
                                         it.Reported,
                                         it.Title,
                                         ideationId
                                     )
                                 )
+
+                                // update Idea with userId
+                                it.User?.let {
+                                    manager.update(
+                                        helper.getIdeaEntry().TBL_IDEA,
+                                        ContentValues().apply {
+                                            put(helper.getUserEntry().USER_ID, it.Id)
+                                        },
+                                        "${helper.getIdeaEntry().IDEA_ID} = ?",
+                                        arrayOf(ideaId.toString())
+                                    )
+                                }
                                 //endregion
 
                                 it.IdeaObjects?.forEach {
                                     //region insert IdeaObject
-                                    //endregion
-                                }
-
-                                it.Votes?.forEach {
-                                    //region insert Vote
                                     manager.insert(
-                                        helper.getVoteEntry().TBL_VOTE,
-                                        helper.getVoteContentValues(
-                                            it.VoteId,
-                                            it.Confirmed,
-                                            it.VoteType?.ordinal,
-                                            ideaId
+                                        helper.getIdeaObjectEntry().TBL_IDEA_OBJECT,
+                                        helper.getIdeaObjectContentValues(
+                                            it.IdeaObjectId,
+                                            it.OrderNr,
+                                            ideaId,
+                                            it.Discriminator,
+                                            it.ImageName,
+                                            it.ImagePath,
+                                            it.Image?.let {
+                                                getBytes(it)
+                                            },
+                                            it.Text,
+                                            it.Url
                                         )
                                     )
                                     //endregion
                                 }
 
+                                it.IdeaTags?.forEach {
+                                    val ideaTagId = it.IdeaTagId
+
+                                    //region insert IdeaTag
+                                    // insert IdeaTag
+                                    manager.insert(
+                                        helper.getTagEntry().TBL_IDEA_TAG,
+                                        helper.getIdeaTagContentValues(
+                                            ideaTagId,
+                                            ideaId
+                                        )
+                                    )
+
+                                    // update IdeaTag with tagId
+                                    it.Tag?.let {
+                                        manager.update(
+                                            helper.getTagEntry().TBL_IDEA_TAG,
+                                            ContentValues().apply {
+                                                put(helper.getTagEntry().TAG_ID, it.TagId)
+                                            },
+                                            "${helper.getTagEntry().IDEA_TAG_ID} = ?",
+                                            arrayOf(ideaTagId.toString())
+                                        )
+                                    }
+                                    //endregion
+                                }
+
+                                it.Votes?.forEach {
+                                    val voteId = it.VoteId
+
+                                    //region insert Vote
+                                    manager.insert(
+                                        helper.getVoteEntry().TBL_VOTE,
+                                        helper.getVoteContentValues(
+                                            voteId,
+                                            it.Confirmed,
+                                            it.VoteType?.ordinal,
+                                            ideaId
+                                        )
+                                    )
+
+                                    // update Vote with userId
+                                    it.User?.let {
+                                        manager.update(
+                                            helper.getVoteEntry().TBL_VOTE,
+                                            ContentValues().apply {
+                                                put(helper.getUserEntry().USER_ID, it.Id)
+                                            },
+                                            "${helper.getVoteEntry().VOTE_ID} = ?",
+                                            arrayOf(voteId.toString())
+                                        )
+                                    }
+                                    //endregion
+                                }
+
                                 it.Reactions?.forEach {
+                                    val reactionId = it.ReactionId
+
                                     //region insert Reaction (Ideas)
                                     // insert Reaction
                                     manager.insert(
                                         helper.getReactionEntry().TBL_REACTION,
                                         helper.getReactionContentValues(
-                                            it.ReactionId,
+                                            reactionId,
                                             it.ReactionText,
                                             it.Reported
                                         )
@@ -296,15 +431,46 @@ class MainActivity : AppCompatActivity() {
                                         "${helper.getReactionEntry().REACTION_ID} = ?",
                                         arrayOf(it.ReactionId.toString())
                                     )
-                                    //endregion
+
+                                    // update Reaction with userId
+                                    it.User?.let {
+                                        manager.update(
+                                            helper.getReactionEntry().TBL_REACTION,
+                                            ContentValues().apply {
+                                                put(helper.getUserEntry().USER_ID, it.Id)
+                                            },
+                                            "${helper.getReactionEntry().REACTION_ID} = ?",
+                                            arrayOf(reactionId.toString())
+                                        )
+                                    }
 
                                     it.Likes?.forEach {
+                                        val likeId = it.LikeId
+
                                         //region insert Like
-//                                    manager.insert(
-//
-//                                    )
+                                        // insert Like
+                                        manager.insert(
+                                            helper.getLikeEntry().TBL_LIKE,
+                                            helper.getLikeContentValues(
+                                                it.LikeId,
+                                                reactionId
+                                            )
+                                        )
+
+                                        // update Like with userId
+                                        it.User?.let {
+                                            manager.update(
+                                                helper.getLikeEntry().TBL_LIKE,
+                                                ContentValues().apply {
+                                                    put(helper.getUserEntry().USER_ID, it.Id)
+                                                },
+                                                "${helper.getLikeEntry().LIKE_ID} = ?",
+                                                arrayOf(likeId.toString())
+                                            )
+                                        }
                                         //endregion
                                     }
+                                    //endregion
                                 }
                             }
                         }
@@ -316,7 +482,7 @@ class MainActivity : AppCompatActivity() {
                             manager.insert(
                                 helper.getSurveyEntry().TBL_SURVEY,
                                 helper.getSurveyContentValues(
-                                    it.SurveyId,
+                                    surveyId,
                                     it.Title,
                                     phaseId
                                 )
@@ -330,7 +496,7 @@ class MainActivity : AppCompatActivity() {
                                 manager.insert(
                                     helper.getQuestionEntry().TBL_QUESTION,
                                     helper.getQuestionContentValues(
-                                        it.QuestionId,
+                                        questionId,
                                         it.QuestionNr,
                                         it.QuestionText,
                                         it.QuestionType?.ordinal,
@@ -360,105 +526,17 @@ class MainActivity : AppCompatActivity() {
         //endregion
     }
 
+    private fun startProjectsActivity() {
+        val intent = Intent(this, ProjectsActivity::class.java)
+        startActivity(intent)
+    }
 
-    @SuppressLint("SetTextI18n", "CheckResult")
-    private fun addEventHandlers() {
-        login.setOnClickListener {
-            //TESTING database
-            /*try {
-                 val contentValues = ContentValues().apply {
-                     put(helper.USER_ID, 10)
-                     put(helper.USER_EMAIL, email.text.toString())
-                     put(helper.USER_PASSWORD, password.text.toString())
-                 }
-                 manager.openDatabase()
-                 val inserted = manager.insert(helper.TBL_USER, contentValues)
+    private fun signIn() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+    }
 
-                 if (inserted) {
-                     Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show()
-                 } else {
-                     Toast.makeText(this, "this user already exists", Toast.LENGTH_SHORT).show()
-                 }
-             } catch (e: Exception) {
-                 e.printStackTrace()
-             }*/
-
-            if (!registering) {
-//                RestClient(this).getUser("users/" + email.text.toString() + "/" + password.text.toString())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribeOn(Schedulers.newThread())
-//                    .subscribe {
-//                        user = it
-//                    }
-//
-//                Thread.sleep(1000)
-
-//                val result = manager.getDetails(
-//                    "SELECT * FROM " + helper.TBL_USER +
-//                            " WHERE " + helper.USER_EMAIL + " = " + email.text.toString()
-//                )
-//
-//                val args = arrayOf(email.text.toString())
-//
-////                manager.openDatabase()
-//
-//                val query = manager.getDetails(
-//                    helper.TBL_USER,
-//                    null,
-//                    "${helper.USER_EMAIL} = ?",
-//                    args,
-//                    null,
-//                    null,
-//                    null
-//                )
-//
-//                with(query) {
-//                    query.moveToFirst()
-//                    user = User(
-//                        getString(getColumnIndexOrThrow(helper.USER_ID)),
-//                        getString(getColumnIndexOrThrow(helper.USER_NAME)),
-//                        getString(getColumnIndexOrThrow(helper.USER_EMAIL)),
-//                        null,
-//                        getString(getColumnIndexOrThrow(helper.USER_PASSWORD)),
-//                        null
-//                    )
-//                }
-//
-//                Log.d("user", user.toString())
-
-//                manager.closeDatabase()
-
-//                result?.moveToFirst()
-//                user = User(
-//                    result!!.getString(0),
-//                    result.getString(1),
-//                    result.getString(2),
-//                    null,
-//                    result.getString(3),
-//                    null
-//                )
-
-//                if (user != null) {
-                val intent = Intent(it.context, ProjectsActivity::class.java)
-                startActivity(intent)
-//                } else {
-//                    Toast.makeText(this, "Foutieve login, probeer opnieuw...", Toast.LENGTH_SHORT).show()
-//                }
-            } else {
-
-            }
-        }
-
-        noAccount.setOnClickListener {
-            if (!registering) {
-                login.text = "Register"
-                noAccount.text = "Al een account? Log in!"
-                registering = true
-            } else {
-                login.text = getString(R.string.log_in)
-                noAccount.text = getString(R.string.no_account)
-                registering = false
-            }
-        }
+    private fun search() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
