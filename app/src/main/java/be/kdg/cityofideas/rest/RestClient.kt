@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Ideation
 import be.kdg.cityofideas.model.ideations.Reaction
+import be.kdg.cityofideas.model.ideations.Tag
 import be.kdg.cityofideas.model.projects.Phase
 import be.kdg.cityofideas.model.projects.Project
 import be.kdg.cityofideas.model.users.User
@@ -218,6 +219,7 @@ public class RestClient(private val context: Context?) {
 
     //endregion
     //endregion
+
     //region User
     fun getUser(url: String) : Observable<User> {
         val prefix: String = if (https) {
@@ -256,5 +258,23 @@ public class RestClient(private val context: Context?) {
     }
     //endregion
 
-
+    //region Tag
+    fun getTags(url: String) : Observable<Array<Tag>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Tag>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val tags = gson.fromJson(response, Array<Tag>::class.java)
+                it.onNext(tags)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+    //endregion
 }

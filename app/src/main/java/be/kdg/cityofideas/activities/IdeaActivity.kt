@@ -10,6 +10,7 @@ import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.ideaSelectionListener
 import be.kdg.cityofideas.fragments.IdeaFragment
+import be.kdg.cityofideas.model.ideations.Idea
 
 const val IDEA_ID : String = "idea"
 
@@ -19,7 +20,7 @@ class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
 
     override fun onIdeaSelected(id: Int) {
         val intent = Intent(this, ReactionActivity::class.java)
-        intent.putExtra(IDEA_ID,id)
+        intent.putExtra(IDEA_ID, id)
         startActivity(intent)
     }
 

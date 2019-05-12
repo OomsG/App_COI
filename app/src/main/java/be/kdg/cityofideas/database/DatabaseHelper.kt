@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.nfc.Tag
 import android.provider.BaseColumns
 import android.util.Log
 import be.kdg.cityofideas.model.ideations.Reaction
@@ -11,7 +12,7 @@ import be.kdg.cityofideas.model.ideations.Reaction
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
         // increment when you changed db schema
-        private const val DB_VERSION: Int = 2
+        private const val DB_VERSION: Int = 10
         private const val DB_NAME: String = "CityOfIdeasApp"
 
         //region Datatypes
@@ -74,7 +75,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         //endregion
         //endregion
 
-        //region Project
         //region Platform
         object PlatformEntry : BaseColumns {
             const val TBL_PLATFORM = "platform_table"
@@ -100,7 +100,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
 
         //endregion
 
-        // region project
+        // region Project
         object ProjectEntry : BaseColumns {
             const val TBL_PROJECT = "project_table"
             const val PROJECT_ID = "ProjectId"
@@ -155,15 +155,19 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                     "${ProjectEntry.PROJECT_ID} INTEGER)"
 
         //endregion
-        //endregion
 
         //region User
         object UserEntry : BaseColumns {
             const val TBL_USER = "user_table"
-            const val USER_ID = "Id"
+            const val USER_ID = "UserId"
             const val USER_NAME = "Name"
             const val USER_EMAIL = "Email"
             const val USER_PASSWORD = "PasswordHash"
+            const val USER_SURNAME = "Surname"
+            const val USER_LAST_NAME = "LastName"
+            const val USER_SEX = "Sex"
+            const val USER_AGE = "Age"
+            const val USER_ZIP = "ZipCode"
         }
 
         private const val TABLE_DROP_USER = "DROP TABLE IF EXISTS ${UserEntry.TBL_USER}"
@@ -174,11 +178,15 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                     "${UserEntry.USER_NAME} TEXT," +
                     "${UserEntry.USER_EMAIL} TEXT UNIQUE," +
                     "${UserEntry.USER_PASSWORD} TEXT," +
+                    "${UserEntry.USER_SURNAME} TEXT," +
+                    "${UserEntry.USER_LAST_NAME} TEXT," +
+                    "${UserEntry.USER_SEX} TEXT," +
+                    "${UserEntry.USER_AGE} INTEGER," +
+                    "${UserEntry.USER_ZIP} TEXT," +
                     "${PlatformEntry.PLATFORM_ID} INTEGER)"
 
         //endregion
 
-        //region Ideation
         //region Idea
         object IdeaEntry : BaseColumns {
             const val TBL_IDEA = "idea_table"
@@ -199,10 +207,61 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                     "${IdeaEntry.IDEA_TITLE} TEXT," +
                     "${UserEntry.USER_ID} TEXT," +
                     "${IdeationEntry.IDEATION_ID} INTEGER)"
-
         //endregion
 
-        //region ideation
+        //region IdeaObject
+        object IdeaObjectEntry : BaseColumns {
+            const val TBL_IDEA_OBJECT = "idea_object_table"
+            const val IDEA_OBJECT_ID = "IdeaObjectId"
+            const val IDEA_OBJECT_ORDERNR = "OrderNr"
+            const val IDEA_OBJECT_DISCRIMINATOR = "Discriminator"
+            const val IDEA_OBJECT_IMAGE_NAME = "ImageName"
+            const val IDEA_OBJECT_IMAGE_PATH = "ImagePath"
+            const val IDEA_OBJECT_IMAGE_DATA = "ImageData"
+            const val IDEA_OBJECT_TEXT = "Text"
+            const val IDEA_OBJECT_URL = "Url"
+        }
+
+        private const val TABLE_DROP_IDEA_OBJECT = "DROP TABLE IF EXISTS ${IdeaObjectEntry.TBL_IDEA_OBJECT}"
+
+        private const val TABLE_CREATE_IDEA_OBJECT =
+            "CREATE TABLE ${IdeaObjectEntry.TBL_IDEA_OBJECT} (" +
+                    "${IdeaObjectEntry.IDEA_OBJECT_ID} INTEGER PRIMARY KEY," +
+                    "${IdeaObjectEntry.IDEA_OBJECT_ORDERNR} INTEGER," +
+                    "${IdeaEntry.IDEA_ID} INTEGER," +
+                    "${IdeaObjectEntry.IDEA_OBJECT_DISCRIMINATOR} TEXT," +
+                    "${IdeaObjectEntry.IDEA_OBJECT_IMAGE_NAME} TEXT," +
+                    "${IdeaObjectEntry.IDEA_OBJECT_IMAGE_PATH} TEXT," +
+                    "${IdeaObjectEntry.IDEA_OBJECT_IMAGE_DATA} BLOB," +
+                    "${IdeaObjectEntry.IDEA_OBJECT_TEXT} TEXT," +
+                    "${IdeaObjectEntry.IDEA_OBJECT_URL} TEXT)"
+        //endregion
+
+        //region Tag
+        object TagEntry : BaseColumns {
+            const val TBL_IDEA_TAG = "idea_tag_table"
+            const val TBL_TAG = "tag_table"
+            const val TAG_ID = "TagId"
+            const val TAG_NAME = "TagName"
+            const val IDEA_TAG_ID = "IdeaTagId"
+        }
+
+        private const val TABLE_DROP_TAG = "DROP TABLE IF EXISTS ${TagEntry.TBL_TAG}"
+        private const val TABLE_DROP_IDEA_TAG = "DROP TABLE IF EXISTS ${TagEntry.TBL_IDEA_TAG}"
+
+        private const val TABLE_CREATE_TAG =
+            "CREATE TABLE ${TagEntry.TBL_TAG} (" +
+                    "${TagEntry.TAG_ID} INTEGER PRIMARY KEY," +
+                    "${TagEntry.TAG_NAME} TEXT)"
+
+        private const val TABLE_CREATE_IDEA_TAG =
+            "CREATE TABLE ${TagEntry.TBL_IDEA_TAG} (" +
+                    "${TagEntry.IDEA_TAG_ID} INTEGER PRIMARY KEY," +
+                    "${IdeaEntry.IDEA_ID} INTEGER," +
+                    "${TagEntry.TAG_ID} INTEGER)"
+        //endregion
+
+        //region Ideation
         object IdeationEntry : BaseColumns {
             const val TBL_IDEATION = "ideation_table"
             const val IDEATION_ID = "IdeationId"
@@ -260,7 +319,20 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                     "${IdeaEntry.IDEA_ID} INTEGER)"
 
         //endregion
-        //endregion
+
+        //region Like
+        object LikeEntry : BaseColumns {
+            const val TBL_LIKE = "like_table"
+            const val LIKE_ID = "LikeId"
+        }
+
+        private const val TABLE_DROP_LIKE = "DROP TABLE IF EXISTS ${LikeEntry.TBL_LIKE}"
+
+        private const val TABLE_CREATE_LIKE =
+            "CREATE TABLE ${LikeEntry.TBL_LIKE} (" +
+                    "${LikeEntry.LIKE_ID} INTEGER PRIMARY KEY," +
+                    "${ReactionEntry.REACTION_ID} INTEGER," +
+                    "${UserEntry.USER_ID} TEXT)"
         //endregion
 
         //region Surveys
@@ -330,17 +402,19 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.execSQL(TABLE_CREATE_PHASE)
         db.execSQL(TABLE_CREATE_USER)
         db.execSQL(TABLE_CREATE_IDEA)
+        db.execSQL(TABLE_CREATE_IDEA_OBJECT)
+        db.execSQL(TABLE_CREATE_TAG)
+        db.execSQL(TABLE_CREATE_IDEA_TAG)
         db.execSQL(TABLE_CREATE_IDEATION)
         db.execSQL(TABLE_CREATE_REACTION)
         db.execSQL(TABLE_CREATE_VOTE)
+        db.execSQL(TABLE_CREATE_LIKE)
         db.execSQL(TABLE_CREATE_SURVEY)
         db.execSQL(TABLE_CREATE_QUESTION)
         db.execSQL(TABLE_CREATE_ANSWER)
-        Log.d("onCreate", "true")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        Log.d("onUpgrade", "true")
         db!!.execSQL(TABLE_DROP_ADDRESS)
         db.execSQL(TABLE_DROP_POSITION)
         db.execSQL(TABLE_DROP_LOCATION)
@@ -349,9 +423,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.execSQL(TABLE_DROP_PHASE)
         db.execSQL(TABLE_DROP_USER)
         db.execSQL(TABLE_DROP_IDEA)
+        db.execSQL(TABLE_DROP_IDEA_OBJECT)
+        db.execSQL(TABLE_DROP_TAG)
+        db.execSQL(TABLE_DROP_IDEA_TAG)
         db.execSQL(TABLE_DROP_IDEATION)
         db.execSQL(TABLE_DROP_REACTION)
         db.execSQL(TABLE_DROP_VOTE)
+        db.execSQL(TABLE_DROP_LIKE)
         db.execSQL(TABLE_DROP_SURVEY)
         db.execSQL(TABLE_DROP_QUESTION)
         db.execSQL(TABLE_DROP_ANSWER)
@@ -359,12 +437,26 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
     }
 
     //region User
-    fun getUserContentValues(id: String, email: String, name: String?, password: String): ContentValues {
+    fun getUserContentValues(
+        id: String,
+        email: String,
+        name: String?,
+        password: String,
+        surname: String?,
+        lastName: String?,
+        sex: String?,
+        age: Int?,
+        zip: String?): ContentValues {
         return ContentValues().apply {
             put(UserEntry.USER_ID, id)
             put(UserEntry.USER_EMAIL, email)
             put(UserEntry.USER_NAME, name)
             put(UserEntry.USER_PASSWORD, password)
+            put(UserEntry.USER_SURNAME, surname)
+            put(UserEntry.USER_LAST_NAME, lastName)
+            put(UserEntry.USER_SEX, sex)
+            put(UserEntry.USER_AGE, age)
+            put(UserEntry.USER_ZIP, zip)
         }
     }
 
@@ -455,6 +547,56 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
     }
     //endregion
 
+    //region IdeaObject
+    fun getIdeaObjectContentValues(
+        id: Int,
+        orderNr: Int?,
+        ideaId: Int?,
+        discriminator: String?,
+        imageName: String?,
+        imagePath: String?,
+        imageData: ByteArray?,
+        text: String?,
+        url: String?
+    ): ContentValues {
+        return ContentValues().apply {
+            put(IdeaObjectEntry.IDEA_OBJECT_ID, id)
+            put(IdeaObjectEntry.IDEA_OBJECT_ORDERNR, orderNr)
+            put(IdeaEntry.IDEA_ID, ideaId)
+            put(IdeaObjectEntry.IDEA_OBJECT_DISCRIMINATOR, discriminator)
+            put(IdeaObjectEntry.IDEA_OBJECT_IMAGE_NAME, imageName)
+            put(IdeaObjectEntry.IDEA_OBJECT_IMAGE_PATH, imagePath)
+            put(IdeaObjectEntry.IDEA_OBJECT_IMAGE_DATA, imageData)
+            put(IdeaObjectEntry.IDEA_OBJECT_TEXT, text)
+            put(IdeaObjectEntry.IDEA_OBJECT_URL, url)
+        }
+    }
+
+    fun getIdeaObjectEntry(): IdeaObjectEntry {
+        return IdeaObjectEntry
+    }
+    //endregion
+
+    //region Tag
+    fun getTagContentValues(id: Int, name: String?): ContentValues {
+        return ContentValues().apply {
+            put(TagEntry.TAG_ID, id)
+            put(TagEntry.TAG_NAME, name)
+        }
+    }
+
+    fun getIdeaTagContentValues(id: Int, ideaId: Int?): ContentValues {
+        return ContentValues().apply {
+            put(TagEntry.IDEA_TAG_ID, id)
+            put(IdeaEntry.IDEA_ID, ideaId)
+        }
+    }
+
+    fun getTagEntry(): TagEntry {
+        return TagEntry
+    }
+    //endregion
+
     //region Vote
     fun getVoteContentValues(id: Int, confirmed: Boolean?, type: Int?, ideaId: Int?): ContentValues {
         return ContentValues().apply {
@@ -487,12 +629,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
     //region Like
     fun getLikeContentValues(id: Int, reactionId: Int?): ContentValues {
         return ContentValues().apply {
-
+            put(LikeEntry.LIKE_ID, id)
+            put(ReactionEntry.REACTION_ID, reactionId)
         }
     }
 
-    fun getLikeEntry() {
-
+    fun getLikeEntry(): LikeEntry {
+        return LikeEntry
     }
     //endregion
 
@@ -510,7 +653,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
     //endregion
 
     //region Address
-    fun getAddressContentValues(id: Int, street: String?, houseNr: String?, city: String?, zip: String?): ContentValues {
+    fun getAddressContentValues(
+        id: Int,
+        street: String?,
+        houseNr: String?,
+        city: String?,
+        zip: String?
+    ): ContentValues {
         return ContentValues().apply {
             put(AddressEntry.ADDRESS_ID, id)
             put(AddressEntry.ADDRESS_STREET, street)

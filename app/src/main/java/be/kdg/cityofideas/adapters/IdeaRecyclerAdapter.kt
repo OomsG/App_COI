@@ -3,7 +3,6 @@ package be.kdg.cityofideas.adapters
 import android.content.Context
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -184,17 +183,17 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         p0.shareCount.text = getIdeaShareCount(ideas[p1], ShareCounter)
         p0.voteCount.text = getIdeaVoteCount(ideas[p1], VoteCounter)
         p0.voteButton.setOnClickListener {
-            Thread({
+            Thread {
                 RestClient(context).createVote(ideas[p1].IdeaId, "VOTE", "A")
 
-            }).start()
+            }.start()
             VoteCounter++
             notifyDataSetChanged()
         }
         p0.shareButton.setOnClickListener {
-            Thread({
+            Thread {
                 RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB.toString(), "A")
-            }).start()
+            }.start()
            ShareCounter++
             notifyDataSetChanged()
         }
