@@ -227,7 +227,7 @@ public class RestClient(private val context: Context?) {
         val formBody = FormBody.Builder().add("IdeaId", ideaId.toString()).build()
 
         val request = Request.Builder()
-            .url(HTTPS_PREFIX + host + ":" + port + apistring + "/vote/" + ideaId)
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "vote")
             .post(formBody).build()
         try {
             getClient()!!.newCall(request).execute()

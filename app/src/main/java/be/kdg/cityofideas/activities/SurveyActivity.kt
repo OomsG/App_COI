@@ -23,10 +23,10 @@ class SurveyActivity : AppCompatActivity() {
     fun initialiseViews() {
         toolbar = findViewById(R.id.SurveyInclude)
         val fragment = supportFragmentManager.findFragmentById(R.id.SurveyFragment) as SurveyFragment
-        getQuestions()
+      //  getQuestions()
     }
 
-    @SuppressLint("CheckResult")
+   /* @SuppressLint("CheckResult")
     fun getQuestions() {
         RestClient(this)
             .getQuestions("questions/" + intent.getIntExtra(IDEATION_ID, 0))
@@ -35,5 +35,5 @@ class SurveyActivity : AppCompatActivity() {
             .subscribe {
                 (fragment).questions = it
             }
-    }
+    }*/
 }

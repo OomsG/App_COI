@@ -24,54 +24,49 @@ import java.lang.NullPointerException
 
 fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
     idea.IdeaObjects?.forEach {
-
-        if (it.Text != null) {
+        val id = it.IdeaObjectId
+        it.Text?.let {
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             val text = TextView(context)
-            text.id = it.IdeaObjectId
-            text.text = it.Text
+            text.id = id
+            text.text = it
             text.layoutParams = params
             layout.addView(text)
         }
-        if (it.ImageName != null) {
+        it.Image?.let {
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             val image = ImageView(context)
-            image.id = it.IdeaObjectId
-            image.setImageBitmap(it.Image)
+            image.id = id
+            image.setImageBitmap(it)
             image.layoutParams = params
             layout.addView(image)
 
         }
-        if (it.Url != null) {
+        it.Url?.let {
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             val video = VideoView(context)
-            video.id = it.IdeaObjectId
-            val uri = Uri.parse(it.Url)
+            video.id = id
+            val uri = Uri.parse(it)
             Log.d("URI", uri.toString())
             video.setVideoURI(uri)
             video.requestFocus()
-            val mediaController= MediaController(context)
+            val mediaController = MediaController(context)
             mediaController.setAnchorView(video)
-
-
             video.layoutParams = params
             layout.addView(video)
 
         }
     }
-
 }
-
-
 fun getIdeaShareCount(idea: Idea, counted: Int): String? {
     var counter = 0
     idea.Votes?.forEach {
@@ -184,14 +179,14 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
 
             }).start()
             VoteCounter++
-            notifyDataSetChanged()
+
+            notifyItemChanged(p1)
         }
         p0.shareButton.setOnClickListener {
             Thread({
                 RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB.toString(), "A")
             }).start()
             ShareCounter++
-            notifyDataSetChanged()
         }
         p0.reactionText.text = getBestReaction(ideas[p1])
         p0.reactionCount.setOnClickListener {
