@@ -37,8 +37,8 @@ class ReactionActivity : AppCompatActivity() {
     private var shareCounter = 0
 
     var idea: Idea = Idea(
-        0, null, null, null, "hello", null, null
-        , null, null, null
+        0, null, null, null, null, null, null
+        , null, null, null, null
     )
         set(idea) {
             field = idea
