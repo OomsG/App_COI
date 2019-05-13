@@ -21,7 +21,6 @@ import java.lang.NullPointerException
 /* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
 
 
-
 //region toplevel Functions
 
 fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
@@ -69,6 +68,7 @@ fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
         }
     }
 }
+
 fun getIdeaShareCount(idea: Idea, counted: Int): String? {
     var counter = 0
     idea.Votes?.forEach {
@@ -109,7 +109,7 @@ fun getBestReaction(idea: Idea): String? {
     if (reactions.isEmpty()) {
         return "Er zijn geen reacties om weer te geven"
     } else {
-        return idea.Reactions?.first()?.ReactionText
+        return idea.Reactions.first().ReactionText
     }
 }
 
