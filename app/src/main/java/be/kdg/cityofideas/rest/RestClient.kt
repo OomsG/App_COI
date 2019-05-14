@@ -7,9 +7,11 @@ import android.net.ConnectivityManager
 import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Ideation
 import be.kdg.cityofideas.model.ideations.Reaction
+import be.kdg.cityofideas.model.ideations.Tag
 import be.kdg.cityofideas.model.projects.Phase
 import be.kdg.cityofideas.model.projects.Project
 import be.kdg.cityofideas.model.surveys.Question
+import be.kdg.cityofideas.model.surveys.Survey
 import be.kdg.cityofideas.model.users.User
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
@@ -167,6 +169,25 @@ public class RestClient(private val context: Context?) {
         return observable
     }
 
+
+    fun getSurveys(url: String): Observable<Array<Survey>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Survey>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val surveys = gson.fromJson(response, Array<Survey>::class.java)
+                it.onNext(surveys)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
     fun getReactions(url: String): Observable<Array<Reaction>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
@@ -238,6 +259,7 @@ public class RestClient(private val context: Context?) {
 
     //endregion
     //endregion
+
     //region User
     fun getUser(url: String): Observable<User> {
         val prefix: String = if (https) {
@@ -275,6 +297,7 @@ public class RestClient(private val context: Context?) {
         return observable
     }
 
+
     //endregion
     //region Survey
     fun getQuestions(url: String): Observable<Array<Question>> {
@@ -282,12 +305,32 @@ public class RestClient(private val context: Context?) {
             HTTPS_PREFIX
         } else HTTP_PREFIX
         val observable = Observable.create<Array<Question>> {
-            try {
+          try {
                 val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
                 val response = getClient()?.newCall(request)?.execute()?.body()?.string()
                 val gson = GsonBuilder().create()
                 val questions = gson.fromJson(response, Array<Question>::class.java)
                 it.onNext(questions)
+          } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
+
+    //region Tag
+    fun getTags(url: String) : Observable<Array<Tag>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Tag>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val tags = gson.fromJson(response, Array<Tag>::class.java)
+                it.onNext(tags)
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -295,5 +338,4 @@ public class RestClient(private val context: Context?) {
         return observable
     }
     //endregion
-
 }

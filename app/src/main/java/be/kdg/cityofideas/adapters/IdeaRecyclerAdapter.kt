@@ -20,6 +20,7 @@ import java.lang.NullPointerException
 
 /* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
 
+
 //region toplevel Functions
 
 fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
@@ -67,6 +68,7 @@ fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
         }
     }
 }
+
 fun getIdeaShareCount(idea: Idea, counted: Int): String? {
     var counter = 0
     idea.Votes?.forEach {
@@ -107,7 +109,7 @@ fun getBestReaction(idea: Idea): String? {
     if (reactions.isEmpty()) {
         return "Er zijn geen reacties om weer te geven"
     } else {
-        return idea.Reactions?.first()?.ReactionText
+        return idea.Reactions.first().ReactionText
     }
 }
 
@@ -144,7 +146,6 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
             notifyDataSetChanged()
         }
 
-
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.IdeaTitle
         val name = view.IdeaUserName
@@ -174,19 +175,19 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         p0.shareCount.text = getIdeaShareCount(ideas[p1], ShareCounter)
         p0.voteCount.text = getIdeaVoteCount(ideas[p1], VoteCounter)
         p0.voteButton.setOnClickListener {
-            Thread({
+            Thread {
                 RestClient(context).createVote(ideas[p1].IdeaId, "VOTE", "A")
 
-            }).start()
+            }.start()
             VoteCounter++
-
-            notifyItemChanged(p1)
+            notifyDataSetChanged()
         }
         p0.shareButton.setOnClickListener {
-            Thread({
+            Thread {
                 RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB.toString(), "A")
-            }).start()
+            }.start()
             ShareCounter++
+            notifyDataSetChanged()
         }
         p0.reactionText.text = getBestReaction(ideas[p1])
         p0.reactionCount.setOnClickListener {
