@@ -36,10 +36,8 @@ class ReactionActivity : AppCompatActivity() {
     private var voteCounter = 0
     private var shareCounter = 0
 
-    var idea: Idea = Idea(
-        0, null, null, null, null, null, null
-        , null, null, null, null
-    )
+    var idea: Idea = Idea(15,null,null,null,null,null,null,null
+    ,null,null,null )
         set(idea) {
             field = idea
         }
@@ -49,7 +47,7 @@ class ReactionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reaction)
         getIdea(this)
-        Log.d("help",idea.toString())
+        Log.d("help", idea.toString())
         initialiseViews()
     }
 
@@ -65,7 +63,7 @@ class ReactionActivity : AppCompatActivity() {
         voteButton = findViewById(R.id.ReactionIdeaVoteButton)
         shareButton = findViewById(R.id.ReactionIdeaShareButton)
 
-        // name.text = idea!!.Title
+        // name.text = idea.
         title.text = idea.Title
         voteCount.text = getIdeaVoteCount(idea, voteCounter)
         reactionCount.text = getReactionCount(idea)
@@ -83,8 +81,8 @@ class ReactionActivity : AppCompatActivity() {
             .getIdea("idea/" + intent.getIntExtra(IDEA_ID, 2))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.newThread())
-            .subscribe {
+            .subscribe({
                 idea = it
-            }
+            })
     }
 }

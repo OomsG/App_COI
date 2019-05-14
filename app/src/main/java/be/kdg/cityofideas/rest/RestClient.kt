@@ -11,6 +11,7 @@ import be.kdg.cityofideas.model.ideations.Tag
 import be.kdg.cityofideas.model.projects.Phase
 import be.kdg.cityofideas.model.projects.Project
 import be.kdg.cityofideas.model.surveys.Question
+import be.kdg.cityofideas.model.surveys.Survey
 import be.kdg.cityofideas.model.users.User
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
@@ -168,6 +169,25 @@ public class RestClient(private val context: Context?) {
         return observable
     }
 
+
+    fun getSurveys(url: String): Observable<Array<Survey>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Survey>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val surveys = gson.fromJson(response, Array<Survey>::class.java)
+                it.onNext(surveys)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
     fun getReactions(url: String): Observable<Array<Reaction>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
@@ -297,8 +317,8 @@ public class RestClient(private val context: Context?) {
         }
         return observable
     }
-          
-          
+
+
     //region Tag
     fun getTags(url: String) : Observable<Array<Tag>> {
         val prefix: String = if (https) {

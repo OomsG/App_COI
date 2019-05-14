@@ -2,6 +2,7 @@ package be.kdg.cityofideas.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,8 @@ class IdeationsRecyclerAdapter(
     RecyclerView.Adapter<IdeationsRecyclerAdapter.IdeationsViewHolder>() {
 
     interface IdeationsSelectionListener {
-        fun onIdeationSelected(ideationid: Int, projectId: Int)
+        fun onIdeationSelected(ideationid: Int, projectId: Int, ideationType: Boolean)
+        fun onSurveySelected(surveyId:Int, projectId: Int)
     }
 
     class IdeationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -29,8 +31,6 @@ class IdeationsRecyclerAdapter(
         val IdedeationsIdeaCount = view.IdeationIdeaCount
         val IdeationsVoteCount = view.IdeationVoteCount
         val IdeationsShareCount = view.IdeationShareCount
-        val IdeationsVote = view.IdeationVote
-        val IdeationsShare = view.IdeationShare
     }
 
     var ideations: Array<Ideation> = arrayOf()
@@ -51,13 +51,9 @@ class IdeationsRecyclerAdapter(
         p0.IdedeationsIdeaCount.text = getIdeaCount(ideations[p1])
         p0.IdeationsVoteCount.text = getIdeationVoteCount(ideations)
         p0.IdeationsShareCount.text = getIdeationShareCount(ideations)
-        p0.IdeationsShare
-        p0.IdeationsVote.setOnClickListener {
-        }
         p0.button.setOnClickListener {
-            selectionListener.onIdeationSelected(ideations[p1].IdeationId, projectId)
+            selectionListener.onIdeationSelected(ideations[p1].IdeationId, projectId, ideations[p1].InputIdeation!!)
         }
-        //p0.Description.text = ideations[p1].
     }
 
 

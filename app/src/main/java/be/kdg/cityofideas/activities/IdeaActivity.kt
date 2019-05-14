@@ -10,13 +10,11 @@ import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.ideaSelectionListener
 import be.kdg.cityofideas.fragments.IdeaFragment
-import be.kdg.cityofideas.model.ideations.Idea
 
 const val IDEA_ID : String = "idea"
 
 class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
     private lateinit var toolbar: Toolbar
-    private lateinit var Title: TextView
 
     override fun onIdeaSelected(id: Int) {
         val intent = Intent(this, ReactionActivity::class.java)
@@ -27,13 +25,12 @@ class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_idea)
-        initialiseViews(this)
+        initialiseViews()
     }
 
-    @SuppressLint("CheckResult")
-    fun initialiseViews(context: Context) {
+    fun initialiseViews() {
         toolbar = findViewById(R.id.IdeaToolbar)
         val fragment = supportFragmentManager.findFragmentById(R.id.IdeaFragment) as IdeaFragment
-        fragment.setId(intent.getIntExtra(IDEATION_ID,1),intent.getIntExtra(PROJECT_ID,1))
+        fragment.setId(intent.getIntExtra(IDEATION_ID,2),intent.getIntExtra(PROJECT_ID,2))
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.support.v4.media.session.MediaControllerCompat.setMediaController
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import java.lang.NullPointerException
 
 
 /* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
+
 
 //region toplevel Functions
 
@@ -66,6 +68,7 @@ fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
         }
     }
 }
+
 fun getIdeaShareCount(idea: Idea, counted: Int): String? {
     var counter = 0
     idea.Votes?.forEach {
@@ -106,7 +109,7 @@ fun getBestReaction(idea: Idea): String? {
     if (reactions.isEmpty()) {
         return "Er zijn geen reacties om weer te geven"
     } else {
-        return idea.Reactions?.first()?.ReactionText
+        return idea.Reactions.first().ReactionText
     }
 }
 
@@ -185,7 +188,7 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
             Thread {
                 RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB.toString(), "A")
             }.start()
-           ShareCounter++
+            ShareCounter++
             notifyDataSetChanged()
         }
         p0.reactionText.text = getBestReaction(ideas[p1])
