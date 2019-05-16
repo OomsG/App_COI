@@ -20,18 +20,29 @@ const val SURVEY_ID:String = "SurveyId"
 const val IDEATION_TYPE :String = "IdeationType"
 
 class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
-    private lateinit var toolbar: Toolbar
     private lateinit var viewPager: ViewPager
     private lateinit var pagerAdapter: IdeationViewPagerAdapter
     private lateinit var tabLayout: TabLayout
 
-    override fun onIdeationSelected(ideationid: Int, projectId:Int ) {
-        val intent = Intent(this,IdeaActivity::class.java)
-        intent.putExtra(IDEATION_ID,ideationid)
-        intent.putExtra(PROJECT_ID,projectId)
-        intent.putExtra(IDEATION_TYPE,ideationType)
+
+class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
+    override fun onSurveySelected(surveyId: Int, projectId: Int) {
+        val surveyIntent = Intent(this,SurveyActivity::class.java)
+        surveyIntent.putExtra(SURVEY_ID,surveyId)
+        surveyIntent.putExtra(PROJECT_ID,projectId)
+        startActivity(surveyIntent)
+    }
+
+    override fun onIdeationSelected(ideationid: Int, projectId:Int, ideationType: Boolean) {
+        val ideationIntent = Intent(this,IdeaActivity::class.java)
+        Log.d("IdeationId", ideationid.toString() )
+        ideationIntent.putExtra(IDEATION_ID,ideationid)
+        ideationIntent.putExtra(PROJECT_ID,projectId)
+        ideationIntent.putExtra(IDEATION_TYPE,ideationType)
         startActivity(ideationIntent)
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +53,6 @@ class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
     @SuppressLint("CheckResult")
     private fun initialiseViews(context: Context, id:Int) {
         tabLayout = findViewById(R.id.IdeationsTab)
-        toolbar = findViewById(R.id.IdeationsInclude)
         viewPager = findViewById(R.id.IdeationsPager)
         pagerAdapter = IdeationViewPagerAdapter(supportFragmentManager, id)
         viewPager.adapter = pagerAdapter

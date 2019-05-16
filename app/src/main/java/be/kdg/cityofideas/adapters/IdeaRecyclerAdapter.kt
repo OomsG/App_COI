@@ -145,7 +145,6 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
             notifyDataSetChanged()
         }
 
-
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.IdeaTitle
         val name = view.IdeaUserName
@@ -176,20 +175,19 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         p0.voteCount.text = getIdeaVoteCount(ideas[p1], VoteCounter)
         p0.voteButton.setOnClickListener {
             Thread {
-                RestClient(context).createVote(ideas[p1].IdeaId, "VOTE", "A")
+                RestClient(context).createVote(ideas[p1].IdeaId, VoteType.VOTE, "A")
 
             }.start()
-            VoteCounter++
-
-            notifyItemChanged(p1)
+            //VoteCounter++
+            //notifyDataSetChanged()
         }
         p0.shareButton.setOnClickListener {
             Thread {
-                RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB.toString(), "A")
+                RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB, "JSLMQKSLDMKQD")
             }.start()
-           
-            ShareCounter++
-            notifyDataSetChanged()
+            //ShareCounter++
+            //notifyDataSetChanged()
+
         }
         p0.reactionText.text = getBestReaction(ideas[p1])
         p0.reactionCount.setOnClickListener {

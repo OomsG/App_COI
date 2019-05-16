@@ -78,6 +78,7 @@
                 app:layout_constraintRight_toLeftOf="@+id/IdeaShareButton"
                 app:layout_constraintTop_toBottomOf="@+id/IdeaReactionCount"/>
         <Button
+
                 android:text="Share"
                 android:gravity="center"
                 android:layout_width="0dp"
