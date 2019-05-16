@@ -21,7 +21,7 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.NullPointerException
 
 
-class ReactionActivity : AppCompatActivity() {
+class ReactionActivity : BaseActivity() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var title: TextView
@@ -36,8 +36,11 @@ class ReactionActivity : AppCompatActivity() {
     private var voteCounter = 0
     private var shareCounter = 0
 
-    var idea: Idea = Idea(15,null,null,null,null,null,null,null
-    ,null,null,null )
+
+    var idea: Idea = Idea(
+        0, null, null, null, null, null, null
+        , null, null, null, null
+    )
         set(idea) {
             field = idea
         }

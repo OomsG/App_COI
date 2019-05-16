@@ -10,5 +10,6 @@
           android:title="@string/login"
           android:icon="@android:drawable/ic_lock_idle_lock"
           app:showAsAction="ifRoom"/>
-
+    <item android:title="@string/account" android:id="@+id/account" app:showAsAction="never" android:visible="false"/>
+    <item android:title="@string/log_out" android:id="@+id/logout" app:showAsAction="never" android:visible="false"/>
 </menu>

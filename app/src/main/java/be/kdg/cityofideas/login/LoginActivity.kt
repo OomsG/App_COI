@@ -1,5 +1,6 @@
 package be.kdg.cityofideas.login
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -9,9 +10,14 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.*
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.model.users.User
+import be.kdg.cityofideas.rest.RestClient
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+
+var loggedInUser: LoggedInUserView? = null
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
@@ -39,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
         password = findViewById(R.id.password)
     }
 
+    @SuppressLint("CheckResult")
     private fun addEventHandlers() {
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
@@ -55,22 +62,41 @@ class LoginActivity : AppCompatActivity() {
                 )
             }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
-                }
-                false
-            }
+//            setOnEditorActionListener { _, actionId, _ ->
+//                when (actionId) {
+//                    EditorInfo.IME_ACTION_DONE ->
+//                        loginViewModel.login(
+//                            context,
+//                            username.text.toString(),
+//                            password.text.toString()
+//                        )
+//                }
+//                false
+//            }
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
 
                 if (!registering) {
-                    loginViewModel.login(username.text.toString(), password.text.toString())
+                    RestClient(context).getUser("users/login", username.text.toString(), password.text.toString())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe {
+                            val loggedInUser = User(
+                                it.Id,
+                                it.UserName,
+                                it.Email,
+                                it.Platform,
+                                it.PasswordHash,
+                                it.Surname,
+                                it.Name,
+                                it.Sex,
+                                it.Age,
+                                it.Zipcode,
+                                it.Votes
+                            )
+                            loginViewModel.login(loggedInUser)
+                        }
                 } else {
 
                 }
@@ -127,11 +153,11 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        // TODO : initiate successful logged in experience
+        loggedInUser = model
+
         Toast.makeText(
             applicationContext,
-            "$welcome $displayName",
+            "$welcome ${model.UserName}",
             Toast.LENGTH_LONG
         ).show()
     }
