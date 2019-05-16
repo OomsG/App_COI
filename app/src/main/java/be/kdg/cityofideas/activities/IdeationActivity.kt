@@ -21,16 +21,16 @@ const val IDEATION_TYPE :String = "IdeationType"
 class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
     override fun onSurveySelected(surveyId: Int, projectId: Int) {
         val surveyIntent = Intent(this,SurveyActivity::class.java)
-        intent.putExtra(SURVEY_ID,surveyId)
-        intent.putExtra(PROJECT_ID,projectId)
+        surveyIntent.putExtra(SURVEY_ID,surveyId)
+        surveyIntent.putExtra(PROJECT_ID,projectId)
         startActivity(surveyIntent)
     }
 
     override fun onIdeationSelected(ideationid: Int, projectId:Int, ideationType: Boolean) {
         val ideationIntent = Intent(this,IdeaActivity::class.java)
-        intent.putExtra(IDEATION_ID,ideationid)
-        intent.putExtra(PROJECT_ID,projectId)
-        intent.putExtra(IDEATION_TYPE,ideationType)
+        ideationIntent.putExtra(IDEATION_ID,ideationid)
+        ideationIntent.putExtra(PROJECT_ID,projectId)
+        ideationIntent.putExtra(IDEATION_TYPE,ideationType)
         startActivity(ideationIntent)
     }
 

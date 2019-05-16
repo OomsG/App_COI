@@ -2,8 +2,6 @@ package be.kdg.cityofideas.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
-
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
@@ -17,7 +15,6 @@ import io.reactivex.schedulers.Schedulers
 
 
 class ReactionActivity : BaseActivity() {
-
     private lateinit var title: TextView
     private lateinit var name: TextView
     private lateinit var voteCount: TextView
@@ -30,21 +27,18 @@ class ReactionActivity : BaseActivity() {
     private var voteCounter = 0
     private var shareCounter = 0
 
-    var idea: Idea? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reaction)
         getIdea(this)
-        Log.d("help", idea.toString())
-        initialiseViews()
     }
 
-    private fun initialiseViews() {
+    private fun initialiseViews(idea: Idea) {
+        Log.d("help", idea.toString())
         layout = findViewById(R.id.LinearLayoutReactionIdea)
         title = findViewById(R.id.ReactionIdeaTitle)
         //name = findViewById(R.id.IdeaUserName)
-        getIdeaDetails(idea!!, this, layout)
+        getIdeaDetails(idea, this, layout)
         voteCount = findViewById(R.id.ReactionIdeaVoteCount)
         reactionCount = findViewById(R.id.ReactionIdeaReactionCount)
         shareCount = findViewById(R.id.ReactionIdeaShareCount)
@@ -52,10 +46,10 @@ class ReactionActivity : BaseActivity() {
         shareButton = findViewById(R.id.ReactionIdeaShareButton)
 
         // name.text = idea.
-        title.text = idea!!.Title
-        voteCount.text = getIdeaVoteCount(idea!!, voteCounter)
-        reactionCount.text = getReactionCount(idea!!)
-        shareCount.text = getIdeaShareCount(idea!!, shareCounter)
+        title.text = idea.Title
+        voteCount.text = getIdeaVoteCount(idea, voteCounter)
+        reactionCount.text = getReactionCount(idea)
+        shareCount.text = getIdeaShareCount(idea, shareCounter)
         voteButton.setOnClickListener { }
         shareButton.setOnClickListener { }
 
@@ -64,13 +58,27 @@ class ReactionActivity : BaseActivity() {
     }
 
     @SuppressLint("CheckResult")
-    private fun getIdea(context: Context) {
+    private fun getIdea(context: Context)  {
         RestClient(context)
             .getIdea("idea/" + intent.getIntExtra(IDEA_ID, 1))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.newThread())
             .subscribe({
-                idea = it
+                val idea = Idea(
+                    it.IdeaId,
+                    it.Position,
+                    it.IdeaObjects,
+                    it.IdeaTags,
+                    it.Reported,
+                    it.Title,
+                    it.Ideation,
+                    it.User,
+                    it.IoTSetup,
+                    it.Votes,
+                    it.Reactions
+                )
+                initialiseViews(idea)
             })
+
     }
 }
