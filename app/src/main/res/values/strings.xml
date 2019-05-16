@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">App_CityOfIdeas</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_account">Geen account? Maak er nu een aan!</string>
     <string name="password">Passwoord</string>
@@ -22,4 +20,13 @@
     <string name="already_account">Al een account? Log in!</string>
     <string name="edittext">Geef hier je antwoord</string>
     <string name="Email">geef hier je Email adres</string>
+    <string name="account">Account</string>
+    <string name="log_out">Log out</string>
+
+    <string-array name="spinSexItems">
+        <item>--</item>
+        <item>Man</item>
+        <item>Vrouw</item>
+        <item>Andere</item>
+    </string-array>
 </resources>

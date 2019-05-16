@@ -16,13 +16,13 @@ import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.login.LoginActivity
 import be.kdg.cityofideas.database.DatabaseManager
+import be.kdg.cityofideas.model.datatypes.Location
 import be.kdg.cityofideas.model.ideations.getBytes
-import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private val manager = DatabaseManager(this)
     private val helper = manager.dbHelper
 
@@ -30,35 +30,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initialiseDatabase()
+        //initialiseDatabase()
         startProjectsActivity()
     }
 
     override fun onDestroy() {
         manager.closeDatabase()
         super.onDestroy()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        return when (item.itemId) {
-            R.id.login -> {
-                signIn()
-                true
-            }
-            R.id.search -> {
-                search()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     @SuppressLint("CheckResult")
@@ -529,14 +507,5 @@ class MainActivity : AppCompatActivity() {
     private fun startProjectsActivity() {
         val intent = Intent(this, ProjectsActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun signIn() {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun search() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -14,7 +14,10 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             android:usesCleartextTraffic="true"
-            tools:ignore="GoogleAppIndexingWarning">
+            tools:ignore="GoogleAppIndexingWarning"
+            tools:targetApi="m">
+        <activity android:name=".activities.AccountActivity">
+        </activity>
         <activity
                 android:name=".login.LoginActivity"
                 android:label="@string/title_activity_login">
@@ -36,6 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".activities.BaseActivity"/>
     </application>
 
 </manifest>

@@ -69,7 +69,7 @@ class QuestionRecyclerAdapter(val context: Context?) :
         )
         val editText = EditText(context)
         editText.id = question.QuestionId
-        editText.setText(context!!.getString(R.string.edittext))
+        editText.hint = context!!.getString(R.string.edittext)
         editText.layoutParams = params
         layout.addView(editText)
     }
@@ -132,7 +132,7 @@ class QuestionRecyclerAdapter(val context: Context?) :
         )
         val email = EditText(context)
         email.id = question.QuestionId
-        email.setText(context!!.getString(R.string.Email))
+        email.hint = context!!.getString(R.string.Email)
         email.layoutParams = params
         layout.addView(email)
     }

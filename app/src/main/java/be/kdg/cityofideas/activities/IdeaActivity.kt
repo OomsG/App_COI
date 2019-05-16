@@ -6,6 +6,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.ideaSelectionListener
@@ -13,8 +14,9 @@ import be.kdg.cityofideas.fragments.IdeaFragment
 
 const val IDEA_ID : String = "idea"
 
-class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
-    private lateinit var toolbar: Toolbar
+class IdeaActivity : BaseActivity(), ideaSelectionListener {
+
+
 
     override fun onIdeaSelected(id: Int) {
         val intent = Intent(this, ReactionActivity::class.java)
@@ -29,8 +31,7 @@ class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
     }
 
     fun initialiseViews() {
-        toolbar = findViewById(R.id.IdeaToolbar)
         val fragment = supportFragmentManager.findFragmentById(R.id.IdeaFragment) as IdeaFragment
-        fragment.setId(intent.getIntExtra(IDEATION_ID,2),intent.getIntExtra(PROJECT_ID,2))
+        fragment.setId(intent.getIntExtra(IDEATION_ID,1),intent.getIntExtra(PROJECT_ID,1))
     }
 }

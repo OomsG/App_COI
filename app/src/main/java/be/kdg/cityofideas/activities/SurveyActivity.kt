@@ -8,7 +8,7 @@ import android.widget.Toolbar
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.fragments.QuestionsFragment
 
-class SurveyActivity : AppCompatActivity() {
+class SurveyActivity : BaseActivity() {
     private lateinit var submit:Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
