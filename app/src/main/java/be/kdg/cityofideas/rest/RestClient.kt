@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
+import android.util.Base64
+import android.util.Log
+import be.kdg.cityofideas.login.Credentials
 import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Ideation
 import be.kdg.cityofideas.model.ideations.Reaction
@@ -12,12 +15,15 @@ import be.kdg.cityofideas.model.projects.Phase
 import be.kdg.cityofideas.model.projects.Project
 import be.kdg.cityofideas.model.users.User
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonParser
 import io.reactivex.Observable
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import java.io.IOException
+import java.util.*
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -102,6 +108,7 @@ public class RestClient(private val context: Context?) {
                     it.BackgroundIMG =BitmapFactory.decodeStream(imageResponse)
                 }
                 it.onNext(projects)
+                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -140,6 +147,7 @@ public class RestClient(private val context: Context?) {
                     }
                 }
                 it.onNext(ideations)
+                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -158,6 +166,7 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val reactions = gson.fromJson(response, Array<Reaction>::class.java)
                 it.onNext(reactions)
+                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -176,6 +185,7 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val phases = gson.fromJson(response, Array<Phase>::class.java)
                 it.onNext(phases)
+                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -194,6 +204,7 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val idea = gson.fromJson(response, Idea::class.java)
                 it.onNext(idea)
+                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -221,17 +232,47 @@ public class RestClient(private val context: Context?) {
     //endregion
 
     //region User
-    fun getUser(url: String) : Observable<User> {
+    fun getUser(url: String, email: String, password: String) : Observable<User> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
         } else HTTP_PREFIX
         val observable = Observable.create<User> {
             try {
-                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val request = Request.Builder()
+                    .url(prefix + host + ":" + port + apistring + url)
+                    .header("Email", Base64.encodeToString(email.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
+                    .header("Password", Base64.encodeToString(password.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
+                    .build()
+
                 val response = getClient()?.newCall(request)?.execute()?.body()?.string()
                 val gson = GsonBuilder().create()
                 val user = gson.fromJson(response, User::class.java)
                 it.onNext(user)
+                it.onComplete()
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
+    fun getTokens(url: String, email: String, password: String) : Observable<Credentials> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Credentials> {
+            try {
+                val request = Request.Builder()
+                    .url(prefix + host + ":" + port + apistring + url)
+                    .header("Email", Base64.encodeToString(email.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
+                    .header("Password", Base64.encodeToString(password.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
+                    .build()
+
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val credentials = gson.fromJson(response, Credentials::class.java)
+                it.onNext(credentials)
+                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -250,6 +291,7 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val users = gson.fromJson(response, Array<User>::class.java)
                 it.onNext(users)
+                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -270,6 +312,7 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val tags = gson.fromJson(response, Array<Tag>::class.java)
                 it.onNext(tags)
+                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }

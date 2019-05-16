@@ -21,7 +21,7 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.NullPointerException
 
 
-class ReactionActivity : AppCompatActivity() {
+class ReactionActivity : BaseActivity() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var title: TextView

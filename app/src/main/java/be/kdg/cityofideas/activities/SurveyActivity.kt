@@ -6,7 +6,7 @@ import android.widget.Toolbar
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.fragments.SurveyFragment
 
-class SurveyActivity : AppCompatActivity() {
+class SurveyActivity : BaseActivity() {
     private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {

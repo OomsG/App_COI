@@ -14,7 +14,7 @@ import be.kdg.cityofideas.model.ideations.Idea
 
 const val IDEA_ID : String = "idea"
 
-class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
+class IdeaActivity : BaseActivity(), ideaSelectionListener {
     private lateinit var toolbar: Toolbar
     private lateinit var Title: TextView
 
