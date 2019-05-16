@@ -2,6 +2,7 @@ package be.kdg.cityofideas.adapters
 
 import android.content.Context
 import android.net.Uri
+import android.support.v4.media.session.MediaControllerCompat.setMediaController
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -18,62 +19,52 @@ import java.lang.NullPointerException
 
 /* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
 
+
 //region toplevel Functions
 
 fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
     idea.IdeaObjects?.forEach {
-        try {
-            if (it.Text != null) {
-                val params = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                val text = TextView(context)
-                text.id = it.IdeaObjectId
-                text.text = it.Text
-                text.layoutParams = params
-                layout.addView(text)
-            }
-        } catch (e: NullPointerException) {
-            e.printStackTrace()
+        val id = it.IdeaObjectId
+        it.Text?.let {
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            val text = TextView(context)
+            text.id = id
+            text.text = it
+            text.layoutParams = params
+            layout.addView(text)
         }
-        try {
-            if (it.ImageName != null) {
-                val params = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                val image = ImageView(context)
-                image.id = it.IdeaObjectId
-                image.setImageBitmap(it.Image)
-                image.layoutParams = params
-                layout.addView(image)
+        it.Image?.let {
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            val image = ImageView(context)
+            image.id = id
+            image.setImageBitmap(it)
+            image.layoutParams = params
+            layout.addView(image)
 
-            }
-        } catch (e: NullPointerException) {
-            e.printStackTrace()
         }
-        try {
-            if (it.Url != null) {
-                val params = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                val video = VideoView(context)
-                video.id = it.IdeaObjectId
-                //Log.d("help", it.Url)
-                val uri = Uri.parse(it.Url)
-                video.setVideoURI(uri)
-                video.requestFocus()
-                video.start()
-                video.layoutParams = params
-                layout.addView(video)
+        it.Url?.let {
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            val video = VideoView(context)
+            video.id = id
+            val uri = Uri.parse(it)
+            Log.d("URI", uri.toString())
+            video.setVideoURI(uri)
+            video.requestFocus()
+            val mediaController = MediaController(context)
+            mediaController.setAnchorView(video)
+            video.layoutParams = params
+            layout.addView(video)
 
-            }
-        } catch (e: NullPointerException) {
-            e.printStackTrace()
         }
-
     }
 }
 
@@ -117,7 +108,7 @@ fun getBestReaction(idea: Idea): String? {
     if (reactions.isEmpty()) {
         return "Er zijn geen reacties om weer te geven"
     } else {
-        return idea.Reactions?.first()?.ReactionText
+        return idea.Reactions.first().ReactionText
     }
 }
 
@@ -154,6 +145,7 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
             notifyDataSetChanged()
         }
 
+
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.IdeaTitle
         val name = view.IdeaUserName
@@ -188,13 +180,15 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
 
             }.start()
             VoteCounter++
-            notifyDataSetChanged()
+
+            notifyItemChanged(p1)
         }
         p0.shareButton.setOnClickListener {
             Thread {
                 RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB.toString(), "A")
             }.start()
-           ShareCounter++
+           
+            ShareCounter++
             notifyDataSetChanged()
         }
         p0.reactionText.text = getBestReaction(ideas[p1])

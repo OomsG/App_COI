@@ -5,11 +5,16 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.login.LoginActivity
 import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.model.datatypes.Location
 import be.kdg.cityofideas.model.ideations.getBytes

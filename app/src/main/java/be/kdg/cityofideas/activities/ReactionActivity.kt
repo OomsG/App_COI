@@ -36,6 +36,7 @@ class ReactionActivity : BaseActivity() {
     private var voteCounter = 0
     private var shareCounter = 0
 
+
     var idea: Idea = Idea(
         0, null, null, null, null, null, null
         , null, null, null, null
@@ -48,8 +49,8 @@ class ReactionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reaction)
-        //getIdea(this)
-        Log.d("help",idea.toString())
+        getIdea(this)
+        Log.d("help", idea.toString())
         initialiseViews()
     }
 
@@ -65,7 +66,7 @@ class ReactionActivity : BaseActivity() {
         voteButton = findViewById(R.id.ReactionIdeaVoteButton)
         shareButton = findViewById(R.id.ReactionIdeaShareButton)
 
-        // name.text = idea!!.Title
+        // name.text = idea.
         title.text = idea.Title
         voteCount.text = getIdeaVoteCount(idea, voteCounter)
         reactionCount.text = getReactionCount(idea)
@@ -83,8 +84,8 @@ class ReactionActivity : BaseActivity() {
             .getIdea("idea/" + intent.getIntExtra(IDEA_ID, 2))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.newThread())
-            .subscribe {
+            .subscribe({
                 idea = it
-            }
+            })
     }
 }

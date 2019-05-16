@@ -13,6 +13,8 @@ import be.kdg.cityofideas.model.ideations.Reaction
 import be.kdg.cityofideas.model.ideations.Tag
 import be.kdg.cityofideas.model.projects.Phase
 import be.kdg.cityofideas.model.projects.Project
+import be.kdg.cityofideas.model.surveys.Question
+import be.kdg.cityofideas.model.surveys.Survey
 import be.kdg.cityofideas.model.users.User
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
@@ -103,9 +105,28 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val projects = gson.fromJson(response, Array<Project>::class.java)
                 projects.forEach {
-                    val ImageRequest =Request.Builder().url(prefix + host + ":" + port + it.BackgroundImage).build()
+                    val ImageRequest = Request.Builder().url(prefix + host + ":" + port + it.BackgroundImage).build()
                     val imageResponse = getClient()?.newCall(ImageRequest)?.execute()?.body()?.byteStream()
-                    it.BackgroundIMG =BitmapFactory.decodeStream(imageResponse)
+                    it.BackgroundIMG = BitmapFactory.decodeStream(imageResponse)
+                    it.Phases?.forEach {
+                        it.Ideations?.forEach {
+                            it.Ideas?.forEach {
+                                it.IdeaObjects?.forEach {
+                                    try {
+                                        if (it.ImageName!!.isNotEmpty()) {
+                                            val ImageRequestIdea =
+                                                Request.Builder().url(prefix + host + ":" + port + it.ImagePath).build()
+                                            val imageResponseIdea    =
+                                                getClient()?.newCall(ImageRequestIdea)?.execute()?.body()?.byteStream()
+                                            it.Image = BitmapFactory.decodeStream(imageResponseIdea)
+                                        }
+                                    } catch (e: NullPointerException) {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 it.onNext(projects)
                 it.onComplete()
@@ -133,14 +154,15 @@ public class RestClient(private val context: Context?) {
                 ideations.forEach {
                     it.Ideas?.forEach {
                         it.IdeaObjects?.forEach {
-                            //Log.d("help", it.ImageName)
                             try {
                                 if (it.ImageName!!.isNotEmpty()) {
-                                    val ImageRequest = Request.Builder().url(prefix + host + ":" + port + it.ImagePath).build()
-                                    val imageResponse = getClient()?.newCall(ImageRequest)?.execute()?.body()?.byteStream()
+                                    val ImageRequest =
+                                        Request.Builder().url(prefix + host + ":" + port + it.ImagePath).build()
+                                    val imageResponse =
+                                        getClient()?.newCall(ImageRequest)?.execute()?.body()?.byteStream()
                                     it.Image = BitmapFactory.decodeStream(imageResponse)
                                 }
-                            }catch (e:NullPointerException){
+                            } catch (e: NullPointerException) {
 
                             }
                         }
@@ -148,6 +170,25 @@ public class RestClient(private val context: Context?) {
                 }
                 it.onNext(ideations)
                 it.onComplete()
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
+
+    fun getSurveys(url: String): Observable<Array<Survey>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Survey>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val surveys = gson.fromJson(response, Array<Survey>::class.java)
+                it.onNext(surveys)
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -214,16 +255,15 @@ public class RestClient(private val context: Context?) {
     //endregion
     //region Put
 
-    fun createVote(ideaId:Int, voteType:String, userId:String){
-        val formBody = FormBody.Builder().add("IdeaId",ideaId.toString()).build()
+    fun createVote(ideaId: Int, voteType: String, userId: String) {
+        val formBody = FormBody.Builder().add("IdeaId", ideaId.toString()).build()
 
         val request = Request.Builder()
-            .url(HTTPS_PREFIX + host + ":" + port + apistring + "/vote/"+ideaId)
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "vote")
             .post(formBody).build()
         try {
             getClient()!!.newCall(request).execute()
-        }
-        catch (e:IOException){
+        } catch (e: IOException) {
             e.printStackTrace()
         }
     }
@@ -280,7 +320,7 @@ public class RestClient(private val context: Context?) {
         return observable
     }
 
-    fun getUsers(url: String) : Observable<Array<User>> {
+    fun getUsers(url: String): Observable<Array<User>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
         } else HTTP_PREFIX
@@ -298,7 +338,27 @@ public class RestClient(private val context: Context?) {
         }
         return observable
     }
+
+
     //endregion
+    //region Survey
+    fun getQuestions(url: String): Observable<Array<Question>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Question>> {
+          try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val questions = gson.fromJson(response, Array<Question>::class.java)
+                it.onNext(questions)
+          } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
 
     //region Tag
     fun getTags(url: String) : Observable<Array<Tag>> {
@@ -312,7 +372,6 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val tags = gson.fromJson(response, Array<Tag>::class.java)
                 it.onNext(tags)
-                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }

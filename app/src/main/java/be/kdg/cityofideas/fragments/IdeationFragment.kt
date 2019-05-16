@@ -17,10 +17,12 @@ import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter
 import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
 
 import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter.IdeationsSelectionListener
+import be.kdg.cityofideas.adapters.SurveyRecyclerAdapter
 
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_ideation.*
 import kotlinx.android.synthetic.main.fragment_project.*
 import java.lang.Exception
 
@@ -66,6 +68,9 @@ class IdeationFragment : Fragment() {
         val rvIdeation = view.findViewById<RecyclerView>(R.id.rvIdeations)
         rvIdeation.layoutManager = LinearLayoutManager(context)
         rvIdeation.adapter = IdeationsRecyclerAdapter(context, listener,projectId)
+        val rvSurveys = view.findViewById<RecyclerView>(R.id.rvSurveys)
+        rvSurveys.layoutManager = LinearLayoutManager(context)
+        rvSurveys.adapter = SurveyRecyclerAdapter(context,listener,projectId)
         RestClient(context)
             .getIdeations("ideations/" + projectId)
             .map {
@@ -78,6 +83,17 @@ class IdeationFragment : Fragment() {
             .subscribe {
                 (rvIdeation.adapter as IdeationsRecyclerAdapter).ideations = it.toTypedArray()
             }
-
+        RestClient(context)
+            .getSurveys("surveys/" + projectId)
+            .map {
+                it.filter {
+                    it.Phase!!.PhaseNr!!.equals(phaseNr)
+                }
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                (rvSurveys.adapter as SurveyRecyclerAdapter).surveys = it.toTypedArray()
+            }
     }
 }
