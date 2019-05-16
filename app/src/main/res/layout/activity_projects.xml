@@ -7,8 +7,7 @@
         android:layout_height="match_parent"
         tools:context=".activities.ProjectsActivity"
         android:orientation="vertical">
-    <include
-            layout="@layout/toolbar_layout" android:id="@+id/ProjectsInclude"/>
+
     <android.support.design.widget.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -17,7 +16,7 @@
             app:tabMode="fixed"
             app:tabGravity="fill"
 
-            app:layout_constraintTop_toBottomOf="@+id/ProjectsInclude"
+            app:layout_constraintTop_toTopOf="parent"
             />
 
     <android.support.v4.view.ViewPager

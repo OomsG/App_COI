@@ -24,20 +24,20 @@ const val IDEATION_TYPE :String = "IdeationType"
 class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
     override fun onSurveySelected(surveyId: Int, projectId: Int) {
         val surveyIntent = Intent(this,SurveyActivity::class.java)
-        intent.putExtra(SURVEY_ID,surveyId)
-        intent.putExtra(PROJECT_ID,projectId)
+        surveyIntent.putExtra(SURVEY_ID,surveyId)
+        surveyIntent.putExtra(PROJECT_ID,projectId)
         startActivity(surveyIntent)
     }
 
     override fun onIdeationSelected(ideationid: Int, projectId:Int, ideationType: Boolean) {
         val ideationIntent = Intent(this,IdeaActivity::class.java)
-        intent.putExtra(IDEATION_ID,ideationid)
-        intent.putExtra(PROJECT_ID,projectId)
-        intent.putExtra(IDEATION_TYPE,ideationType)
+        Log.d("IdeationId", ideationid.toString() )
+        ideationIntent.putExtra(IDEATION_ID,ideationid)
+        ideationIntent.putExtra(PROJECT_ID,projectId)
+        ideationIntent.putExtra(IDEATION_TYPE,ideationType)
         startActivity(ideationIntent)
     }
 
-    private lateinit var toolbar: Toolbar
     private lateinit var viewPager: ViewPager
     private lateinit var pagerAdapter: IdeationViewPagerAdapter
     private lateinit var tabLayout: TabLayout
@@ -52,7 +52,6 @@ class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
     @SuppressLint("CheckResult")
     fun initaliseViews(context: Context , id:Int) {
         tabLayout = findViewById(R.id.IdeationsTab)
-        toolbar = findViewById(R.id.IdeationsInclude)
         viewPager = findViewById(R.id.IdeationsPager)
         pagerAdapter = IdeationViewPagerAdapter(supportFragmentManager, id)
         viewPager.adapter = pagerAdapter

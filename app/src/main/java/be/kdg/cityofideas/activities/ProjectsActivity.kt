@@ -14,7 +14,6 @@ const val PROJECT_ID: String = "projectid"
 
 class ProjectsActivity : AppCompatActivity(), ProjectsSelectionListener {
 
-    private lateinit var toolbar: Toolbar
     private lateinit var viewPager: ViewPager
     private lateinit var pagerAdapter: ProjectsViewPagerAdapter
     private lateinit var tabLayout: TabLayout
@@ -33,7 +32,6 @@ class ProjectsActivity : AppCompatActivity(), ProjectsSelectionListener {
 
     private fun initialiseViews() {
         tabLayout = findViewById(R.id.ProjectsTab)
-        toolbar = findViewById(R.id.ProjectsInclude)
         viewPager = findViewById(R.id.ProjectsPager)
         pagerAdapter = ProjectsViewPagerAdapter(supportFragmentManager)
         viewPager.adapter = pagerAdapter

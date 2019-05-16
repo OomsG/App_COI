@@ -4,21 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
-import be.kdg.cityofideas.model.ideations.Idea
-import be.kdg.cityofideas.model.ideations.Ideation
-import be.kdg.cityofideas.model.ideations.Reaction
-import be.kdg.cityofideas.model.ideations.Tag
+import be.kdg.cityofideas.model.ideations.*
 import be.kdg.cityofideas.model.projects.Phase
 import be.kdg.cityofideas.model.projects.Project
 import be.kdg.cityofideas.model.surveys.Question
 import be.kdg.cityofideas.model.surveys.Survey
 import be.kdg.cityofideas.model.users.User
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.*
 import java.io.IOException
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -110,7 +105,7 @@ public class RestClient(private val context: Context?) {
                                         if (it.ImageName!!.isNotEmpty()) {
                                             val ImageRequestIdea =
                                                 Request.Builder().url(prefix + host + ":" + port + it.ImagePath).build()
-                                            val imageResponseIdea    =
+                                            val imageResponseIdea =
                                                 getClient()?.newCall(ImageRequestIdea)?.execute()?.body()?.byteStream()
                                             it.Image = BitmapFactory.decodeStream(imageResponseIdea)
                                         }
@@ -244,12 +239,18 @@ public class RestClient(private val context: Context?) {
     //endregion
     //region Put
 
-    fun createVote(ideaId: Int, voteType: String, userId: String) {
-        val formBody = FormBody.Builder().add("IdeaId", ideaId.toString()).build()
+    fun createVote(ideaId: Int, voteType: VoteType, userId: String) {
 
+        val formBody = FormBody.Builder()
+            .add("IdeaId", ideaId.toString())
+            .add("voteType", voteType.toString()).build()
+
+        val gson = Gson().toJson(formBody)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),gson)
         val request = Request.Builder()
             .url(HTTPS_PREFIX + host + ":" + port + apistring + "vote")
-            .post(formBody).build()
+            .post(body)
+            .build()
         try {
             getClient()!!.newCall(request).execute()
         } catch (e: IOException) {
@@ -305,22 +306,22 @@ public class RestClient(private val context: Context?) {
             HTTPS_PREFIX
         } else HTTP_PREFIX
         val observable = Observable.create<Array<Question>> {
-          try {
+            try {
                 val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
                 val response = getClient()?.newCall(request)?.execute()?.body()?.string()
                 val gson = GsonBuilder().create()
                 val questions = gson.fromJson(response, Array<Question>::class.java)
                 it.onNext(questions)
-          } catch (e: IOException) {
+            } catch (e: IOException) {
                 e.printStackTrace();
             }
         }
         return observable
     }
 
-
+//endregion
     //region Tag
-    fun getTags(url: String) : Observable<Array<Tag>> {
+    fun getTags(url: String): Observable<Array<Tag>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
         } else HTTP_PREFIX

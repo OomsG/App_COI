@@ -26,7 +26,7 @@ class SurveyActivity : AppCompatActivity() {
             }
         }
         val fragment = supportFragmentManager.findFragmentById(R.id.SurveyFragment) as QuestionsFragment
-        fragment.setQuestionId(intent.getIntExtra(SURVEY_ID,1))
+        fragment.setQuestionId(intent.getIntExtra(SURVEY_ID,5))
     }
 
 

@@ -42,6 +42,7 @@ class IdeaFragment : Fragment() {
     fun initialiseViews(view: View, ideationId: Int,projectId: Int) {
         val rvIdeas = view.findViewById<RecyclerView>(R.id.rvIdeas)
         rvIdeas.layoutManager = LinearLayoutManager(context)
+        Log.d("projectId",projectId.toString())
         rvIdeas.adapter = IdeaRecyclerAdapter(context, listener)
         RestClient(context)
             .getIdeations("ideations/" + projectId)
