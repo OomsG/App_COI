@@ -3,10 +3,12 @@ package be.kdg.cityofideas.login
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import android.util.Patterns
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.login.data.LoginRepository
 import be.kdg.cityofideas.login.data.Result
+import be.kdg.cityofideas.model.users.User
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
     private val _loginForm = MutableLiveData<LoginFormState>()
@@ -15,12 +17,22 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
+    fun login(loggedInUser: User) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
+        val result = loginRepository.login(loggedInUser)
 
         if (result is Result.Success) {
-            _loginResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+            _loginResult.value = LoginResult(
+                success = LoggedInUserView(
+                    UserName = result.data.UserName,
+                    Email = result.data.Email,
+                    Surname = result.data.Surname,
+                    Name = result.data.Name,
+                    Sex = result.data.Sex,
+                    Age = result.data.Age,
+                    Zipcode = result.data.Zipcode
+                )
+            )
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
         }
@@ -47,6 +59,6 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5;
+        return password.length > 5
     }
 }

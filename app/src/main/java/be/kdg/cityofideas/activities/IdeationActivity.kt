@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import be.kdg.cityofideas.R
@@ -19,6 +18,11 @@ import io.reactivex.schedulers.Schedulers
 const val IDEATION_ID :String = "IdeationId"
 const val SURVEY_ID:String = "SurveyId"
 const val IDEATION_TYPE :String = "IdeationType"
+
+class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
+    private lateinit var viewPager: ViewPager
+    private lateinit var pagerAdapter: IdeationViewPagerAdapter
+    private lateinit var tabLayout: TabLayout
 
 
 class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
@@ -38,31 +42,28 @@ class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
         startActivity(ideationIntent)
     }
 
-    private lateinit var viewPager: ViewPager
-    private lateinit var pagerAdapter: IdeationViewPagerAdapter
-    private lateinit var tabLayout: TabLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ideation)
-        initaliseViews(this, intent.getIntExtra(PROJECT_ID,1))
+        initialiseViews(this, intent.getIntExtra(PROJECT_ID,1))
     }
 
     @SuppressLint("CheckResult")
-    fun initaliseViews(context: Context , id:Int) {
+    private fun initialiseViews(context: Context, id:Int) {
         tabLayout = findViewById(R.id.IdeationsTab)
         viewPager = findViewById(R.id.IdeationsPager)
         pagerAdapter = IdeationViewPagerAdapter(supportFragmentManager, id)
         viewPager.adapter = pagerAdapter
         tabLayout.setupWithViewPager(viewPager)
+
         RestClient(context)
             .getPhases("phases/" + id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe({
+            .subscribe {
                 (pagerAdapter).phases = it
-            })
-
+            }
     }
 }

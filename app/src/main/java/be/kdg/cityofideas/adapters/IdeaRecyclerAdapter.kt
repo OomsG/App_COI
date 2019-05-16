@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.support.v4.media.session.MediaControllerCompat.setMediaController
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -188,6 +187,7 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
             }.start()
             //ShareCounter++
             //notifyDataSetChanged()
+
         }
         p0.reactionText.text = getBestReaction(ideas[p1])
         p0.reactionCount.setOnClickListener {

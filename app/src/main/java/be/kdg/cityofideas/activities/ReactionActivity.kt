@@ -16,7 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-class ReactionActivity : AppCompatActivity() {
+class ReactionActivity : BaseActivity() {
 
     private lateinit var title: TextView
     private lateinit var name: TextView
@@ -31,7 +31,6 @@ class ReactionActivity : AppCompatActivity() {
     private var shareCounter = 0
 
     var idea: Idea? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
