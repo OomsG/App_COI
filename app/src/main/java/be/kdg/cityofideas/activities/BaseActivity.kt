@@ -1,11 +1,15 @@
 package be.kdg.cityofideas.activities;
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import be.kdg.cityofideas.R
+import android.widget.Toast
+import be.kdg.cityofideas.*
+import be.kdg.cityofideas.login.LoggedInUserView
 import be.kdg.cityofideas.login.LoginActivity
 import be.kdg.cityofideas.login.loggedInUser
 
@@ -62,6 +66,15 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun signOut() {
+        val session = SessionManager(this)
 
+        Toast.makeText(
+            applicationContext,
+            "Tot ziens ${loggedInUser!!.UserName}!",
+            Toast.LENGTH_LONG
+        ).show()
+
+        session.logoutUser()
+        invalidateOptionsMenu()
     }
 }

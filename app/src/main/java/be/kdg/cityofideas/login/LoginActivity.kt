@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.model.users.User
@@ -95,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
                                 it.Zipcode,
                                 it.Votes
                             )
-                            loginViewModel.login(loggedInUser)
+                            loginViewModel.login(loggedInUser, context)
                         }
                 } else {
 
@@ -157,7 +158,7 @@ class LoginActivity : AppCompatActivity() {
 
         Toast.makeText(
             applicationContext,
-            "$welcome ${model.UserName}",
+            "$welcome ${model.UserName}!",
             Toast.LENGTH_LONG
         ).show()
     }

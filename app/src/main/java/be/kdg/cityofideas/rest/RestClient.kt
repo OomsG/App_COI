@@ -24,6 +24,7 @@ import java.io.IOException
 import java.text.Normalizer
 import java.util.*
 import android.util.Base64
+import be.kdg.cityofideas.model.ideations.*
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -127,6 +128,7 @@ public class RestClient(private val context: Context?) {
                     }
                 }
                 it.onNext(projects)
+                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -346,8 +348,6 @@ public class RestClient(private val context: Context?) {
         }
         return observable
     }
-
-
     //endregion
     //region Survey
 
@@ -387,7 +387,6 @@ public class RestClient(private val context: Context?) {
         }
         return observable
     }
-
     //endregion
     //region Tag
     fun getTags(url: String): Observable<Array<Tag>> {

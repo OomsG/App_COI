@@ -54,3 +54,7 @@ android {
         implementation files('libs/YouTubeAndroidPlayerApi.jar')
     }
 }
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+}

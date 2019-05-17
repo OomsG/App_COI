@@ -12,7 +12,7 @@ import be.kdg.cityofideas.model.ideations.Reaction
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
         // increment when you changed db schema
-        private const val DB_VERSION: Int = 10
+        private const val DB_VERSION: Int = 24
         private const val DB_NAME: String = "CityOfIdeasApp"
 
         //region Datatypes

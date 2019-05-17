@@ -1,5 +1,7 @@
 package be.kdg.cityofideas.login.data
 
+import android.content.Context
+import be.kdg.cityofideas.SessionManager
 import be.kdg.cityofideas.model.users.User
 
 /**
@@ -8,16 +10,10 @@ import be.kdg.cityofideas.model.users.User
  */
 
 class LoginRepository(val dataSource: LoginDataSource) {
-    // in-memory cache of the loggedInUser object
     var user: User? = null
         private set
 
-    val isLoggedIn: Boolean
-        get() = user != null
-
     init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
         user = null
     }
 
@@ -26,19 +22,21 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(loggedInUser: User): Result<User> {
+    fun login(loggedInUser: User, context: Context): Result<User> {
         val result = dataSource.login(loggedInUser)
 
         if (result is Result.Success) {
-            setLoggedInUser(result.data)
+            val sessionManager = SessionManager(context)
+
+            setLoggedInUser(result.data, sessionManager)
         }
 
         return result
     }
 
-    private fun setLoggedInUser(loggedInUser: User) {
+    private fun setLoggedInUser(loggedInUser: User, sessionManager: SessionManager) {
         this.user = loggedInUser
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
+
+        sessionManager.createLoginSession(this.user!!)
     }
 }

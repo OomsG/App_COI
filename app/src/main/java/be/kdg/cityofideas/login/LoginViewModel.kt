@@ -17,9 +17,9 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(loggedInUser: User) {
+    fun login(loggedInUser: User, context: Context) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(loggedInUser)
+        val result = loginRepository.login(loggedInUser, context)
 
         if (result is Result.Success) {
             _loginResult.value = LoginResult(

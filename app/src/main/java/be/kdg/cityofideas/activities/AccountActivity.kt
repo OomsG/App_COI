@@ -56,6 +56,8 @@ class AccountActivity : AppCompatActivity() {
     private fun addEventHandlers() {
         btnSave.setOnClickListener {
             // TODO: save account info
+
+
         }
     }
 }
