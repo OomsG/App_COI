@@ -16,6 +16,10 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning"
             tools:targetApi="m">
+        <activity
+                android:name=".activities.CreateIdeaActivity"
+                android:theme="@style/popUp">
+        </activity>
         <activity android:name=".activities.AccountActivity">
         </activity>
         <activity

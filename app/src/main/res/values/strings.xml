@@ -18,6 +18,8 @@
     <string name="login_failed">"Login failed"</string>
     <string name="register">Register</string>
     <string name="already_account">Al een account? Log in!</string>
+    <string name="edittext">Geef hier je antwoord</string>
+    <string name="Email">geef hier je Email adres</string>
     <string name="account">Account</string>
     <string name="log_out">Log out</string>
 

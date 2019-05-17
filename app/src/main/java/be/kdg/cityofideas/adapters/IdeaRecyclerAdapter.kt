@@ -2,25 +2,33 @@ package be.kdg.cityofideas.adapters
 
 import android.content.Context
 import android.net.Uri
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import android.support.v4.media.session.MediaControllerCompat.setMediaController
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
+import android.system.Os.remove
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import be.kdg.cityofideas.R
 import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Reaction
+import be.kdg.cityofideas.model.ideations.Vote
 import be.kdg.cityofideas.model.ideations.VoteType
 import be.kdg.cityofideas.rest.RestClient
+
 import kotlinx.android.synthetic.main.ideas_list.view.*
-import java.lang.NullPointerException
 
+import com.google.android.youtube.player.YouTubePlayerSupportFragment
 
+const val YOUTUBE_API: String = "AIzaSyAyyohq9ZDQT-bnC_E50ZcU-iA8efhXMjY"
 /* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
 
-
 //region toplevel Functions
+
 
 fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
     idea.IdeaObjects?.forEach {
@@ -53,16 +61,23 @@ fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            val video = VideoView(context)
-            video.id = id
-            val uri = Uri.parse(it)
-            Log.d("URI", uri.toString())
-            video.setVideoURI(uri)
-            video.requestFocus()
-            val mediaController = MediaController(context)
-            mediaController.setAnchorView(video)
-            video.layoutParams = params
-            layout.addView(video)
+            /* val video = YouTubePlayerView(context)
+             video.id = id
+             val init = object : YouTubePlayer.OnInitializedListener {
+                 override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, p1: YouTubePlayer?, p2: Boolean) {
+                     p1!!.loadVideo(it)
+                 }
+
+                 override fun onInitializationFailure(
+                     p0: YouTubePlayer.Provider?,
+                     p1: YouTubeInitializationResult?
+                 ) {
+                     Toast.makeText(context, "Deze video kan niet worden afgespeeld", Toast.LENGTH_SHORT).show()
+                 }
+             }
+             video.initialize(YOUTUBE_API, init)
+             video.layoutParams = params
+             layout.addView(video)*/
 
         }
     }
@@ -125,11 +140,13 @@ fun getReactionCount(idea: Idea): String? {
     }
     return null
 }
+
+
 //endregion
 
 class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
-
+    private var youTubePlayerFragment: YouTubePlayerSupportFragment? = null
     private lateinit var bestReaction: Reaction
     private lateinit var view: View
     private var VoteCounter = 0
@@ -139,11 +156,12 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         fun onIdeaSelected(id: Int)
     }
 
-    var ideas: Array<Idea> = arrayOf()
+    var ideas: MutableList<Idea> = arrayListOf()
         set(ideas) {
             field = ideas
             notifyDataSetChanged()
         }
+
 
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.IdeaTitle
@@ -159,15 +177,16 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): IdeaViewHolder {
-        val ideaView = LayoutInflater.from(p0.context).inflate(R.layout.ideas_list, p0, false)
+        val ideaView = LayoutInflater.from(p0.context).inflate(be.kdg.cityofideas.R.layout.ideas_list, p0, false)
         view = ideaView
         return IdeaViewHolder(ideaView)
     }
 
+
     override fun getItemCount() = ideas.size
 
     override fun onBindViewHolder(p0: IdeaViewHolder, p1: Int) {
-        //p0.name.text = ideas[p1].user.Name
+        //p0.name.text = ideas[p1].User!!.Name
         p0.title.text = ideas[p1].Title
         getIdeaDetails(ideas[p1], context, p0.layout)
         p0.reactionCount.text = getReactionCount(ideas[p1])
@@ -176,17 +195,15 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         p0.voteButton.setOnClickListener {
             Thread {
                 RestClient(context).createVote(ideas[p1].IdeaId, VoteType.VOTE, "A")
-
+                Log.d("vote", "Voted")
             }.start()
-            //VoteCounter++
-            //notifyDataSetChanged()
+            notifyItemChanged(p1)
         }
         p0.shareButton.setOnClickListener {
             Thread {
                 RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB, "JSLMQKSLDMKQD")
             }.start()
-            //ShareCounter++
-            //notifyDataSetChanged()
+            notifyItemChanged(p1)
 
         }
         p0.reactionText.text = getBestReaction(ideas[p1])
@@ -197,4 +214,5 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
                 Toast.makeText(it.context, "Er zijn geen reacties om te tonen", Toast.LENGTH_LONG).show()
         }
     }
+
 }

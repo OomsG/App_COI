@@ -18,14 +18,7 @@ import io.reactivex.schedulers.Schedulers
 const val IDEATION_ID :String = "IdeationId"
 const val SURVEY_ID:String = "SurveyId"
 const val IDEATION_TYPE :String = "IdeationType"
-
 class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
-    private lateinit var viewPager: ViewPager
-    private lateinit var pagerAdapter: IdeationViewPagerAdapter
-    private lateinit var tabLayout: TabLayout
-
-
-class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
     override fun onSurveySelected(surveyId: Int, projectId: Int) {
         val surveyIntent = Intent(this,SurveyActivity::class.java)
         surveyIntent.putExtra(SURVEY_ID,surveyId)
@@ -35,13 +28,15 @@ class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
 
     override fun onIdeationSelected(ideationid: Int, projectId:Int, ideationType: Boolean) {
         val ideationIntent = Intent(this,IdeaActivity::class.java)
-        Log.d("IdeationId", ideationid.toString() )
         ideationIntent.putExtra(IDEATION_ID,ideationid)
         ideationIntent.putExtra(PROJECT_ID,projectId)
         ideationIntent.putExtra(IDEATION_TYPE,ideationType)
         startActivity(ideationIntent)
     }
 
+    private lateinit var viewPager: ViewPager
+    private lateinit var pagerAdapter: IdeationViewPagerAdapter
+    private lateinit var tabLayout: TabLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +52,6 @@ class IdeationActivity : AppCompatActivity(),IdeationsSelectionListener{
         pagerAdapter = IdeationViewPagerAdapter(supportFragmentManager, id)
         viewPager.adapter = pagerAdapter
         tabLayout.setupWithViewPager(viewPager)
-
         RestClient(context)
             .getPhases("phases/" + id)
             .observeOn(AndroidSchedulers.mainThread())

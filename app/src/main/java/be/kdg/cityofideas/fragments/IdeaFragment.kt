@@ -56,7 +56,7 @@ class IdeaFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
-                (rvIdeas.adapter as IdeaRecyclerAdapter).ideas = it!!.toTypedArray()
+                (rvIdeas.adapter as IdeaRecyclerAdapter).ideas = it!!.toMutableList()
             })
     }
 

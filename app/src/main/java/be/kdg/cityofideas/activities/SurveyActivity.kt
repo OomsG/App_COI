@@ -1,6 +1,5 @@
 package be.kdg.cityofideas.activities
 
-import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -10,7 +9,7 @@ import be.kdg.cityofideas.R
 import be.kdg.cityofideas.fragments.QuestionsFragment
 
 class SurveyActivity : BaseActivity() {
-    private lateinit var toolbar: Toolbar
+    private lateinit var submit:Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +25,7 @@ class SurveyActivity : BaseActivity() {
             }
         }
         val fragment = supportFragmentManager.findFragmentById(R.id.SurveyFragment) as QuestionsFragment
-        fragment.setQuestionId(intent.getIntExtra(SURVEY_ID,5))
+        fragment.setQuestionId(intent.getIntExtra(SURVEY_ID,1))
     }
 
 
