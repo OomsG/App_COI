@@ -8,17 +8,25 @@
         tools:context=".activities.SurveyActivity">
 
 
-    <include
-            layout="@layout/toolbar_layout" android:id="@+id/SurveyInclude"/>
-
     <fragment
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:name="be.kdg.cityofideas.fragments.SurveyFragment"
+            android:name="be.kdg.cityofideas.fragments.QuestionsFragment"
             android:id="@+id/SurveyFragment"
-            tools:layout="@layout/fragment_survey"
-            app:layout_constraintTop_toBottomOf="@+id/SurveyInclude"
+            tools:layout="@layout/fragment_questions"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@+id/SurveySubmit"
+            />
+
+    <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/SurveySubmit"
+            app:layout_constraintTop_toBottomOf="@+id/SurveyFragment"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="Bevestig"/>
 </android.support.constraint.ConstraintLayout>

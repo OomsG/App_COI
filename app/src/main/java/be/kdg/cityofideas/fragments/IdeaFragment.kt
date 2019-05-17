@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +22,6 @@ import java.lang.Exception
 
 class IdeaFragment : Fragment() {
     private lateinit var listener: ideaSelectionListener
-    private var ideationId = 0
-    private var projectId = 0
     private lateinit var view1: View
 
     override fun onAttach(context: Context?) {
@@ -40,9 +39,10 @@ class IdeaFragment : Fragment() {
     }
 
     @SuppressLint("CheckResult")
-    fun initialiseViews(view: View, projectId: Int, ideationId: Int) {
+    fun initialiseViews(view: View, ideationId: Int,projectId: Int) {
         val rvIdeas = view.findViewById<RecyclerView>(R.id.rvIdeas)
         rvIdeas.layoutManager = LinearLayoutManager(context)
+        Log.d("projectId",projectId.toString())
         rvIdeas.adapter = IdeaRecyclerAdapter(context, listener)
         RestClient(context)
             .getIdeations("ideations/" + projectId)
@@ -56,14 +56,12 @@ class IdeaFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
-                (rvIdeas.adapter as IdeaRecyclerAdapter).ideas = it!!.toTypedArray()
+                (rvIdeas.adapter as IdeaRecyclerAdapter).ideas = it!!.toMutableList()
             })
     }
 
     fun setId(ideation: Int, project: Int) {
-        ideationId = ideation
-        projectId = project
-        initialiseViews(view1, project, ideation)
+        initialiseViews(view1, ideation, project)
     }
 
 }
