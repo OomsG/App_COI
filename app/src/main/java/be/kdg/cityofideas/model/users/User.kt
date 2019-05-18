@@ -10,10 +10,10 @@ data class User(
     val Email: String,
     val Platform: Platform?,
     val PasswordHash: String,
-    val Surname: String?,
-    val Name: String?,
-    val Sex: String?,
-    val Age: Int?,
-    val Zipcode: String?,
+    var Surname: String?,
+    var Name: String?,
+    var Sex: String?,
+    var Age: Int?,
+    var Zipcode: String?,
     val Votes: Collection<Vote>?
 ) : Serializable

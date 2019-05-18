@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import android.widget.Toast
 import java.lang.IllegalStateException
 
@@ -39,8 +40,14 @@ class DatabaseManager(context: Context) {
         var inserted: Long = -1;
         try {
             inserted = db.insert(tblName, null, values)
+
+            // if insert failed, try replace
+            if (inserted.toInt() == -1) {
+                inserted = db.replace(tblName, null, values)
+                Log.d("replacing", "ja")
+            }
         } catch (e: SQLiteException) {
-            e.printStackTrace()
+//            e.printStackTrace()
         }
         return inserted.toInt() != -1;
     }

@@ -1,7 +1,9 @@
 package be.kdg.cityofideas.login.data
 
 import android.content.Context
-import be.kdg.cityofideas.SessionManager
+import be.kdg.cityofideas.login.LoggedInUserView
+import be.kdg.cityofideas.login.LoginSessionManager
+import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.users.User
 
 /**
@@ -10,23 +12,11 @@ import be.kdg.cityofideas.model.users.User
  */
 
 class LoginRepository(val dataSource: LoginDataSource) {
-    var user: User? = null
-        private set
-
-    init {
-        user = null
-    }
-
-    fun logout() {
-        user = null
-        dataSource.logout()
-    }
-
     fun login(loggedInUser: User, context: Context): Result<User> {
         val result = dataSource.login(loggedInUser)
 
         if (result is Result.Success) {
-            val sessionManager = SessionManager(context)
+            val sessionManager = LoginSessionManager(context)
 
             setLoggedInUser(result.data, sessionManager)
         }
@@ -34,9 +24,18 @@ class LoginRepository(val dataSource: LoginDataSource) {
         return result
     }
 
-    private fun setLoggedInUser(loggedInUser: User, sessionManager: SessionManager) {
-        this.user = loggedInUser
+    private fun setLoggedInUser(user: User, sessionManager: LoginSessionManager) {
+        loggedInUser = LoggedInUserView(
+            user.Id,
+            user.UserName,
+            user.Email,
+            user.Surname,
+            user.Name,
+            user.Sex,
+            user.Age,
+            user.Zipcode
+        )
 
-        sessionManager.createLoginSession(this.user!!)
+        sessionManager.createLoginSession(loggedInUser!!)
     }
 }

@@ -6,18 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
 import be.kdg.cityofideas.*
 import be.kdg.cityofideas.database.DatabaseManager
-import be.kdg.cityofideas.login.LoggedInUserView
-import be.kdg.cityofideas.login.loggedInUser
-import be.kdg.cityofideas.model.datatypes.Location
+import be.kdg.cityofideas.login.*
 import be.kdg.cityofideas.model.ideations.getBytes
 import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
@@ -33,12 +25,11 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        initialiseDatabase()
+        initialiseDatabase()
 
         pref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
         if (pref.getBoolean(IS_LOGIN, false)) {
-            Log.d("IS_LOGIN", pref.getBoolean(IS_LOGIN, false).toString())
             setLoggedInUser()
             invalidateOptionsMenu()
         }
@@ -46,10 +37,10 @@ class MainActivity : BaseActivity() {
         startProjectsActivity()
     }
 
-//    override fun onDestroy() {
-//        manager.closeDatabase()
-//        super.onDestroy()
-//    }
+    override fun onDestroy() {
+        manager.closeDatabase()
+        super.onDestroy()
+    }
 
     @SuppressLint("CheckResult")
     private fun initialiseDatabase() {
@@ -522,46 +513,26 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setLoggedInUser() {
-        Log.d("LoggedInUser", pref.getString(KEY_USER_NAME, "no name"))
+            val c = manager.getDetails(
+                helper.getUserEntry().TBL_USER,
+                null,
+                "${helper.getUserEntry().USER_ID} = ?",
+                arrayOf(pref.getString(KEY_USER_ID, "")!!),
+                null, null, null
+            )
 
-        loggedInUser = LoggedInUserView(
-            pref.getString(KEY_USER_NAME, null)!!,
-            pref.getString(KEY_USER_EMAIL, null)!!,
-            pref.getString(KEY_USER_SURNAME, null),
-            pref.getString(KEY_USER_LASTNAME, null),
-            pref.getString(KEY_USER_SEX, null),
-            pref.getInt(KEY_USER_AGE, 0),
-            pref.getString(KEY_USER_ZIP, null)
-        )
-
-//            val c = manager.getDetails(
-//                helper.getUserEntry().TBL_USER,
-//                null,
-//                "${helper.getUserEntry().USER_NAME} LIKE ?",
-//                arrayOf(pref.getString(KEY_USER_NAME, "")!!),
-//                null, null, null
-//            )
-
-//            val c = manager.getDetails(
-//                "SELECT * FROM ${helper.getUserEntry().TBL_USER} " +
-//                        "WHERE ${helper.getUserEntry().USER_NAME} = ${pref.getString(KEY_USER_NAME, "")}"
-//            )
-//
-//            if (c != null) {
-//                loggedInUser = LoggedInUserView(
-//                    c.getString(c.getColumnIndex(helper.getUserEntry().USER_NAME)),
-//                    c.getString(c.getColumnIndex(helper.getUserEntry().USER_EMAIL)),
-//                    c.getString(c.getColumnIndex(helper.getUserEntry().USER_SURNAME)),
-//                    c.getString(c.getColumnIndex(helper.getUserEntry().USER_LAST_NAME)),
-//                    c.getString(c.getColumnIndex(helper.getUserEntry().USER_SEX)),
-//                    c.getInt(c.getColumnIndex(helper.getUserEntry().USER_AGE)),
-//                    c.getString(c.getColumnIndex(helper.getUserEntry().USER_ZIP))
-//                )
-//            } else {
-//                Log.d("Cursor Result", "no user found")
-//            }
-//
-//            c?.close()
-
+        if (c.moveToFirst()) {
+            loggedInUser = LoggedInUserView(
+                c.getString(c.getColumnIndex(helper.getUserEntry().USER_ID)),
+                c.getString(c.getColumnIndex(helper.getUserEntry().USER_NAME)),
+                c.getString(c.getColumnIndex(helper.getUserEntry().USER_EMAIL)),
+                c.getString(c.getColumnIndex(helper.getUserEntry().USER_SURNAME)),
+                c.getString(c.getColumnIndex(helper.getUserEntry().USER_LAST_NAME)),
+                c.getString(c.getColumnIndex(helper.getUserEntry().USER_SEX)),
+                c.getInt(c.getColumnIndex(helper.getUserEntry().USER_AGE)),
+                c.getString(c.getColumnIndex(helper.getUserEntry().USER_ZIP))
+            )
+        }
+        c.close()
     }
 }

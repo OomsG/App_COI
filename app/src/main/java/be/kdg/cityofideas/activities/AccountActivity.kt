@@ -1,15 +1,23 @@
 package be.kdg.cityofideas.activities
 
+import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.login.loggedInUser
+import be.kdg.cityofideas.model.users.Gender
+import be.kdg.cityofideas.rest.RestClient
 
 class AccountActivity : AppCompatActivity() {
+    private val manager = DatabaseManager(this)
+    private val helper = manager.dbHelper
+
     private lateinit var etUsername: EditText
     private lateinit var etEmail: EditText
     private lateinit var etSurname: EditText
@@ -42,10 +50,10 @@ class AccountActivity : AppCompatActivity() {
         etSurname.setText(loggedInUser?.Surname)
         etLastName.setText(loggedInUser?.Name)
 
-        when(loggedInUser?.Sex?.toUpperCase()) {
-            "MALE" -> spinSex.setSelection(1)
-            "FEMALE" -> spinSex.setSelection(2)
-            "OTHER" -> spinSex.setSelection(3)
+        when (loggedInUser?.Sex?.toUpperCase()) {
+            Gender.MALE.name -> spinSex.setSelection(1)
+            Gender.FEMALE.name -> spinSex.setSelection(2)
+            Gender.OTHER.name -> spinSex.setSelection(3)
             else -> spinSex.setSelection(0)
         }
 
@@ -53,11 +61,52 @@ class AccountActivity : AppCompatActivity() {
         etZipCode.setText(loggedInUser?.Zipcode)
     }
 
+    @SuppressLint("ShowToast")
     private fun addEventHandlers() {
         btnSave.setOnClickListener {
-            // TODO: save account info
+            loggedInUser?.Surname = etSurname.text.toString()
+            loggedInUser?.Name = etLastName.text.toString()
 
+            when (spinSex.selectedItem) {
+                Gender.MALE.genderNL -> loggedInUser?.Sex = Gender.MALE.genderEN
+                Gender.FEMALE.genderNL -> loggedInUser?.Sex = Gender.FEMALE.genderEN
+                Gender.OTHER.genderNL -> loggedInUser?.Sex = Gender.OTHER.genderEN
+                else -> loggedInUser?.Sex = null
+            }
 
+            if (etAge.text.toString().isBlank())
+                loggedInUser?.Age = 0
+            else
+                loggedInUser?.Age = etAge.text.toString().toInt()
+
+            loggedInUser?.Zipcode = etZipCode.text.toString()
+
+            saveAccountInfoToBackEnd()
+
+            Toast.makeText(applicationContext, "Info opgeslagen!", Toast.LENGTH_LONG)
+        }
+    }
+
+    private fun saveAccountInfoToBackEnd() {
+        manager.openDatabase()
+
+        manager.update(
+            helper.getUserEntry().TBL_USER,
+            ContentValues().apply {
+                put(helper.getUserEntry().USER_SURNAME, loggedInUser?.Surname)
+                put(helper.getUserEntry().USER_LAST_NAME, loggedInUser?.Name)
+                put(helper.getUserEntry().USER_SEX, loggedInUser?.Sex)
+                put(helper.getUserEntry().USER_AGE, loggedInUser?.Age)
+                put(helper.getUserEntry().USER_ZIP, loggedInUser?.Zipcode)
+            },
+            "${helper.getUserEntry().USER_NAME} = ?",
+            arrayOf(loggedInUser?.UserName.toString())
+        )
+
+        loggedInUser?.let {
+            Thread {
+                RestClient(this).updateUser(it)
+            }.start()
         }
     }
 }

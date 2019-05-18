@@ -99,7 +99,7 @@ class LoginActivity : AppCompatActivity() {
                             loginViewModel.login(loggedInUser, context)
                         }
                 } else {
-
+                    // TODO: register user en login
                 }
             }
         }
