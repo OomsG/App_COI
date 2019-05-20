@@ -5,16 +5,19 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import be.kdg.cityofideas.*
 import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.login.*
 import be.kdg.cityofideas.model.ideations.getBytes
-import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 class MainActivity : BaseActivity() {
     private val manager = DatabaseManager(this)
@@ -24,6 +27,9 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //get Facebook HashKey
+        //printkeyHash()
 
         initialiseDatabase()
 
@@ -36,6 +42,26 @@ class MainActivity : BaseActivity() {
 
         startProjectsActivity()
     }
+
+    fun printkeyHash() {
+        try {
+            val info = this.getPackageManager().getPackageInfo(
+                "be.kdg.cityofideas",
+                PackageManager.GET_SIGNATURES
+            )
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+
+        } catch (e: NoSuchAlgorithmException) {
+
+        }
+
+    }
+
 
     override fun onDestroy() {
         manager.closeDatabase()
@@ -513,13 +539,13 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setLoggedInUser() {
-            val c = manager.getDetails(
-                helper.getUserEntry().TBL_USER,
-                null,
-                "${helper.getUserEntry().USER_ID} = ?",
-                arrayOf(pref.getString(KEY_USER_ID, "")!!),
-                null, null, null
-            )
+        val c = manager.getDetails(
+            helper.getUserEntry().TBL_USER,
+            null,
+            "${helper.getUserEntry().USER_ID} = ?",
+            arrayOf(pref.getString(KEY_USER_ID, "")!!),
+            null, null, null
+        )
 
         if (c.moveToFirst()) {
             loggedInUser = LoggedInUserView(

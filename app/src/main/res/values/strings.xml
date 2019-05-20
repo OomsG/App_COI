@@ -24,6 +24,7 @@
     <string name="Email">Geef hier je e-mailadres</string>
     <string name="account">Account</string>
     <string name="log_out">Log out</string>
+    <string name="facebook_app_id">1038823499646079</string>
 
     <string-array name="spinSexItems">
         <item>--</item>

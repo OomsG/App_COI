@@ -4,10 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.nfc.Tag
 import android.provider.BaseColumns
-import android.util.Log
-import be.kdg.cityofideas.model.ideations.Reaction
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
@@ -604,7 +601,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
     //endregion
 
     //region Vote
-    fun getVoteContentValues(id: Int, confirmed: Boolean?, type: Int?, ideaId: Int?): ContentValues {
+    fun getVoteContentValues(id: Int, confirmed: String, type: Int?, ideaId: Int?): ContentValues {
         return ContentValues().apply {
             put(VoteEntry.VOTE_ID, id)
             put(VoteEntry.VOTE_CONFIRMED, confirmed)

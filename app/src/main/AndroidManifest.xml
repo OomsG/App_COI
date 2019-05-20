@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
+
+
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -16,6 +18,18 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning"
             tools:targetApi="m">
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1038823499646079"
+                  android:name="com.facebook.FacebookContentProvider"
+                  android:exported="true"
+                  />
+
+        <activity
+                android:name=".activities.ShareActivity"
+                android:theme="@style/popUp">
+        </activity>
         <activity
                 android:name=".activities.CreateIdeaActivity"
                 android:theme="@style/popUp">
