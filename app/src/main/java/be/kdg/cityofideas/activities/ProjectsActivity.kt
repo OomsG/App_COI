@@ -14,7 +14,6 @@ import be.kdg.cityofideas.adapters.ProjectsViewPagerAdapter
 const val PROJECT_ID: String = "projectid"
 
 class ProjectsActivity : BaseActivity(), ProjectsSelectionListener {
-
     private lateinit var viewPager: ViewPager
     private lateinit var pagerAdapter: ProjectsViewPagerAdapter
     private lateinit var tabLayout: TabLayout

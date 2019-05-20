@@ -63,7 +63,7 @@ class ReactionActivity : BaseActivity() {
             .getIdea("idea/" + intent.getIntExtra(IDEA_ID, 1))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.newThread())
-            .subscribe({
+            .subscribe {
                 val idea = Idea(
                     it.IdeaId,
                     it.Position,
@@ -78,7 +78,6 @@ class ReactionActivity : BaseActivity() {
                     it.Reactions
                 )
                 initialiseViews(idea)
-            })
-
+            }
     }
 }

@@ -52,6 +52,7 @@ class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
         pagerAdapter = IdeationViewPagerAdapter(supportFragmentManager, id)
         viewPager.adapter = pagerAdapter
         tabLayout.setupWithViewPager(viewPager)
+
         RestClient(context)
             .getPhases("phases/" + id)
             .observeOn(AndroidSchedulers.mainThread())

@@ -4,25 +4,26 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
-import android.util.Base64
-import android.util.Log
-import be.kdg.cityofideas.login.Credentials
-import be.kdg.cityofideas.model.ideations.*
+import be.kdg.cityofideas.model.ideations.Idea
+import be.kdg.cityofideas.model.ideations.Ideation
+import be.kdg.cityofideas.model.ideations.Reaction
+import be.kdg.cityofideas.model.ideations.Tag
 import be.kdg.cityofideas.model.projects.Phase
 import be.kdg.cityofideas.model.projects.Project
 import be.kdg.cityofideas.model.surveys.Question
 import be.kdg.cityofideas.model.surveys.Survey
 import be.kdg.cityofideas.model.users.User
-import com.google.api.client.json.Json
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonArray
-import com.google.gson.JsonParser
 import io.reactivex.Observable
 import okhttp3.*
 import java.io.IOException
-import java.text.Normalizer
-import java.util.*
+import android.util.Base64
+import android.util.Log
+import be.kdg.cityofideas.login.LoggedInUserView
+import be.kdg.cityofideas.model.ideations.*
+import com.google.android.youtube.player.internal.i
+import org.json.JSONObject
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -165,14 +166,12 @@ public class RestClient(private val context: Context?) {
                     }
                 }
                 it.onNext(ideations)
-                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
         }
         return observable
     }
-
 
     fun getReactions(url: String): Observable<Array<Reaction>> {
         val prefix: String = if (https) {
@@ -185,7 +184,6 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val reactions = gson.fromJson(response, Array<Reaction>::class.java)
                 it.onNext(reactions)
-                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -204,7 +202,6 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val phases = gson.fromJson(response, Array<Phase>::class.java)
                 it.onNext(phases)
-                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
@@ -258,7 +255,7 @@ public class RestClient(private val context: Context?) {
             .header("id", ideaId.toString())
             .header("vote", voteType.toString())
             .header("userId", userId)
-            //body is neaded for rider to know it's a post request
+            //body is needed for rider to know it's a post request
             .post(body)
             .build()
 
@@ -273,7 +270,7 @@ public class RestClient(private val context: Context?) {
     //endregion
 
     //region User
-    fun getUser(url: String, email: String, password: String): Observable<User> {
+    fun getUser(url: String, username: String, password: String): Observable<User> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
         } else HTTP_PREFIX
@@ -282,8 +279,8 @@ public class RestClient(private val context: Context?) {
                 val request = Request.Builder()
                     .url(prefix + host + ":" + port + apistring + url)
                     .header(
-                        "Email",
-                        Base64.encodeToString(email.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString()
+                        "Username",
+                        Base64.encodeToString(username.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString()
                     )
                     .header(
                         "Password",
@@ -303,34 +300,35 @@ public class RestClient(private val context: Context?) {
         return observable
     }
 
-    fun getTokens(url: String, email: String, password: String): Observable<Credentials> {
-        val prefix: String = if (https) {
-            HTTPS_PREFIX
-        } else HTTP_PREFIX
-        val observable = Observable.create<Credentials> {
-            try {
-                val request = Request.Builder()
-                    .url(prefix + host + ":" + port + apistring + url)
-                    .header(
-                        "Email",
-                        Base64.encodeToString(email.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString()
-                    )
-                    .header(
-                        "Password",
-                        Base64.encodeToString(password.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString()
-                    )
-                    .build()
+    fun updateUser(user: LoggedInUserView) {
+        val formBody = FormBody.Builder()
+            .add("Surname", user.Surname.toString())
+            .add("LastName", user.Name.toString())
+            .add("Sex", user.Sex.toString())
+            .add("Age", user.Age.toString())
+            .add("ZipCode", user.Zipcode.toString())
+            .build()
 
-                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
-                val gson = GsonBuilder().create()
-                val credentials = gson.fromJson(response, Credentials::class.java)
-                it.onNext(credentials)
-                it.onComplete()
-            } catch (e: IOException) {
-                e.printStackTrace();
-            }
+        val json = JSONObject()
+        for (i in 0 until formBody.size()) {
+            json.put(formBody.encodedName(i), formBody.encodedValue(i))
         }
-        return observable
+
+        val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), json.toString())
+
+        val request = Request.Builder()
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "users/update")
+            //headers post the data
+            .header("Username", user.UserName)
+            //body is needed for rider to know it's a post request
+            .post(body)
+            .build()
+
+        try {
+            getClient()!!.newCall(request).execute()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     fun getUsers(url: String): Observable<Array<User>> {
@@ -344,15 +342,12 @@ public class RestClient(private val context: Context?) {
                 val gson = GsonBuilder().create()
                 val users = gson.fromJson(response, Array<User>::class.java)
                 it.onNext(users)
-                it.onComplete()
             } catch (e: IOException) {
                 e.printStackTrace();
             }
         }
         return observable
     }
-
-
     //endregion
     //region Survey
 

@@ -8,18 +8,20 @@
     <string name="login">Login</string>
     <string name="search">Search</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
+    <string name="prompt_email">Gebruikersnaam of e-mail</string>
+    <string name="prompt_password">Wachtwoord</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
-    <string name="register">Register</string>
+    <string name="welcome">"Welkom "</string>
+    <string name="invalid_username">Ongeldige e-mail</string>
+    <string name="invalid_password">
+        Wachtwoord moet minstens 6 karakters zijn en minstens 1 getal, 1 hoofdletter en 1 speciaal teken bevatten
+    </string>
+    <string name="login_failed">"Login mislukt"</string>
+    <string name="register">Registreren</string>
     <string name="already_account">Al een account? Log in!</string>
     <string name="edittext">Geef hier je antwoord</string>
-    <string name="Email">geef hier je Email adres</string>
+    <string name="Email">Geef hier je e-mailadres</string>
     <string name="account">Account</string>
     <string name="log_out">Log out</string>
 

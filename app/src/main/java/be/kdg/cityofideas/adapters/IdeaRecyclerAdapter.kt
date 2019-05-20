@@ -19,9 +19,7 @@ import be.kdg.cityofideas.model.ideations.Reaction
 import be.kdg.cityofideas.model.ideations.Vote
 import be.kdg.cityofideas.model.ideations.VoteType
 import be.kdg.cityofideas.rest.RestClient
-
 import kotlinx.android.synthetic.main.ideas_list.view.*
-
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 
 const val YOUTUBE_API: String = "AIzaSyAyyohq9ZDQT-bnC_E50ZcU-iA8efhXMjY"
@@ -140,8 +138,6 @@ fun getReactionCount(idea: Idea): String? {
     }
     return null
 }
-
-
 //endregion
 
 class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSelectionListener) :
@@ -162,7 +158,6 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
             notifyDataSetChanged()
         }
 
-
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.IdeaTitle
         val name = view.IdeaUserName
@@ -181,7 +176,6 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         view = ideaView
         return IdeaViewHolder(ideaView)
     }
-
 
     override fun getItemCount() = ideas.size
 
@@ -214,5 +208,4 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
                 Toast.makeText(it.context, "Er zijn geen reacties om te tonen", Toast.LENGTH_LONG).show()
         }
     }
-
 }

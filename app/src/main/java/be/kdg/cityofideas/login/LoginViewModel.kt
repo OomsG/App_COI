@@ -17,13 +17,14 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(loggedInUser: User) {
+    fun login(loggedInUser: User, context: Context) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(loggedInUser)
+        val result = loginRepository.login(loggedInUser, context)
 
         if (result is Result.Success) {
             _loginResult.value = LoginResult(
                 success = LoggedInUserView(
+                    UserId = result.data.Id,
                     UserName = result.data.UserName,
                     Email = result.data.Email,
                     Surname = result.data.Surname,
@@ -59,6 +60,6 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
+        return password.matches("""((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#${'$'}%^&*()_+=\[{\]};:<>|./?,\-]).{6,100})""".toRegex())
     }
 }

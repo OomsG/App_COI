@@ -15,7 +15,7 @@ import be.kdg.cityofideas.model.ideations.Idea
 
 const val IDEA_ID : String = "idea"
 
-class IdeaActivity : AppCompatActivity(), ideaSelectionListener {
+class IdeaActivity : BaseActivity(), ideaSelectionListener {
     private lateinit var createIdeaButton : FloatingActionButton
 
     override fun onIdeaSelected(id: Int) {
