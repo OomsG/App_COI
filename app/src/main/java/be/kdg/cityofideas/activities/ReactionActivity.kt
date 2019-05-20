@@ -29,6 +29,8 @@ class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
     private lateinit var shareButton: Button
     private lateinit var layout: LinearLayout
 
+    private var url: String? = null
+
     private var voteCounter = 0
     private var shareCounter = 0
 
@@ -38,14 +40,17 @@ class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
         getIdea(this)
     }
 
+
     private fun initialiseViews(idea: Idea) {
         Log.d("help", idea.toString())
         layout = findViewById(R.id.LinearLayoutReactionIdea)
         title = findViewById(R.id.ReactionIdeaTitle)
         //name = findViewById(R.id.IdeaUserName)
-        getIdeaDetails(idea, this, layout)
+        //getIdeaDetails(idea, this, layout)
         idea.IdeaObjects!!.forEach {
+
             it.Url?.let {
+                url = it
                 val fragmentTransaction = supportFragmentManager.beginTransaction()
                 val fragment = YouTubePlayerSupportFragment()
                 fragmentTransaction.add(R.id.LinearLayoutReactionIdea,fragment).commit()
@@ -93,10 +98,17 @@ class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
                 initialiseViews(idea)
             }
     }
+
+
+    private fun getUrl() : String{
+       val array = url!!.split('/')
+        return array.last()
+    }
     override fun onInitializationSuccess(provider: YouTubePlayer.Provider, player: YouTubePlayer, wasRestored: Boolean) {
         if (!wasRestored) {
             player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT)
-            player.loadVideo("6EEW-9NDM5k")
+            Log.d("URL",getUrl())
+            player.loadVideo(getUrl())
             player.play()
         }
     }
@@ -107,4 +119,6 @@ class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
         Log.d("errorMessage:", errorMessage)
     }
+
+
 }
