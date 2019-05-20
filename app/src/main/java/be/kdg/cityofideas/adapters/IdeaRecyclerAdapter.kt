@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import be.kdg.cityofideas.R
 import be.kdg.cityofideas.login.LoggedInUserView
 import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.ideations.Idea
@@ -55,7 +56,6 @@ fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
             image.setImageBitmap(it)
             image.layoutParams = params
             layout.addView(image)
-
         }
 
     }

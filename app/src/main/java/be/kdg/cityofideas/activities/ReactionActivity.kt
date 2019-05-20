@@ -3,18 +3,23 @@ package be.kdg.cityofideas.activities
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.FragmentTransaction
 import android.util.Log
 import android.widget.*
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.*
 import be.kdg.cityofideas.fragments.ReactionFragment
+import be.kdg.cityofideas.fragments.YoutubeFragment
 import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.rest.RestClient
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
+import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-class ReactionActivity : BaseActivity() {
+class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
     private lateinit var title: TextView
     private lateinit var name: TextView
     private lateinit var voteCount: TextView
@@ -39,6 +44,14 @@ class ReactionActivity : BaseActivity() {
         title = findViewById(R.id.ReactionIdeaTitle)
         //name = findViewById(R.id.IdeaUserName)
         getIdeaDetails(idea, this, layout)
+        idea.IdeaObjects!!.forEach {
+            it.Url?.let {
+                val fragmentTransaction = supportFragmentManager.beginTransaction()
+                val fragment = YouTubePlayerSupportFragment()
+                fragmentTransaction.add(R.id.LinearLayoutReactionIdea,fragment).commit()
+                fragment.initialize(YOUTUBE_API,this)
+            }
+        }
         voteCount = findViewById(R.id.ReactionIdeaVoteCount)
         reactionCount = findViewById(R.id.ReactionIdeaReactionCount)
         shareCount = findViewById(R.id.ReactionIdeaShareCount)
@@ -79,5 +92,19 @@ class ReactionActivity : BaseActivity() {
                 )
                 initialiseViews(idea)
             }
+    }
+    override fun onInitializationSuccess(provider: YouTubePlayer.Provider, player: YouTubePlayer, wasRestored: Boolean) {
+        if (!wasRestored) {
+            player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT)
+            player.loadVideo("6EEW-9NDM5k")
+            player.play()
+        }
+    }
+
+    override fun onInitializationFailure(provider: YouTubePlayer.Provider, error: YouTubeInitializationResult) {
+        // YouTube error
+        val errorMessage = error.toString()
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        Log.d("errorMessage:", errorMessage)
     }
 }
