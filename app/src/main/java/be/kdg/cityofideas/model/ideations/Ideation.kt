@@ -9,5 +9,13 @@ data class Ideation(
     val Phase: Phase?,
     val InputIdeation: Boolean?,
     val Reactions: Collection<Reaction>?,
-    val Ideas: Collection<Idea>?
-) : Serializable
+    val Ideas: Collection<Idea>?,
+    val Text: Boolean?,
+    val Image: Boolean?,
+    val Video: Boolean?,
+    val Map: Boolean?,
+    val TextRequired: Boolean?,
+    val ImageRequired: Boolean?,
+    val VideoRequired: Boolean?,
+    val MapRequired: Boolean?
+    ) : Serializable

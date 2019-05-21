@@ -250,7 +250,7 @@ public class RestClient(private val context: Context?) {
                 val response = getClient()?.newCall(request)?.execute()?.body()?.string()
                 val gson = GsonBuilder().create()
                 val vote = gson.fromJson(response, Array<Vote>::class.java)
-                if (vote != null ){
+                if (vote != null) {
                     it.onNext(vote)
                 }
             } catch (e: IOException) {
@@ -260,7 +260,32 @@ public class RestClient(private val context: Context?) {
         return observable
     }
     //endregion
-    //region Put
+    //region Post
+
+    fun createReaction(param: String, userId: String, id: Int, element: String) {
+        val formBody = FormBody.Builder()
+            .add("param", param)
+            .add("userId", userId)
+            .add("id", id.toString())
+            .add("element", element)
+        val gson = Gson().toJson(formBody)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson)
+        val request = Request.Builder()
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "reaction")
+            //headers post the data
+            .header("param", param)
+            .header("userId", userId)
+            .header("id", id.toString())
+            .header("element", element)
+            //body is needed for rider to know it's a post request
+            .post(body)
+            .build()
+        try {
+            getClient()!!.newCall(request).execute()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
 
     fun createVote(ideaId: Int, voteType: VoteType, userId: String) {
         val formBody = FormBody.Builder()

@@ -10,6 +10,8 @@ import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.*
 import be.kdg.cityofideas.fragments.ReactionFragment
 import be.kdg.cityofideas.fragments.YoutubeFragment
+import be.kdg.cityofideas.login.LoggedInUserView
+import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.rest.RestClient
 import com.google.android.youtube.player.YouTubeInitializationResult
@@ -19,7 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
+class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
     private lateinit var title: TextView
     private lateinit var name: TextView
     private lateinit var voteCount: TextView
@@ -28,6 +30,8 @@ class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
     private lateinit var voteButton: Button
     private lateinit var shareButton: Button
     private lateinit var layout: LinearLayout
+    private lateinit var reactionText: EditText
+    private lateinit var submit: ImageButton
 
     private var url: String? = null
 
@@ -53,8 +57,8 @@ class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
                 url = it
                 val fragmentTransaction = supportFragmentManager.beginTransaction()
                 val fragment = YouTubePlayerSupportFragment()
-                fragmentTransaction.add(R.id.LinearLayoutReactionIdea,fragment).commit()
-                fragment.initialize(YOUTUBE_API,this)
+                fragmentTransaction.add(R.id.LinearLayoutReactionIdea, fragment).commit()
+                fragment.initialize(YOUTUBE_API, this)
             }
         }
         voteCount = findViewById(R.id.ReactionIdeaVoteCount)
@@ -62,6 +66,8 @@ class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
         shareCount = findViewById(R.id.ReactionIdeaShareCount)
         voteButton = findViewById(R.id.ReactionIdeaVoteButton)
         shareButton = findViewById(R.id.ReactionIdeaShareButton)
+        reactionText = findViewById(R.id.ReactionText)
+        submit = findViewById(R.id.createReaction)
 
         // name.text = idea.
         title.text = idea.Title
@@ -70,13 +76,31 @@ class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
         shareCount.text = getIdeaShareCount(idea, shareCounter)
         voteButton.setOnClickListener { }
         shareButton.setOnClickListener { }
+        submit.setOnClickListener {
+            if (!reactionText.text.isNullOrEmpty()) {
+                if (loggedInUser != null) {
+                    Thread {
+                        RestClient(this)
+                            .createReaction(
+                                reactionText.text.toString(),
+                                loggedInUser!!.UserId,
+                                idea.IdeaId,
+                                "idea"
+                            )
+                    }.start()
+                }
+            } else {
+                Toast.makeText(this, "U bent niet aangemeld", Toast.LENGTH_SHORT).show()
+            }
+        }
+
 
         val fragment = supportFragmentManager.findFragmentById(R.id.ReactionFragment) as? ReactionFragment
         fragment?.setId(intent.getIntExtra(IDEA_ID, 1))
     }
 
     @SuppressLint("CheckResult")
-    private fun getIdea(context: Context)  {
+    private fun getIdea(context: Context) {
         RestClient(context)
             .getIdea("idea/" + intent.getIntExtra(IDEA_ID, 1))
             .observeOn(AndroidSchedulers.mainThread())
@@ -100,14 +124,19 @@ class ReactionActivity : BaseActivity() , YouTubePlayer.OnInitializedListener{
     }
 
 
-    private fun getUrl() : String{
-       val array = url!!.split('/')
+    private fun getUrl(): String {
+        val array = url!!.split('/')
         return array.last()
     }
-    override fun onInitializationSuccess(provider: YouTubePlayer.Provider, player: YouTubePlayer, wasRestored: Boolean) {
+
+    override fun onInitializationSuccess(
+        provider: YouTubePlayer.Provider,
+        player: YouTubePlayer,
+        wasRestored: Boolean
+    ) {
         if (!wasRestored) {
             player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT)
-            Log.d("URL",getUrl())
+            Log.d("URL", getUrl())
             player.loadVideo(getUrl())
             player.play()
         }

@@ -9,7 +9,7 @@
     <style name="popUp" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
-        <item name="android:windowSwipeToDismiss">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
 
     </style>
 

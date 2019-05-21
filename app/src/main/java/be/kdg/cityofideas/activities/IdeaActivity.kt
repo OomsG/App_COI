@@ -1,19 +1,14 @@
 package be.kdg.cityofideas.activities
 
 import android.annotation.SuppressLint
-import android.app.SharedElementCallback
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v7.widget.Toolbar
-import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.ideaSelectionListener
 import be.kdg.cityofideas.fragments.IdeaFragment
 import be.kdg.cityofideas.login.LoggedInUserView
-import be.kdg.cityofideas.model.ideations.Idea
 
 const val IDEA_ID: String = "idea"
 const val LOGGEDIN_USER: String = "loggedinUser"
@@ -21,7 +16,7 @@ const val LOGGEDIN_USER: String = "loggedinUser"
 
 class IdeaActivity : BaseActivity(), ideaSelectionListener {
     override fun shareButtonPressed(id: Int, loggedInUser: LoggedInUserView) {
-        val shareIntent = Intent(this, ShareActivity::class.java)
+        val shareIntent = Intent(this, ShareVoteActivity::class.java)
         shareIntent.putExtra(IDEA_ID, id)
         shareIntent.putExtra(LOGGEDIN_USER, loggedInUser.UserId)
         startActivity(shareIntent)
@@ -46,6 +41,8 @@ class IdeaActivity : BaseActivity(), ideaSelectionListener {
         createIdeaButton = findViewById(R.id.fab)
         createIdeaButton.setOnClickListener {
             val createIdea = Intent(this, CreateIdeaActivity::class.java)
+            createIdea.putExtra(IDEATION_ID, intent.getIntExtra(IDEATION_ID,1))
+            createIdea.putExtra(PROJECT_ID,intent.getIntExtra(PROJECT_ID, 1))
             startActivity(createIdea)
         }
         val fragment = supportFragmentManager.findFragmentById(R.id.IdeaFragment) as IdeaFragment

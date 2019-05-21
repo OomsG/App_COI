@@ -14,6 +14,8 @@ import be.kdg.cityofideas.adapters.ProjectsViewPagerAdapter
 const val PROJECT_ID: String = "projectid"
 
 class ProjectsActivity : BaseActivity(), ProjectsSelectionListener {
+
+
     private lateinit var viewPager: ViewPager
     private lateinit var pagerAdapter: ProjectsViewPagerAdapter
     private lateinit var tabLayout: TabLayout
@@ -22,6 +24,11 @@ class ProjectsActivity : BaseActivity(), ProjectsSelectionListener {
         val intent = Intent(this, IdeationActivity::class.java)
         intent.putExtra(PROJECT_ID, id)
         startActivity(intent)
+    }
+    override fun onShareSelected(id: Int) {
+        val shareIntent = Intent(this, ShareActivity::class.java)
+        shareIntent.putExtra(PROJECT_ID, id)
+        startActivity(shareIntent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
