@@ -9,10 +9,12 @@ import android.support.annotation.StringRes
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.*
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.activities.helper
+import be.kdg.cityofideas.activities.manager
 import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,6 +29,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loading: ProgressBar
     private lateinit var username: EditText
     private lateinit var password: EditText
+    private lateinit var email: EditText
+    private lateinit var confirmPwd: EditText
     private var registering = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,24 +48,54 @@ class LoginActivity : AppCompatActivity() {
         loading = findViewById(R.id.loginLoading)
         username = findViewById(R.id.username)
         password = findViewById(R.id.password)
+        email = findViewById(R.id.email)
+        confirmPwd = findViewById(R.id.confirmPassword)
     }
 
     @SuppressLint("CheckResult")
     private fun addEventHandlers() {
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
+                registering,
                 username.text.toString(),
-                password.text.toString()
+                email.text.toString(),
+                password.text.toString(),
+                confirmPwd.text.toString()
             )
         }
 
         password.apply {
             afterTextChanged {
                 loginViewModel.loginDataChanged(
+                    registering,
                     username.text.toString(),
-                    password.text.toString()
+                    email.text.toString(),
+                    password.text.toString(),
+                    confirmPwd.text.toString()
                 )
             }
+        }
+
+        email.afterTextChanged {
+            loginViewModel.loginDataChanged(
+                registering,
+                username.text.toString(),
+                email.text.toString(),
+                password.text.toString(),
+                confirmPwd.text.toString()
+            )
+        }
+
+        confirmPwd.afterTextChanged {
+            loginViewModel.loginDataChanged(
+                registering,
+                username.text.toString(),
+                email.text.toString(),
+                password.text.toString(),
+                confirmPwd.text.toString()
+            )
+        }
+
 
 //            setOnEditorActionListener { _, actionId, _ ->
 //                when (actionId) {
@@ -75,11 +109,32 @@ class LoginActivity : AppCompatActivity() {
 //                false
 //            }
 
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
+        login.setOnClickListener {
+            loading.visibility = View.VISIBLE
 
-                if (!registering) {
-                    RestClient(context).getUser("users/login", username.text.toString(), password.text.toString())
+            if (!registering) {
+                RestClient(this).getUser("users/login", username.text.toString(), password.text.toString())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe {
+                        val loggedInUser = User(
+                            it.Id,
+                            it.UserName,
+                            it.Email,
+                            it.Platform,
+                            it.PasswordHash,
+                            it.Surname,
+                            it.Name,
+                            it.Sex,
+                            it.Age,
+                            it.Zipcode,
+                            it.Votes
+                        )
+                        loginViewModel.login(loggedInUser, this)
+                    }
+            } else {
+                if (!userExistsAlready(username.text.toString(), email.text.toString())) {
+                    RestClient(this).createUser("users/register", username.text.toString(), email.text.toString(), password.text.toString())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe {
@@ -96,10 +151,8 @@ class LoginActivity : AppCompatActivity() {
                                 it.Zipcode,
                                 it.Votes
                             )
-                            loginViewModel.login(loggedInUser, context)
+                            loginViewModel.login(loggedInUser, this)
                         }
-                } else {
-                    // TODO: register user en login
                 }
             }
         }
@@ -108,10 +161,16 @@ class LoginActivity : AppCompatActivity() {
             if (!registering) {
                 login.text = getString(R.string.register)
                 noAccount.text = getString(R.string.already_account)
+                username.hint = getString(R.string.username)
+                email.visibility = View.VISIBLE
+                confirmPwd.visibility = View.VISIBLE
                 registering = true
             } else {
                 login.text = getString(R.string.log_in)
                 noAccount.text = getString(R.string.no_account)
+                username.hint = getString(R.string.prompt_username)
+                email.visibility = View.GONE
+                confirmPwd.visibility = View.GONE
                 registering = false
             }
         }
@@ -124,14 +183,20 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
 
-            // disable login button unless both username / password is valid
+            // disable login button unless login/registering values are valid
             login.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
             }
+            if (loginState.emailError != null) {
+                email.error = getString(loginState.emailError)
+            }
             if (loginState.passwordError != null) {
                 password.error = getString(loginState.passwordError)
+            }
+            if (loginState.confirmPwdError != null) {
+                confirmPwd.error = getString(loginState.confirmPwdError)
             }
         })
 
@@ -165,6 +230,18 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun userExistsAlready(username: String, email: String): Boolean {
+        val c = manager.getDetails(
+            helper.getUserEntry().TBL_USER,
+            null,
+            "${helper.getUserEntry().USER_NAME} LIKE ? OR ${helper.getUserEntry().USER_EMAIL} LIKE ?",
+            arrayOf(username, email),
+            null, null, null
+        )
+
+        return c.moveToFirst()
     }
 }
 

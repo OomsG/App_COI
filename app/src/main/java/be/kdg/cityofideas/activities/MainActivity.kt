@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import be.kdg.cityofideas.*
+import be.kdg.cityofideas.database.DatabaseHelper
 import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.login.*
 import be.kdg.cityofideas.model.ideations.getBytes
@@ -16,14 +17,20 @@ import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
+lateinit var manager: DatabaseManager
+lateinit var helper: DatabaseHelper
+
 class MainActivity : BaseActivity() {
-    private val manager = DatabaseManager(this)
-    private val helper = manager.dbHelper
+    //    private val manager = DatabaseManager(this)
+//    private val helper = manager.dbHelper
     private lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        manager = DatabaseManager(this)
+        helper = manager.dbHelper
 
         initialiseDatabase()
 
@@ -513,13 +520,13 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setLoggedInUser() {
-            val c = manager.getDetails(
-                helper.getUserEntry().TBL_USER,
-                null,
-                "${helper.getUserEntry().USER_ID} = ?",
-                arrayOf(pref.getString(KEY_USER_ID, "")!!),
-                null, null, null
-            )
+        val c = manager.getDetails(
+            helper.getUserEntry().TBL_USER,
+            null,
+            "${helper.getUserEntry().USER_ID} = ?",
+            arrayOf(pref.getString(KEY_USER_ID, "")!!),
+            null, null, null
+        )
 
         if (c.moveToFirst()) {
             loggedInUser = LoggedInUserView(

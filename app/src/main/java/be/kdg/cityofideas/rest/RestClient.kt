@@ -300,6 +300,40 @@ public class RestClient(private val context: Context?) {
         return observable
     }
 
+    fun createUser(url: String, username: String, email: String, password: String): Observable<User> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<User> {
+            try {
+                val request = Request.Builder()
+                    .url(prefix + host + ":" + port + apistring + url)
+                    .header(
+                        "Username",
+                        Base64.encodeToString(username.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString()
+                    )
+                    .header(
+                        "Email",
+                        Base64.encodeToString(email.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString()
+                    )
+                    .header(
+                        "Password",
+                        Base64.encodeToString(password.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString()
+                    )
+                    .build()
+
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val user = gson.fromJson(response, User::class.java)
+                it.onNext(user)
+                it.onComplete()
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
     fun updateUser(user: LoggedInUserView) {
         val formBody = FormBody.Builder()
             .add("Surname", user.Surname.toString())
