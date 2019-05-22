@@ -311,6 +311,53 @@ public class RestClient(private val context: Context?) {
         }
     }
 
+    fun createIdea(postList: ArrayList<IdeaObject>, ideationId: Int, id: String) {
+
+        val json = JSONObject()
+
+        postList.forEach {
+            when (it.Discriminator) {
+                "image" -> {
+                    val formBody = FormBody.Builder()
+                        .add("discriminator", it.Discriminator)
+                        .add("image", it.ImageName!!)
+                        .build()
+
+                    for (i in 0 until formBody.size()) {
+                        json.put(formBody.encodedName(i), formBody.encodedValue(i))
+                    }
+                }
+                "text" -> {
+                    val formBody = FormBody.Builder()
+                        .add("discriminator", it.Discriminator)
+                        .add("text", it.Text!!)
+                        .build()
+
+                    for (i in 0 until formBody.size()) {
+                        json.put(formBody.encodedName(i), formBody.encodedValue(i))
+                    }
+                }
+            }
+        }
+        Log.d("json", json.toString())
+        val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), json.toString())
+        val request = Request.Builder()
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "idea")
+            //headers post the data
+            .header("userid", id)
+            .header("ideationid", ideationId.toString())
+            //body is needed for rider to know it's a post request
+            .post(body)
+            .build()
+
+        try {
+            getClient()!!.newCall(request).execute()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+    }
+
     //endregion
     //endregion
     //region User

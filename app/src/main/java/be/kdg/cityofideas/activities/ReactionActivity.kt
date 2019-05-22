@@ -21,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
+
 class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
     private lateinit var title: TextView
     private lateinit var name: TextView
@@ -126,7 +127,8 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
 
     private fun getUrl(): String {
         val array = url!!.split('/')
-        return array.last()
+        val final = array.last().split('=')
+        return final.last()
     }
 
     override fun onInitializationSuccess(
