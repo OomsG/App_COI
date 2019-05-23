@@ -2,6 +2,9 @@
 
 
 <menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/qrScanner"
+          android:icon="@drawable/ic_qr_white_32"
+          app:showAsAction="ifRoom" android:title="@string/qr"/>
     <item android:id="@+id/search"
           android:title="@string/search"
           android:icon="@android:drawable/ic_menu_search"

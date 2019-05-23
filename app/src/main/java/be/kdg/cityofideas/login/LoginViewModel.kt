@@ -39,27 +39,55 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         }
     }
 
-    fun loginDataChanged(username: String, password: String) {
-        if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+    fun loginDataChanged(registering: Boolean, username: String, email: String?, password: String, confirmPwd: String?) {
+        if (!registering) {
+            if (!isUserNameValid(registering, username)) {
+                _loginForm.value = LoginFormState(usernameError = R.string.invalid_email)
+            } else if (!isPasswordValid(password)) {
+                _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+            } else {
+                _loginForm.value = LoginFormState(isDataValid = true)
+            }
         } else {
-            _loginForm.value = LoginFormState(isDataValid = true)
+            if (!isUserNameValid(registering, username)) {
+                _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
+            } else if (!isEmailValid(email!!)) {
+                _loginForm.value = LoginFormState(emailError = R.string.invalid_email)
+            } else if (!isPasswordValid(password)) {
+                _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+            } else if (!isConfirmPasswordValid(password, confirmPwd!!)) {
+                _loginForm.value = LoginFormState(confirmPwdError = R.string.invalid_confirm_password)
+            } else {
+                _loginForm.value = LoginFormState(isDataValid = true)
+            }
         }
     }
 
     // A placeholder username validation check
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
+    private fun isUserNameValid(registering: Boolean, username: String): Boolean {
+        if (!registering) {
+            return if (username.contains('@')) {
+                Patterns.EMAIL_ADDRESS.matcher(username).matches()
+            } else {
+                username.isNotBlank()
+            }
         } else {
-            username.isNotBlank()
+            return username.isNotBlank()
         }
+    }
+
+    // A placeholder email validation check
+    private fun isEmailValid(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.matches("""((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#${'$'}%^&*()_+=\[{\]};:<>|./?,\-]).{6,100})""".toRegex())
+    }
+
+    // A placeholder confirm password validation check
+    private fun isConfirmPasswordValid(password: String, confirmPwd: String): Boolean {
+        return confirmPwd == password
     }
 }

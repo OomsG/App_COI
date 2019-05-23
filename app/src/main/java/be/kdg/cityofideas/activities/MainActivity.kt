@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import be.kdg.cityofideas.*
+import be.kdg.cityofideas.database.DatabaseHelper
 import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.login.*
 import be.kdg.cityofideas.model.ideations.getBytes
@@ -19,14 +20,20 @@ import io.reactivex.schedulers.Schedulers
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
+lateinit var manager: DatabaseManager
+lateinit var helper: DatabaseHelper
+
 class MainActivity : BaseActivity() {
-    private val manager = DatabaseManager(this)
-    private val helper = manager.dbHelper
+    //    private val manager = DatabaseManager(this)
+//    private val helper = manager.dbHelper
     private lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        manager = DatabaseManager(this)
+        helper = manager.dbHelper
 
         //get Facebook HashKey
         //printkeyHash()

@@ -1,23 +1,22 @@
 package be.kdg.cityofideas.adapters
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.surveys.Answer
 import be.kdg.cityofideas.model.surveys.Question
-import be.kdg.cityofideas.model.surveys.QuestionType
 import be.kdg.cityofideas.model.surveys.QuestionType.*
 
 class QuestionRecyclerAdapter(val context: Context?) :
     RecyclerView.Adapter<QuestionRecyclerAdapter.SurveyViewHolder>() {
-
-    private lateinit var layout: LinearLayout
 
     var questions: Array<Question> = arrayOf()
         set(question) {
@@ -29,29 +28,26 @@ class QuestionRecyclerAdapter(val context: Context?) :
         val question = view.findViewById<TextView>(R.id.QuestionText)
         val questionNr = view.findViewById<TextView>(R.id.QuestionNr)
         val layout = view.findViewById<LinearLayout>(R.id.LinearLayoutQuestion)
-
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): SurveyViewHolder {
-        val surveyViewholder = LayoutInflater.from(p0.context).inflate(R.layout.question_list, p0, false)
-        return SurveyViewHolder(surveyViewholder)
+        val surveyViewHolder = LayoutInflater.from(p0.context).inflate(R.layout.question_list, p0, false)
+        return SurveyViewHolder(surveyViewHolder)
     }
 
     override fun getItemCount() = questions.size
 
     override fun onBindViewHolder(p0: SurveyViewHolder, p1: Int) {
-        p0.questionNr.text = getquestionNr(questions[p1])
+        p0.questionNr.text = getQuestionNr(questions[p1])
         p0.question.text = questions[p1].QuestionText
         getQuestionAnswers(questions[p1], context, p0.layout)
-
     }
 
-    fun getquestionNr(question: Question): String {
+    private fun getQuestionNr(question: Question): String {
         return question.QuestionNr.toString() + "/" + itemCount
     }
 
-    fun getQuestionAnswers(question: Question, context: Context?, layout: LinearLayout) {
-
+    private fun getQuestionAnswers(question: Question, context: Context?, layout: LinearLayout) {
         when (question.QuestionType) {
             OPEN -> getOpenAnswer(question, context, layout)
             RADIO -> getRadioAnswers(question, context, layout)
@@ -62,7 +58,7 @@ class QuestionRecyclerAdapter(val context: Context?) :
         }
     }
 
-    fun getOpenAnswer(question: Question, context: Context?, layout: LinearLayout) {
+    private fun getOpenAnswer(question: Question, context: Context?, layout: LinearLayout) {
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -74,7 +70,7 @@ class QuestionRecyclerAdapter(val context: Context?) :
         layout.addView(editText)
     }
 
-    fun getRadioAnswers(question: Question, context: Context?, layout: LinearLayout) {
+    private fun getRadioAnswers(question: Question, context: Context?, layout: LinearLayout) {
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -91,7 +87,7 @@ class QuestionRecyclerAdapter(val context: Context?) :
         layout.addView(radioGroup)
     }
 
-    fun getCheckAnswers(question: Question, context: Context?, layout: LinearLayout) {
+    private fun getCheckAnswers(question: Question, context: Context?, layout: LinearLayout) {
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -105,7 +101,7 @@ class QuestionRecyclerAdapter(val context: Context?) :
         }
     }
 
-    fun getDropAnswers(question: Question, context: Context?, layout: LinearLayout) {
+    private fun getDropAnswers(question: Question, context: Context?, layout: LinearLayout) {
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -125,7 +121,7 @@ class QuestionRecyclerAdapter(val context: Context?) :
         layout.addView(spinner)
     }
 
-    fun giveEmail(question: Question, context: Context?, layout: LinearLayout) {
+    private fun giveEmail(question: Question, context: Context?, layout: LinearLayout) {
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -133,10 +129,12 @@ class QuestionRecyclerAdapter(val context: Context?) :
         val email = EditText(context)
         email.id = question.QuestionId
         email.hint = context!!.getString(R.string.Email)
+        email.inputType = TYPE_TEXT_VARIATION_EMAIL_ADDRESS
         email.layoutParams = params
+
+        if (loggedInUser != null)
+            email.setText(loggedInUser?.Email)
+
         layout.addView(email)
     }
-
-
-
 }
