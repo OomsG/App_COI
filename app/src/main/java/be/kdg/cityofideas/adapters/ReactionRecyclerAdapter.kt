@@ -5,9 +5,15 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.ideations.Reaction
+import be.kdg.cityofideas.rest.RestClient
 import kotlinx.android.synthetic.main.reactions_list.view.*
+import kotlin.concurrent.thread
 
 class ReactionRecyclerAdapter(val context: Context?) :
     RecyclerView.Adapter<ReactionRecyclerAdapter.ReactionsViewHolder>() {
@@ -21,6 +27,9 @@ class ReactionRecyclerAdapter(val context: Context?) :
     class ReactionsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name = view.NameReaction
         val text = view.TextReaction
+        val submitLike = view.LikeButton
+        val likeCounter = view.LikeCounter
+
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ReactionsViewHolder {
@@ -32,6 +41,26 @@ class ReactionRecyclerAdapter(val context: Context?) :
 
     override fun onBindViewHolder(p0: ReactionsViewHolder, p1: Int) {
         p0.text.text = reactions[p1].ReactionText
+        p0.submitLike.setOnClickListener {
+            if (loggedInUser != null) {
+                Thread {
+                    RestClient(context).createLike(reactions[p1].ReactionId, loggedInUser!!.UserId)
+                }.start()
+                Toast.makeText(context, "Liked", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "U bent niet ingelogd", Toast.LENGTH_LONG).show()
+            }
+        }
+        p0.likeCounter.text = getLikeCount(reactions[p1])
+
+    }
+
+    private fun getLikeCount(reaction: Reaction): CharSequence? {
+        if (reaction.Likes.isNullOrEmpty()) {
+            return "0"
+        } else {
+            return reaction.Likes.size.toString()
+        }
     }
 
 }

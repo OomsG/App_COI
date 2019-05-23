@@ -311,6 +311,7 @@ public class RestClient(private val context: Context?) {
         }
     }
 
+    //work in progress
     fun createIdea(postList: ArrayList<IdeaObject>, ideationId: Int, id: String) {
 
         val json = JSONObject()
@@ -356,6 +357,29 @@ public class RestClient(private val context: Context?) {
             e.printStackTrace()
         }
 
+    }
+
+    fun createLike(reactionId: Int,userId: String){
+        val formBody = FormBody.Builder()
+            .add("userId", userId)
+            .add("id", reactionId.toString())
+            .build()
+        val gson = Gson().toJson(formBody)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson)
+        val request = Request.Builder()
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "like")
+            //headers post the data
+            .header("reactionId", reactionId.toString())
+            .header("userId", userId)
+            //body is needed for rider to know it's a post request
+            .post(body)
+            .build()
+
+        try {
+            getClient()!!.newCall(request).execute()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     //endregion
