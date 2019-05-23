@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.model.surveys.Question
 import be.kdg.cityofideas.model.surveys.Survey
 
 class SurveyRecyclerAdapter(val context: Context?, val selectionListener: IdeationsRecyclerAdapter.IdeationsSelectionListener, val projectsId: Int) : RecyclerView.Adapter<SurveyRecyclerAdapter.SurveyViewHolder>() {
-
     var surveys: Array<Survey> = arrayOf()
         set(question) {
             field = question
@@ -27,8 +25,8 @@ class SurveyRecyclerAdapter(val context: Context?, val selectionListener: Ideati
 
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): SurveyViewHolder {
-        val surveyViewholder = LayoutInflater.from(p0.context).inflate(R.layout.survey_list, p0, false)
-        return SurveyViewHolder(surveyViewholder)
+        val surveyViewHolder = LayoutInflater.from(p0.context).inflate(R.layout.survey_list, p0, false)
+        return SurveyViewHolder(surveyViewHolder)
     }
 
     override fun getItemCount() = surveys.size

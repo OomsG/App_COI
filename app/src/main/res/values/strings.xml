@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App_CityOfIdeas</string>
+    <string name="app_name">City Of Ideas</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_account">Geen account? Maak er nu een aan!</string>
     <string name="password">Passwoord</string>
@@ -29,6 +29,10 @@
     <string name="username">Gebruikersnaam</string>
     <string name="invalid_email">Ongeldige e-mail</string>
     <string name="invalid_confirm_password">Wachtwoorden komen niet overeen</string>
+    <string name="qr">qr</string>
+    <string name="confirm">Bevestig</string>
+    <string name="vraag_1_15">Vraag 1/15</string>
+    <string name="dummy_textview">TextView</string>
 
     <string-array name="spinSexItems">
         <item>--</item>

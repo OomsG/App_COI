@@ -28,8 +28,9 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-public class RestClient(private val context: Context?) {
-    //private val host = "35.187.121.148"
+class RestClient(private val context: Context?) {
+    //private val host = "34.76.196.101"
+    //private val port = 5000
     private val host = "10.0.2.2"
     private val port = 5001
     private val apistring = "/Api/"
@@ -420,6 +421,43 @@ public class RestClient(private val context: Context?) {
             }
         }
         return observable
+    }
+
+    fun postAnswers(url: String, surveyId: Int, answers: MutableMap<Int, Array<String>>) {
+        val jsonArray = mutableListOf<JSONObject>()
+
+        for ((k, v) in answers) {
+            v.forEach {
+                val formBody = FormBody.Builder()
+                    // encode for special characters
+                    .add("AnswerText", Base64.encodeToString(it.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
+                    .add("QuestionId", k.toString())
+                    .build()
+
+                val json = JSONObject()
+
+                for (i in 0 until formBody!!.size()) {
+                    json.put(formBody.encodedName(i), formBody.encodedValue(i))
+                }
+
+                jsonArray.add(json)
+            }
+        }
+
+        Log.d("surveyId", surveyId.toString())
+
+        val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), jsonArray.toString())
+
+        val request = Request.Builder()
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + url)
+            .header("SurveyId", surveyId.toString())
+            .post(body)
+            .build()
+        try {
+            getClient()!!.newCall(request).execute()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     //endregion
