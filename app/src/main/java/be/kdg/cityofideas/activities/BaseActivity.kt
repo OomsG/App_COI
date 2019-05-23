@@ -45,6 +45,10 @@ open class BaseActivity : AppCompatActivity() {
                 signOut()
                 true
             }
+            R.id.qrScanner -> {
+                scanQr()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -74,5 +78,10 @@ open class BaseActivity : AppCompatActivity() {
 
         session.logoutUser()
         invalidateOptionsMenu()
+    }
+
+    private fun scanQr() {
+        val intent = Intent(this, QrActivity::class.java)
+        startActivity(intent)
     }
 }
