@@ -47,24 +47,24 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
     private lateinit var url: String
     private val itemList: ArrayList<String> = arrayListOf()
     private var image_rui: Uri? = null
-    private val postList: ArrayList<IdeaObject> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_idea)
+        Log.d("ideationId->create",intent.getIntExtra(IDEATION_ID, 1).toString())
+        Log.d("projectId->create",intent.getIntExtra(PROJECT_ID, 1).toString())
         getIdeation()
         //createLayout()
     }
 
     private fun initialiseViews(ideation: Ideation) {
         fillList(ideation)
+        layout = findViewById(R.id.LinearLayoutCreateIdea)
+        getRequiredFields(layout, ideation)
         titleText = findViewById(R.id.editIdeaTitle)
         spinner = findViewById(R.id.PossibleFields)
         val adapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, itemList)
         spinner.adapter = adapter
-        getLayout()
-
-        getRequiredFields(getLayout(), ideation)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -73,87 +73,74 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 Log.d("spinnerItem", itemList[p2])
                 when (itemList[p2]) {
-                    "Omschrijving" -> createTextField(getLayout())
-                    "Foto" -> createImageField(getLayout())
-                    "Youtube Link" -> createVideoField(getLayout())
-                    "Kaart" -> createMapField(getLayout())
+                    "Omschrijving" -> createTextField(layout)
+                    "Foto" -> createImageField(layout)
+                    "Youtube Link" -> createVideoField(layout)
+                    "Kaart" -> createMapField(layout)
                 }
             }
         }
         submit = findViewById(R.id.createIdea)
         submit.setOnClickListener {
-            requestData(getLayout())
-            if (loggedInUser != null) {
-                Thread {
-                    RestClient(this).createIdea(postList, intent.getIntExtra(IDEATION_ID, 0), loggedInUser!!.UserId)
-
-                }.start()
-                Toast.makeText(this,"Created",Toast.LENGTH_LONG).show()
+            if (validateData(layout, ideation, titleText.text.toString())) {
+                finish()
             }else{
-                Toast.makeText(this,"U bent niet ingelogd",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"er is geen idee opgeslagen",Toast.LENGTH_LONG).show()
             }
+
         }
     }
 
-    private fun getLayout(): LinearLayout {
-        layout = findViewById(R.id.LinearLayoutCreateIdea)
-        return layout
-    }
 
-    private fun requestData(layout: LinearLayout) {
-        for (child in 0..layout.childCount) {
-            val v = layout.getChildAt(child)
-            when (v) {
+    private fun validateData(layout: LinearLayout, ideation: Ideation, title: String): Boolean {
+        val parameters = mutableMapOf<String, Array<String>>()
+        for (i in 1..layout.childCount) {
+            when (val param = layout.getChildAt(i - 1)) {
+                is EditText -> {
+                    if (!param.text.isNullOrBlank()) {
+                        parameters["text"] = arrayOf(param.text.toString())
+                    }
+                }
                 is ImageView -> {
-                    postList.add(
-                        IdeaObject(
-                            child,
-                            child,
-                            "image",
-                            v.contentDescription.toString(),
-                            v.contentDescription.toString(),
-                            null,
-                            null,
-                            null,
-                            null
-                        )
-                    )
+                    parameters["image"] = arrayOf(param.contentDescription.toString())
+
+                }
+                is com.google.android.youtube.player.YouTubePlayerView -> {
+                    parameters["video"] = arrayOf(url)
                 }
                 is MapView -> {
                 }
-                is EditText -> {
-                    postList.add(
-                        IdeaObject(
-                            child,
-                            child,
-                             "text" ,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            v.text.toString()
-                        )
-                    )
-                }
-                is YouTubePlayerSupportFragment -> {
-                }
             }
         }
+        if (!title.isBlank()) {
+            parameters["title"] = arrayOf(title)
+        }
+        if (!parameters.isNullOrEmpty()) {
+            saveObjects(parameters, ideation)
+            return true
+        } else {
+            return false
+        }
+    }
+
+    fun saveObjects(parameters: MutableMap<String, Array<String>>, ideation: Ideation) {
+        Thread {
+            RestClient(this).createIdea(parameters, ideation.IdeationId, loggedInUser!!.UserId)
+        }.start()
     }
 
     private fun fillList(ideation: Ideation) {
         itemList.add("Kies een element om toe te voegen")
-        if (ideation.Text!!) {
+        if (ideation.TextAllowed!!) {
             itemList.add("Omschrijving")
         }
-        if (ideation.Image!!) {
+        if (ideation.ImageAllowed!!) {
             itemList.add("Foto")
         }
-        if (ideation.Video!!) {
+        if (ideation.VideoAllowed!!) {
             itemList.add("Youtube Link")
         }
-        if (ideation.Map!!) {
+        if (ideation.MapAllowed!!) {
             itemList.add("Kaart")
         }
     }
@@ -193,7 +180,7 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
             .subscribeOn(Schedulers.io())
             .subscribe {
                 it.forEach {
-                    val SingleIdeation =
+                    val singleIdeation =
                         Ideation(
                             it.IdeationId,
                             it.CentralQuestion,
@@ -201,16 +188,18 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
                             it.InputIdeation,
                             it.Reactions,
                             it.Ideas,
-                            it.Text,
-                            it.Image,
-                            it.Video,
-                            it.Map,
+                            it.TextAllowed,
+                            it.ImageAllowed,
+                            it.VideoAllowed,
+                            it.MapAllowed,
                             it.TextRequired,
                             it.ImageRequired,
                             it.VideoRequired,
                             it.MapRequired
                         )
-                    initialiseViews(SingleIdeation)
+                    Log.d("ideation->create",singleIdeation.toString())
+
+                    initialiseViews(singleIdeation)
                 }
             }
     }
@@ -244,7 +233,8 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
                 if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
                 ) {
-                    val permissions = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    val permissions =
+                        arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     requestPermissions(permissions, TAKE_PERMISSION_CODE)
                 } else {
                     takePicture()
@@ -278,7 +268,9 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         button.setOnClickListener {
             if (editText.text.isNotBlank()) {
                 url = editText.text.toString()
+
                 val fragmentTransaction = supportFragmentManager.beginTransaction()
+
                 val fragment = YouTubePlayerSupportFragment()
                 fragmentTransaction.add(R.id.LinearLayoutCreateIdea, fragment).commit()
                 fragment.initialize(YOUTUBE_API, this)
@@ -344,7 +336,11 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         startActivityForResult(cameraIntent, IMAGE_TAKE_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             PICK_PERMISSION_CODE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -364,12 +360,11 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val layout = findViewById<LinearLayout>(R.id.LinearLayoutCreateIdea)
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            val layout = getLayout()
             createImage(layout, data?.data)
         }
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_TAKE_CODE) {
-            val layout = getLayout()
             createImage(layout, image_rui)
         }
     }

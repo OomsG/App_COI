@@ -312,46 +312,36 @@ class RestClient(private val context: Context?) {
         }
     }
 
-    //work in progress
-    fun createIdea(postList: ArrayList<IdeaObject>, ideationId: Int, id: String) {
+    fun createIdea(parameters: MutableMap<String, Array<String>>, ideationId: Int, id: String) {
 
-        val json = JSONObject()
+        val jsonArray = mutableListOf<JSONObject>()
 
-        postList.forEach {
-            when (it.Discriminator) {
-                "image" -> {
+        for ((k, v) in parameters) {
+                v.forEach {
                     val formBody = FormBody.Builder()
-                        .add("discriminator", it.Discriminator)
-                        .add("image", it.ImageName!!)
+                        .add("type", k)
+                        .add("value", Base64.encodeToString(it.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
                         .build()
-
-                    for (i in 0 until formBody.size()) {
+                    val json = JSONObject()
+                    for (i in 0 until formBody!!.size()) {
                         json.put(formBody.encodedName(i), formBody.encodedValue(i))
                     }
+                    jsonArray.add(json)
                 }
-                "text" -> {
-                    val formBody = FormBody.Builder()
-                        .add("discriminator", it.Discriminator)
-                        .add("text", it.Text!!)
-                        .build()
 
-                    for (i in 0 until formBody.size()) {
-                        json.put(formBody.encodedName(i), formBody.encodedValue(i))
-                    }
-                }
             }
-        }
-        Log.d("json", json.toString())
-        val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), json.toString())
+
+        Log.d("jsonarray",jsonArray.toString())
+
+        val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), jsonArray.toString())
         val request = Request.Builder()
-            .url(HTTPS_PREFIX + host + ":" + port + apistring + "idea")
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "createidea")
             //headers post the data
-            .header("userid", id)
             .header("ideationid", ideationId.toString())
+            .header("userId", id)
             //body is needed for rider to know it's a post request
             .post(body)
             .build()
-
         try {
             getClient()!!.newCall(request).execute()
         } catch (e: IOException) {
@@ -360,18 +350,21 @@ class RestClient(private val context: Context?) {
 
     }
 
-    fun createLike(reactionId: Int,userId: String){
+    fun createLike(reactionId: Int, userId: String) {
+        val json = JSONObject()
         val formBody = FormBody.Builder()
             .add("userId", userId)
             .add("id", reactionId.toString())
             .build()
-        val gson = Gson().toJson(formBody)
-        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson)
+        for (i in 0 until formBody.size()) {
+            json.put(formBody.encodedName(i), formBody.encodedValue(i))
+        }
+
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString())
         val request = Request.Builder()
             .url(HTTPS_PREFIX + host + ":" + port + apistring + "like")
             //headers post the data
             .header("reactionId", reactionId.toString())
-            .header("userId", userId)
             //body is needed for rider to know it's a post request
             .post(body)
             .build()
@@ -384,8 +377,8 @@ class RestClient(private val context: Context?) {
     }
 
     //endregion
-    //endregion
-    //region User
+//endregion
+//region User
     fun getUser(url: String, username: String, password: String): Observable<User> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
@@ -498,8 +491,8 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
-    //endregion
-    //region Survey
+//endregion
+//region Survey
 
     fun getSurveys(url: String): Observable<Array<Survey>> {
         val prefix: String = if (https) {
@@ -518,7 +511,6 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
-
 
     fun getQuestions(url: String): Observable<Array<Question>> {
         val prefix: String = if (https) {
@@ -576,7 +568,7 @@ class RestClient(private val context: Context?) {
     }
 
     //endregion
-    //region Tag
+//region Tag
     fun getTags(url: String): Observable<Array<Tag>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
@@ -594,5 +586,5 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
-    //endregion
+//endregion
 }
