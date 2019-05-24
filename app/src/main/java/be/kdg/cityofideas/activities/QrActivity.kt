@@ -21,13 +21,13 @@ class QrActivity : BaseActivity() {
         setContentView(R.layout.activity_qr)
 
         // Comment for testing
-//        qrScanIntegrator = IntentIntegrator(this)
-//        qrScanIntegrator.setOrientationLocked(false)
-//        qrScanIntegrator.initiateScan()
+        qrScanIntegrator = IntentIntegrator(this)
+        qrScanIntegrator.setOrientationLocked(false)
+        qrScanIntegrator.initiateScan()
 
         // Uncomment for testing
 //        testNavigationToIdea()
-        testNavigationToSurvey()
+//        testNavigationToSurvey()
     }
 
     //region Tests

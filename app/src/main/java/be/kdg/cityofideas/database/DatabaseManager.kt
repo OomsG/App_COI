@@ -27,13 +27,15 @@ class DatabaseManager(context: Context) {
         return db.rawQuery(query, null)
     }
 
-    fun getDetails(table: String,
-                   projection: Array<String>? = null,
-                   selection: String,
-                   selectionArgs: Array<String>,
-                   group: String? = null,
-                   filter: String? = null,
-                   order: String? = null) : Cursor {
+    fun getDetails(
+        table: String,
+        projection: Array<String>? = null,
+        selection: String,
+        selectionArgs: Array<String>,
+        group: String? = null,
+        filter: String? = null,
+        order: String? = null
+    ): Cursor {
         return db.query(table, projection, selection, selectionArgs, group, filter, order)
     }
 
@@ -72,12 +74,6 @@ class DatabaseManager(context: Context) {
         selection: String,
         selectionArgs: Array<String>
     ): Cursor {
-        val cursor: Cursor = SQLiteQueryBuilder().run {
-            tables = table
-            query(db, null, selection, selectionArgs, null, null, null)
-        }
-
-        return cursor
+        return db.query(table, null, selection, selectionArgs, null, null, null)
     }
-
 }

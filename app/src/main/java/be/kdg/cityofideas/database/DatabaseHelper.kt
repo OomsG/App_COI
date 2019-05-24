@@ -9,7 +9,7 @@ import android.provider.BaseColumns
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
         // increment when you changed db schema
-        private const val DB_VERSION: Int = 31
+        private const val DB_VERSION: Int = 35
         private const val DB_NAME: String = "CityOfIdeasApp"
 
         //region Datatypes

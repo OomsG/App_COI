@@ -31,7 +31,7 @@ import javax.net.ssl.X509TrustManager
 
 class RestClient(private val context: Context?) {
     // online
-//    private val host = "34.76.196.101"
+//    private val host = "cityofideas.gq"
 //    private val port = 5000
 //    private val https = false
 

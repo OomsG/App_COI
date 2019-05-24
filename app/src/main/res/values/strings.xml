@@ -38,6 +38,11 @@
     <string name="upload">upload foto</string>
     <string name="upload_video">gebruik deze video</string>
     <string name="Take_Picture">neem een foto</string>
+    <string name="search_projects">Projecten</string>
+    <string name="search_ideations">Ideations</string>
+    <string name="search_ideas">Ideeën</string>
+    <string name="search_reactions">Reacties</string>
+    <string name="search_results_for">Zoekresultaten voor</string>
     <string name="Load_more">Bekijk meer</string>
     <string name="share">Share</string>
     <string name="stem">Stem</string>
