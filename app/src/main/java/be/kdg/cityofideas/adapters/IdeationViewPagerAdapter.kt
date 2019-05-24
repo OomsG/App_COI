@@ -7,8 +7,6 @@ import be.kdg.cityofideas.fragments.IdeationFragment
 import be.kdg.cityofideas.model.projects.Phase
 
 class IdeationViewPagerAdapter(fm: FragmentManager?, val projectId:Int) : FragmentPagerAdapter(fm) {
-
-
     var phases: Array<Phase> = arrayOf()
         set(phases) {
             field = phases

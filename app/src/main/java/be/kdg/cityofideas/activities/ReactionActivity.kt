@@ -4,20 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentTransaction
 import android.util.Log
-import android.widget.*
+import android.widget.LinearLayout
+import android.widget.Toast
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.*
 import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.fragments.ReactionFragment
-import be.kdg.cityofideas.fragments.YoutubeFragment
 import be.kdg.cityofideas.login.LoggedInUserView
 import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Vote
 import be.kdg.cityofideas.model.ideations.VoteType
-import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -26,13 +24,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_reaction.*
 
-
 class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
     private lateinit var layout: LinearLayout
-
     private var url: String? = null
-
-    private val votes: ArrayList<Vote> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +35,6 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         helper = manager.dbHelper
         getIdea(this)
     }
-
 
     private fun initialiseViews(idea: Idea) {
         layout = findViewById(R.id.LinearLayoutReactionIdea)
@@ -102,7 +95,7 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         }
 
         val fragment = supportFragmentManager.findFragmentById(R.id.ReactionFragment) as? ReactionFragment
-        fragment?.setId(intent.getIntExtra(IDEA_ID, 1))
+        fragment?.id = intent.getIntExtra(IDEA_ID, 1)
     }
 
     private fun shareButtonPressed(id: Int, loggedInUser: LoggedInUserView) {
@@ -162,5 +155,4 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
         Log.d("errorMessage:", errorMessage)
     }
-
 }

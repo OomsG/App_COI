@@ -14,7 +14,7 @@
             android:layout_height="wrap_content">
 
         <TextView
-                android:text="Glenn Ooms"
+                android:text="@string/dummy_user"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
                 app:layout_constraintRight_toLeftOf="@+id/IdeaTitle"
                 app:layout_constraintTop_toTopOf="parent"/>
         <TextView
-                android:text="Titel"
+                android:text="@string/title"
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
 
         </LinearLayout>
         <TextView
-                android:text="5 Reacties"
+                android:text="@string/dummy_reactions"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/LinearLayoutIdea"
                 app:layout_constraintRight_toLeftOf="@+id/IdeaVoteCount"/>
         <TextView
-                android:text="20 Stemmen"
+                android:text="@string/dummy_votes"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 app:layout_constraintRight_toLeftOf="@+id/IdeaShareCount"
                 app:layout_constraintTop_toTopOf="@id/IdeaReactionCount"/>
         <TextView
-                android:text="10 keer gedeeld"
+                android:text="@string/dummy_shares"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                 app:layout_constraintTop_toTopOf="@+id/IdeaReactionCount"/>
 
         <Button
-                android:text="@string/stem"
+                android:text="@string/vote"
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp">
                 <TextView
-                        android:text="UserName"
+                        android:text="@string/username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/IdeaReactionNameFirst"
@@ -123,7 +123,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                 />
                 <TextView
-                        android:text="Hier komt de reactie op een idee"
+                        android:text="@string/dummy_reaction_idea"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/IdeaReactionTextFirst"

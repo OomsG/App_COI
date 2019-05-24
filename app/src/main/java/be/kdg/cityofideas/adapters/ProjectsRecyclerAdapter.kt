@@ -2,10 +2,13 @@ package be.kdg.cityofideas.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v7.widget.AppCompatImageButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.model.projects.Project
 import kotlinx.android.synthetic.main.projects_list.view.*
@@ -24,10 +27,10 @@ class ProjectsRecyclerAdapter(
     }
 
     class ProjectsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title = view.TitleProject
-        val Description = view.SmallDescriptionProject
-        val picture = view.smallFotoProject
-        val share = view.Share
+        val title: TextView = view.TitleProject
+        val description: TextView = view.SmallDescriptionProject
+        val picture: ImageView = view.smallFotoProject
+        val share: AppCompatImageButton = view.Share
     }
 
     var projects: Array<Project> = arrayOf()
@@ -45,7 +48,7 @@ class ProjectsRecyclerAdapter(
 
     override fun onBindViewHolder(p0: ProjectsViewHolder, p1: Int) {
         p0.title.text = getProjectsOfStatus(projects, status)[p1].ProjectName
-        p0.Description.text = getProjectsOfStatus(projects, status)[p1].Description
+        p0.description.text = getProjectsOfStatus(projects, status)[p1].Description
         p0.picture.setImageBitmap( getProjectsOfStatus(projects, status)[p1].BackgroundIMG)
         p0.share.setOnClickListener {
             selectionListener.onShareSelected(getProjectsOfStatus(projects,status)[p1].ProjectId)

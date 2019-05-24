@@ -5,13 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.login.loggedInUser
-import be.kdg.cityofideas.model.IoT.IoTSetup
-import be.kdg.cityofideas.model.ideations.VoteType
-import be.kdg.cityofideas.rest.RestClient
 import com.google.zxing.integration.android.IntentIntegrator
-import org.json.JSONException
-import org.json.JSONObject
 
 class QrActivity : BaseActivity() {
     private lateinit var qrScanIntegrator: IntentIntegrator

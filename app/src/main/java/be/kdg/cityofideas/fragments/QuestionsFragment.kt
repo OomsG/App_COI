@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +37,7 @@ class QuestionsFragment : Fragment() {
         rvSurvey.adapter = QuestionRecyclerAdapter(context)
 
         RestClient(this.context)
-            .getQuestions("questions/" + surveyId)
+            .getQuestions("questions/$surveyId")
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
@@ -107,10 +106,10 @@ class QuestionsFragment : Fragment() {
             }
         }
 
-        if (answers.size == questions.size) {
+        return if (answers.size == questions.size) {
             saveAnswers(answers)
-            return true
-        } else return false
+            true
+        } else false
     }
 
     private fun saveAnswers(answers: MutableMap<Int, Array<String>>) {

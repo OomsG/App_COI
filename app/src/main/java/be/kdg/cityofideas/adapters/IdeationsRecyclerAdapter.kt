@@ -2,7 +2,6 @@ package be.kdg.cityofideas.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,9 +60,8 @@ class IdeationsRecyclerAdapter(
         }
     }
 
-
-    fun getIdeationVoteCount(ideations: Array<Ideation>): String? {
-        var votes: Int = 0
+    private fun getIdeationVoteCount(ideations: Array<Ideation>): String? {
+        var votes = 0
         ideations.forEach {
             it.Ideas?.forEach {
                 it.Votes?.forEach {
@@ -73,11 +71,11 @@ class IdeationsRecyclerAdapter(
                 }
             }
         }
-        return votes.toString() + " Stemmen"
+        return "$votes Stemmen"
     }
 
-    fun getIdeationShareCount(ideations: Array<Ideation>): String? {
-        var votes: Int = 0
+    private fun getIdeationShareCount(ideations: Array<Ideation>): String? {
+        var votes = 0
         ideations.forEach {
             it.Ideas?.forEach {
                 it.Votes?.forEach {
@@ -87,10 +85,10 @@ class IdeationsRecyclerAdapter(
                 }
             }
         }
-        return votes.toString() + " keer gedeeld"
+        return "$votes keer gedeeld"
     }
 
-    fun getIdeaCount(ideation: Ideation): String? {
+    private fun getIdeaCount(ideation: Ideation): String? {
         val size = ideation.Ideas?.size
         if (size == 0) {
             return "Geen ideeën"
@@ -98,7 +96,7 @@ class IdeationsRecyclerAdapter(
             return "1 idee"
         } else if (size != null) {
             if (size > 1) {
-                return size.toString() + " ideeën"
+                return "$size ideeën"
             }
         }
         return null

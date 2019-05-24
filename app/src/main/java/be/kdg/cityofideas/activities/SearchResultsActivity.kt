@@ -16,7 +16,6 @@ class SearchResultsActivity : AppCompatActivity() {
     private lateinit var listSearchedIdeations: GridView
     private lateinit var listSearchedIdeas: GridView
     private lateinit var listSearchedReactions: GridView
-
     private lateinit var projectSearchResults: MutableMap<Int, String>
     private lateinit var ideationSearchResults: MutableMap<Int, String>
     private lateinit var ideaSearchResults: MutableMap<Int, String>
@@ -44,7 +43,7 @@ class SearchResultsActivity : AppCompatActivity() {
     }
 
     private fun addEventHandlers() {
-        listSearchedProjects.setOnItemClickListener { parent, view, position, id ->
+        listSearchedProjects.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(this, IdeationActivity::class.java)
             var i = 0
             projectSearchResults.forEach {
@@ -58,7 +57,7 @@ class SearchResultsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        listSearchedIdeations.setOnItemClickListener { parent, view, position, id ->
+        listSearchedIdeations.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(this, IdeaActivity::class.java)
             var i = 0
             ideationSearchResults.forEach {
@@ -99,7 +98,7 @@ class SearchResultsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        listSearchedIdeas.setOnItemClickListener { parent, view, position, id ->
+        listSearchedIdeas.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(this, ReactionActivity::class.java)
             var i = 0
             ideaSearchResults.forEach {
@@ -117,7 +116,7 @@ class SearchResultsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        listSearchedReactions.setOnItemClickListener { parent, view, position, id ->
+        listSearchedReactions.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(this, ReactionActivity::class.java)
             var i = 0
             reactionSearchResults.forEach {
@@ -239,7 +238,7 @@ class SearchResultsActivity : AppCompatActivity() {
     private fun getStringResultsOfMap(map: MutableMap<Int, String>): Array<String> {
         val stringResults = mutableListOf<String>()
 
-        for ((k, v) in map) {
+        for ((_, v) in map) {
             stringResults.add(v)
         }
 

@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
-import be.kdg.cityofideas.model.ideations.Idea
-import be.kdg.cityofideas.model.ideations.Ideation
-import be.kdg.cityofideas.model.ideations.Reaction
-import be.kdg.cityofideas.model.ideations.Tag
+import android.util.Base64
+import android.util.Log
+import be.kdg.cityofideas.login.LoggedInUserView
+import be.kdg.cityofideas.model.IoT.IoTSetup
+import be.kdg.cityofideas.model.ideations.*
 import be.kdg.cityofideas.model.projects.Phase
 import be.kdg.cityofideas.model.projects.Project
 import be.kdg.cityofideas.model.surveys.Question
@@ -17,14 +18,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import okhttp3.*
-import java.io.IOException
-import android.util.Base64
-import android.util.Log
-import be.kdg.cityofideas.login.LoggedInUserView
-import be.kdg.cityofideas.model.IoT.IoTSetup
-import be.kdg.cityofideas.model.ideations.*
-import com.google.android.youtube.player.internal.i
 import org.json.JSONObject
+import java.io.IOException
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -87,10 +82,10 @@ class RestClient(private val context: Context?) {
                 }
                 return client
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
-        return null;
+        return null
     }
     //endregion
 
@@ -133,7 +128,7 @@ class RestClient(private val context: Context?) {
                 it.onNext(projects)
                 it.onComplete()
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -171,7 +166,7 @@ class RestClient(private val context: Context?) {
                 }
                 it.onNext(ideations)
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -189,7 +184,7 @@ class RestClient(private val context: Context?) {
                 val reactions = gson.fromJson(response, Array<Reaction>::class.java)
                 it.onNext(reactions)
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -207,7 +202,7 @@ class RestClient(private val context: Context?) {
                 val phases = gson.fromJson(response, Array<Phase>::class.java)
                 it.onNext(phases)
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -238,7 +233,7 @@ class RestClient(private val context: Context?) {
                 it.onNext(idea)
                 it.onComplete()
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -258,7 +253,7 @@ class RestClient(private val context: Context?) {
                     it.onNext(vote)
                 }
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -394,7 +389,7 @@ class RestClient(private val context: Context?) {
                 val users = gson.fromJson(response, Array<User>::class.java)
                 it.onNext(users)
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -424,7 +419,7 @@ class RestClient(private val context: Context?) {
                 it.onNext(user)
                 it.onComplete()
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -458,7 +453,7 @@ class RestClient(private val context: Context?) {
                 it.onNext(user)
                 it.onComplete()
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -513,7 +508,7 @@ class RestClient(private val context: Context?) {
                 val surveys = gson.fromJson(response, Array<Survey>::class.java)
                 it.onNext(surveys)
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -531,7 +526,7 @@ class RestClient(private val context: Context?) {
                 val questions = gson.fromJson(response, Array<Question>::class.java)
                 it.onNext(questions)
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -589,7 +584,7 @@ class RestClient(private val context: Context?) {
                 val tags = gson.fromJson(response, Array<Tag>::class.java)
                 it.onNext(tags)
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable
@@ -610,7 +605,7 @@ class RestClient(private val context: Context?) {
                 val iotSetups = gson.fromJson(response, Array<IoTSetup>::class.java)
                 it.onNext(iotSetups)
             } catch (e: IOException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
         return observable

@@ -1,6 +1,5 @@
 package be.kdg.cityofideas.fragments
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -18,7 +17,6 @@ import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
-
 
 class IdeaFragment : Fragment() {
     private lateinit var listener: ideaSelectionListener
@@ -45,19 +43,19 @@ class IdeaFragment : Fragment() {
         Log.d("projectId",projectId.toString())
         rvIdeas.adapter = IdeaRecyclerAdapter(context, listener)
         RestClient(context)
-            .getIdeations("ideations/" + projectId)
+            .getIdeations("ideations/$projectId")
             .map {
                 it.filter {
-                    it.IdeationId.equals(ideationId)
+                    it.IdeationId == ideationId
                 }
             }.map {
                 it.first().Ideas
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe({
+            .subscribe {
                 (rvIdeas.adapter as IdeaRecyclerAdapter).ideas = it!!.toMutableList()
-            })
+            }
     }
 
     fun setId(ideation: Int, project: Int) {

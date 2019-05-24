@@ -5,11 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
-import android.database.sqlite.SQLiteOpenHelper
-import android.database.sqlite.SQLiteQueryBuilder
 import android.util.Log
-import android.widget.Toast
-import java.lang.IllegalStateException
 
 class DatabaseManager(context: Context) {
     private lateinit var db: SQLiteDatabase
@@ -40,7 +36,7 @@ class DatabaseManager(context: Context) {
     }
 
     fun insert(tblName: String, values: ContentValues): Boolean {
-        var inserted: Long = -1;
+        var inserted: Long = -1
         try {
             inserted = db.insert(tblName, null, values)
 
@@ -52,7 +48,7 @@ class DatabaseManager(context: Context) {
         } catch (e: SQLiteException) {
 //            e.printStackTrace()
         }
-        return inserted.toInt() != -1;
+        return inserted.toInt() != -1
     }
 
     fun delete(tblName: String): Boolean {
@@ -65,8 +61,7 @@ class DatabaseManager(context: Context) {
     }
 
     fun update(tblName: String, values: ContentValues, selection: String, selectionargs: Array<String>): Int {
-        val count = db.update(tblName, values, selection, selectionargs)
-        return count
+        return db.update(tblName, values, selection, selectionargs)
     }
 
     fun querySearch(

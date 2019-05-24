@@ -13,7 +13,6 @@ import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.ideations.Reaction
 import be.kdg.cityofideas.rest.RestClient
 import kotlinx.android.synthetic.main.reactions_list.view.*
-import kotlin.concurrent.thread
 
 class ReactionRecyclerAdapter(val context: Context?) :
     RecyclerView.Adapter<ReactionRecyclerAdapter.ReactionsViewHolder>() {
@@ -25,11 +24,10 @@ class ReactionRecyclerAdapter(val context: Context?) :
         }
 
     class ReactionsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name = view.NameReaction
-        val text = view.TextReaction
-        val submitLike = view.LikeButton
-        val likeCounter = view.LikeCounter
-
+        val name: TextView = view.NameReaction
+        val text: TextView = view.TextReaction
+        val submitLike: ImageButton = view.LikeButton
+        val likeCounter: TextView = view.LikeCounter
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ReactionsViewHolder {
@@ -56,10 +54,10 @@ class ReactionRecyclerAdapter(val context: Context?) :
     }
 
     private fun getLikeCount(reaction: Reaction): CharSequence? {
-        if (reaction.Likes.isNullOrEmpty()) {
-            return "0"
+        return if (reaction.Likes.isNullOrEmpty()) {
+            "0"
         } else {
-            return reaction.Likes.size.toString()
+            reaction.Likes.size.toString()
         }
     }
 
