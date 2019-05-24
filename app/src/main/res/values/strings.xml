@@ -29,10 +29,11 @@
     <string name="username">Gebruikersnaam</string>
     <string name="invalid_email">Ongeldige e-mail</string>
     <string name="invalid_confirm_password">Wachtwoorden komen niet overeen</string>
-    <string name="qr">qr</string>
+    <string name="qr">QR</string>
     <string name="confirm">Bevestig</string>
     <string name="vraag_1_15">Vraag 1/15</string>
     <string name="dummy_textview">TextView</string>
+    <string name="search_hint">Zoeken…</string>
     <string name="facebook_app_id">1038823499646079</string>
     <string name="upload">upload foto</string>
     <string name="upload_video">gebruik deze video</string>

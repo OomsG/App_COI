@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import android.database.sqlite.SQLiteQueryBuilder
 import android.util.Log
 import android.widget.Toast
 import java.lang.IllegalStateException
@@ -65,4 +66,18 @@ class DatabaseManager(context: Context) {
         val count = db.update(tblName, values, selection, selectionargs)
         return count
     }
+
+    fun querySearch(
+        table: String,
+        selection: String,
+        selectionArgs: Array<String>
+    ): Cursor {
+        val cursor: Cursor = SQLiteQueryBuilder().run {
+            tables = table
+            query(db, null, selection, selectionArgs, null, null, null)
+        }
+
+        return cursor
+    }
+
 }

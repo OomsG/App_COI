@@ -21,11 +21,11 @@ import io.reactivex.schedulers.Schedulers
 
 
 class ReactionFragment : Fragment() {
-    private lateinit var view1 : View
+    private lateinit var mView : View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_reaction, container, false)
-        view1 =view
+        mView =view
         return view
     }
 
@@ -44,6 +44,6 @@ class ReactionFragment : Fragment() {
     }
 
     fun setId(ideaId: Int){
-        initialiseViews(view1,ideaId)
+        initialiseViews(mView, ideaId)
     }
 }

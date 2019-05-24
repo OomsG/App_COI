@@ -24,8 +24,6 @@ lateinit var manager: DatabaseManager
 lateinit var helper: DatabaseHelper
 
 class MainActivity : BaseActivity() {
-    //    private val manager = DatabaseManager(this)
-//    private val helper = manager.dbHelper
     private lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -185,7 +183,7 @@ class MainActivity : BaseActivity() {
                                 )
                             )
 
-                            // update Location with Address
+                            // update Location with AddressId
                             manager.update(
                                 helper.getLocationEntry().TBL_LOCATION,
                                 ContentValues().apply {
@@ -209,7 +207,7 @@ class MainActivity : BaseActivity() {
                                 )
                             )
 
-                            // update Location with Position
+                            // update Location with PositionId
                             manager.update(
                                 helper.getLocationEntry().TBL_LOCATION,
                                 ContentValues().apply {
@@ -270,7 +268,7 @@ class MainActivity : BaseActivity() {
                                     )
                                 )
 
-                                //update Reaction with IdeationId
+                                // update Reaction with ideationId
                                 manager.update(
                                     helper.getReactionEntry().TBL_REACTION,
                                     ContentValues().apply {
@@ -280,7 +278,7 @@ class MainActivity : BaseActivity() {
                                     arrayOf(reactionId.toString())
                                 )
 
-                                // update Reaction with userId
+                                // update Reaction with UserId
                                 it.User?.let {
                                     manager.update(
                                         helper.getReactionEntry().TBL_REACTION,
@@ -534,6 +532,61 @@ class MainActivity : BaseActivity() {
                                 }
                             }
                         }
+                    }
+                }
+            }
+        //endregion
+
+        //region RestClient getIoTSetups
+        RestClient(this)
+            .getIoTSetups("iot")
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                it.forEach {
+                    val code = it.Code
+
+                    manager.insert(
+                        helper.getIoTEntry().TBL_IOT,
+                        helper.getIoTContentValues(
+                            code
+                        )
+                    )
+
+                    // update IoTSetup with PositionId
+                    it.Position?.let {
+                        manager.update(
+                            helper.getIoTEntry().TBL_IOT,
+                            ContentValues().apply {
+                                put(helper.getPositionEntry().POSITION_ID, it.PositionId)
+                            },
+                            "${helper.getIoTEntry().IOT_CODE} = ?",
+                            arrayOf(code)
+                        )
+                    }
+
+                    // update IoTSetup with IdeaId
+                    it.Idea?.let {
+                        manager.update(
+                            helper.getIoTEntry().TBL_IOT,
+                            ContentValues().apply {
+                                put(helper.getIdeaEntry().IDEA_ID, it.IdeaId)
+                            },
+                            "${helper.getIoTEntry().IOT_CODE} = ?",
+                            arrayOf(code)
+                        )
+                    }
+
+                    // update IoTSetup with QuestionId
+                    it.Question?.let {
+                        manager.update(
+                            helper.getIoTEntry().TBL_IOT,
+                            ContentValues().apply {
+                                put(helper.getQuestionEntry().QUESTION_ID, it.QuestionId)
+                            },
+                            "${helper.getIoTEntry().IOT_CODE} = ?",
+                            arrayOf(code)
+                        )
                     }
                 }
             }
