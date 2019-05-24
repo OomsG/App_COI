@@ -9,12 +9,15 @@ import android.util.Log
 import android.widget.*
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.*
+import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.fragments.ReactionFragment
 import be.kdg.cityofideas.fragments.YoutubeFragment
 import be.kdg.cityofideas.login.LoggedInUserView
 import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.ideations.Idea
+import be.kdg.cityofideas.model.ideations.Vote
 import be.kdg.cityofideas.model.ideations.VoteType
+import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -29,18 +32,18 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
 
     private var url: String? = null
 
-    private var voteCounter = 0
-    private var shareCounter = 0
+    private val votes: ArrayList<Vote> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reaction)
+        manager = DatabaseManager(this)
+        helper = manager.dbHelper
         getIdea(this)
     }
 
 
     private fun initialiseViews(idea: Idea) {
-        Log.d("help", idea.toString())
         layout = findViewById(R.id.LinearLayoutReactionIdea)
         getIdeaDetails(idea, this, layout)
         idea.IdeaObjects!!.forEach {
@@ -55,15 +58,17 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
 
         // name.text = idea.
         ReactionIdeaTitle.text = idea.Title
-        ReactionIdeaVoteCount.text = getIdeaVoteCount(idea, voteCounter)
+        ReactionIdeaVoteCount.text = getIdeaVoteCount(idea)
         ReactionIdeaReactionCount.text = getReactionCount(idea)
-        ReactionIdeaShareCount.text = getIdeaShareCount(idea, shareCounter)
+        ReactionIdeaShareCount.text = getIdeaShareCount(idea)
         ReactionIdeaVoteButton.setOnClickListener {
             if (loggedInUser != null) {
-                Thread {
-                    RestClient(this).createVote(idea.IdeaId, VoteType.VOTE, loggedInUser!!.UserId)
-                    Log.d("vote", "Voted")
-                }.start()
+                if (validVote(idea)) {
+                    Thread {
+                        RestClient(this).createVote(idea.IdeaId, VoteType.VOTE, loggedInUser!!.UserId)
+                    }.start()
+                    Toast.makeText(it.context, "U heeft gestemd!", Toast.LENGTH_LONG).show()
+                }
             } else {
                 Toast.makeText(it.context, "U bent niet ingelogd!", Toast.LENGTH_LONG).show()
             }
@@ -77,7 +82,6 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
                 Toast.makeText(it.context, "U bent niet ingelogd!", Toast.LENGTH_LONG).show()
             }
         }
-
 
         createReaction.setOnClickListener {
             if (!ReactionText.text.isNullOrEmpty()) {
@@ -96,7 +100,6 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
                 Toast.makeText(this, "U bent niet aangemeld", Toast.LENGTH_SHORT).show()
             }
         }
-
 
         val fragment = supportFragmentManager.findFragmentById(R.id.ReactionFragment) as? ReactionFragment
         fragment?.setId(intent.getIntExtra(IDEA_ID, 1))
@@ -159,6 +162,5 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
         Log.d("errorMessage:", errorMessage)
     }
-
 
 }
