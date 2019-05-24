@@ -38,6 +38,10 @@
     <string name="upload">upload foto</string>
     <string name="upload_video">gebruik deze video</string>
     <string name="Take_Picture">neem een foto</string>
+    <string name="Load_more">Bekijk meer</string>
+    <string name="share">Share</string>
+    <string name="stem">Stem</string>
+    <string name="beste_reactie">Beste reactie</string>
 
     <string-array name="spinSexItems">
         <item>--</item>

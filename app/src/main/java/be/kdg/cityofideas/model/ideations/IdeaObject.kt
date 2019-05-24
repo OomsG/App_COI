@@ -20,7 +20,7 @@ fun getImage(image: ByteArray): Bitmap {
 //endregion
 
 data class IdeaObject(
-    val IdeaObjectId: Int,
+    val IdeaObjectId : Int,
     val OrderNr: Int,
     val Discriminator: String?,
     val ImageName: String?,

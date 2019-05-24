@@ -14,17 +14,21 @@ import com.facebook.share.model.ShareLinkContent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import be.kdg.cityofideas.adapters.getVotes
+import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Vote
 import be.kdg.cityofideas.model.ideations.VoteType
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_share.*
 
 
 class ShareVoteActivity : AppCompatActivity() {
     private lateinit var callbackManager: CallbackManager
     private lateinit var shareDialog: ShareDialog
-    private lateinit var fbButton: Button
-    private lateinit var twButton: Button
+
+    private val sharedUrl: String = "https://localhost:5001/Antwerpen/Project/Idea?ideaId="
+    private val message: String = "Dit is geweldig!"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,29 +36,8 @@ class ShareVoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_share_vote)
         initFacebook()
         createLayout()
-        getdata()
+        initialiseViews()
     }
-
-    @SuppressLint("CheckResult")
-    private fun getdata() {
-        Log.d("userId",intent.getStringExtra(LOGGEDIN_USER))
-        val votes: MutableList<Vote>? = null
-        RestClient(this)
-            .getSharedVotes("sharedVotes/" + intent.getIntExtra(IDEA_ID, 0))
-            .map {
-                it.forEach {
-                    it.User!!.Id == intent.getStringExtra(LOGGEDIN_USER)
-                    votes!!.add(Vote(it.VoteId, it.Confirmed, it.VoteType, it.User, it.Idea))
-                }
-            }
-            .observeOn(Schedulers.newThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe {
-                initialiseViews(votes)
-            }
-
-    }
-
 
     private fun initFacebook() {
         callbackManager = CallbackManager.Factory.create()
@@ -71,155 +54,81 @@ class ShareVoteActivity : AppCompatActivity() {
         window.attributes.gravity = Gravity.BOTTOM
     }
 
-    private fun initialiseViews(votes: MutableList<Vote>?) {
-        fbButton = findViewById(R.id.fbShare)
-        twButton = findViewById(R.id.twShare)
-        Log.d("shareType", votes?.size.toString())
-        if (votes != null) {
-            votes.forEach {
-                Log.d("shareType", it.VoteType.toString())
-                when (it.VoteType) {
-
-                    VoteType.VOTE -> {
-                        twButton.setOnClickListener {
-                            val url = "http://www.twitter.com/intent/tweet?url=YOURURL&text=YOURTEXT"
-                            val i = Intent(Intent.ACTION_VIEW)
-                            i.data = Uri.parse(url)
-                            startActivity(i)
-                            Thread {
-                                RestClient(this).createVote(
-                                    intent.getIntExtra(IDEA_ID, 0),
-                                    VoteType.SHARE_TW,
-                                    intent.getStringExtra(LOGGEDIN_USER)
-                                )
-                            }.start()
-                        }
-                        fbButton.setOnClickListener {
-                            if (ShareDialog.canShow(ShareLinkContent::class.java)) {
-                                val linkContent = ShareLinkContent.Builder()
-                                    .setQuote("Dit is een geweldig idee!")
-                                    .setContentUrl(Uri.parse("http://facebook.com"))
-                                    .build()
-                                shareDialog.show(linkContent)
-                            }
-                            Thread {
-                                RestClient(this).createVote(
-                                    intent.getIntExtra(IDEA_ID, 0),
-                                    VoteType.SHARE_FB,
-                                    intent.getStringExtra(LOGGEDIN_USER)
-                                )
-                            }.start()
-                        }
-                    }
-                    VoteType.SHARE_FB -> {
-                        fbButton.setOnClickListener {
-                            Toast.makeText(it.context, "U reeds op dewe manier gestemd", Toast.LENGTH_LONG).show()
-                            twButton.setOnClickListener {
-                                val url = "http://www.twitter.com/intent/tweet?url=YOURURL&text=YOURTEXT"
-                                val i = Intent(Intent.ACTION_VIEW)
-                                i.data = Uri.parse(url)
-                                startActivity(i)
-                                Thread {
-                                    RestClient(this).createVote(
-                                        intent.getIntExtra(IDEA_ID, 0),
-                                        VoteType.SHARE_TW,
-                                        intent.getStringExtra(LOGGEDIN_USER)
-                                    )
-                                }.start()
-                            }
-                        }
-                    }
-                    VoteType.SHARE_TW -> {
-                        twButton.setOnClickListener {
-                            Toast.makeText(it.context, "U reeds op dewe manier gestemd", Toast.LENGTH_LONG).show()
-                            fbButton.setOnClickListener {
-                                if (ShareDialog.canShow(ShareLinkContent::class.java)) {
-                                    val linkContent = ShareLinkContent.Builder()
-                                        .setQuote("Dit is een geweldig idee!")
-                                        .setContentUrl(Uri.parse("http://facebook.com"))
-                                        .build()
-                                    shareDialog.show(linkContent)
-                                }
-                                Thread {
-                                    RestClient(this).createVote(
-                                        intent.getIntExtra(IDEA_ID, 0),
-                                        VoteType.SHARE_FB,
-                                        intent.getStringExtra(LOGGEDIN_USER)
-                                    )
-                                }.start()
-                            }
-                        }
-                    }
-                    VoteType.IOT -> {
-                        twButton.setOnClickListener {
-                            val url = "http://www.twitter.com/intent/tweet?url=YOURURL&text=YOURTEXT"
-                            val i = Intent(Intent.ACTION_VIEW)
-                            i.data = Uri.parse(url)
-                            startActivity(i)
-                            Thread {
-                                RestClient(this).createVote(
-                                    intent.getIntExtra(IDEA_ID, 0),
-                                    VoteType.SHARE_TW,
-                                    intent.getStringExtra(LOGGEDIN_USER)
-                                )
-                            }.start()
-                        }
-                        fbButton.setOnClickListener {
-                            if (ShareDialog.canShow(ShareLinkContent::class.java)) {
-                                val linkContent = ShareLinkContent.Builder()
-                                    .setQuote("Dit is een geweldig idee!")
-                                    .setContentUrl(Uri.parse("http://facebook.com"))
-                                    .build()
-                                shareDialog.show(linkContent)
-                            }
-                            Thread {
-                                RestClient(this).createVote(
-                                    intent.getIntExtra(IDEA_ID, 0),
-                                    VoteType.SHARE_FB,
-                                    intent.getStringExtra(LOGGEDIN_USER)
-                                )
-                            }.start()
-                        }
-                    }
-                    null -> return
-                }
-            }
-        } else {
-            twButton.setOnClickListener {
-                val url = "http://www.twitter.com/intent/tweet?url=YOURURL&text=YOURTEXT"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                startActivity(i)
-                Thread {
-                    RestClient(this).createVote(
-                        intent.getIntExtra(IDEA_ID, 0),
-                        VoteType.SHARE_TW,
-                        intent.getStringExtra(LOGGEDIN_USER)
-                    )
-                }.start()
-            }
-            fbButton.setOnClickListener {
-                if (ShareDialog.canShow(ShareLinkContent::class.java)) {
-                    val linkContent = ShareLinkContent.Builder()
-                        .setQuote("Dit is een geweldig idee!")
-                        .setContentUrl(Uri.parse("http://facebook.com"))
-                        .build()
-                    shareDialog.show(linkContent)
-                }
-                Thread {
-                    RestClient(this).createVote(
-                        intent.getIntExtra(IDEA_ID, 0),
-                        VoteType.SHARE_FB,
-                        intent.getStringExtra(LOGGEDIN_USER)
-                    )
-                }.start()
+    private fun initialiseViews() {
+        twShare.setOnClickListener {
+            if (validTweet(intent.getIntExtra(IDEA_ID,0))) {
+                shareTweet(sharedUrl, message)
+            }else{
+                Toast.makeText(this,"U hebt reeds op deze manier gestemd!",Toast.LENGTH_LONG).show()
             }
         }
+        fbShare.setOnClickListener {
+            if (validFbShare(intent.getIntExtra(IDEA_ID,0))){
+            shareFacebook(sharedUrl, message)
+        }else{
+            Toast.makeText(this,"U hebt reeds op deze manier gestemd!",Toast.LENGTH_LONG).show()
+        }
+        }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
+    fun shareTweet(sharedUrl: String, message: String) {
+        val url =
+            "http://www.twitter.com/intent/tweet?url=${sharedUrl + intent.getIntExtra(IDEA_ID, 0)}&text=${message}"
+        val i = Intent(Intent.ACTION_VIEW)
+        i.data = Uri.parse(url)
+        startActivity(i)
+        Thread {
+            RestClient(this).createVote(
+                intent.getIntExtra(IDEA_ID, 0),
+                VoteType.SHARE_TW,
+                intent.getStringExtra(LOGGEDIN_USER)
+            )
+        }.start()
+    }
+
+    fun shareFacebook(sharedUrl: String, message: String) {
+        if (ShareDialog.canShow(ShareLinkContent::class.java)) {
+            val linkContent = ShareLinkContent.Builder()
+                .setQuote(message)
+                .setContentUrl(Uri.parse(sharedUrl + intent.getIntExtra(IDEA_ID, 0)))
+                .build()
+            shareDialog.show(linkContent)
+        }
+        Thread {
+            RestClient(this).createVote(
+                intent.getIntExtra(IDEA_ID, 0),
+                VoteType.SHARE_FB,
+                intent.getStringExtra(LOGGEDIN_USER)
+            )
+        }.start()
+    }
+
+    fun validFbShare(id: Int): Boolean {
+        val votes = getVotes()
+        var state: Boolean = false
+        votes.forEach {
+            if (it.VoteType == VoteType.SHARE_FB || it.Idea!!.IdeaId == id) {
+                state = true
+            }
+        }
+        return state
+    }
+
+    fun validTweet(id: Int): Boolean {
+        val votes = getVotes()
+        var state: Boolean = false
+        votes.forEach {
+            if (it.VoteType == VoteType.SHARE_TW || it.Idea!!.IdeaId == id) {
+                state = true
+            }
+        }
+        return state
+    }
 }
+

@@ -467,7 +467,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         lastName: String?,
         sex: String?,
         age: Int?,
-        zip: String?): ContentValues {
+        zip: String?
+    ): ContentValues {
         return ContentValues().apply {
             put(UserEntry.USER_ID, id)
             put(UserEntry.USER_EMAIL, email)
