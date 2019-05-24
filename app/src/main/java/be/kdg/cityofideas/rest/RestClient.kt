@@ -240,8 +240,53 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
+
+    fun getSharedVotes(url: String): Observable<Array<Vote>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<Vote>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val vote = gson.fromJson(response, Array<Vote>::class.java)
+                if (vote != null) {
+                    it.onNext(vote)
+                }
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
     //endregion
-    //region Put
+    //region Post
+
+    fun createReaction(param: String, userId: String, id: Int, element: String) {
+        val formBody = FormBody.Builder()
+            .add("param", param)
+            .add("userId", userId)
+            .add("id", id.toString())
+            .add("element", element)
+        val gson = Gson().toJson(formBody)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson)
+        val request = Request.Builder()
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "reaction")
+            //headers post the data
+            .header("param", param)
+            .header("userId", userId)
+            .header("id", id.toString())
+            .header("element", element)
+            //body is needed for rider to know it's a post request
+            .post(body)
+            .build()
+        try {
+            getClient()!!.newCall(request).execute()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
 
     fun createVote(ideaId: Int, voteType: VoteType, userId: String) {
         val formBody = FormBody.Builder()
@@ -267,9 +312,79 @@ class RestClient(private val context: Context?) {
         }
     }
 
-    //endregion
-    //endregion
+    //work in progress
+    fun createIdea(postList: ArrayList<IdeaObject>, ideationId: Int, id: String) {
 
+        val json = JSONObject()
+
+        postList.forEach {
+            when (it.Discriminator) {
+                "image" -> {
+                    val formBody = FormBody.Builder()
+                        .add("discriminator", it.Discriminator)
+                        .add("image", it.ImageName!!)
+                        .build()
+
+                    for (i in 0 until formBody.size()) {
+                        json.put(formBody.encodedName(i), formBody.encodedValue(i))
+                    }
+                }
+                "text" -> {
+                    val formBody = FormBody.Builder()
+                        .add("discriminator", it.Discriminator)
+                        .add("text", it.Text!!)
+                        .build()
+
+                    for (i in 0 until formBody.size()) {
+                        json.put(formBody.encodedName(i), formBody.encodedValue(i))
+                    }
+                }
+            }
+        }
+        Log.d("json", json.toString())
+        val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), json.toString())
+        val request = Request.Builder()
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "idea")
+            //headers post the data
+            .header("userid", id)
+            .header("ideationid", ideationId.toString())
+            //body is needed for rider to know it's a post request
+            .post(body)
+            .build()
+
+        try {
+            getClient()!!.newCall(request).execute()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+    }
+
+    fun createLike(reactionId: Int,userId: String){
+        val formBody = FormBody.Builder()
+            .add("userId", userId)
+            .add("id", reactionId.toString())
+            .build()
+        val gson = Gson().toJson(formBody)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson)
+        val request = Request.Builder()
+            .url(HTTPS_PREFIX + host + ":" + port + apistring + "like")
+            //headers post the data
+            .header("reactionId", reactionId.toString())
+            .header("userId", userId)
+            //body is needed for rider to know it's a post request
+            .post(body)
+            .build()
+
+        try {
+            getClient()!!.newCall(request).execute()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    //endregion
+    //endregion
     //region User
     fun getUser(url: String, username: String, password: String): Observable<User> {
         val prefix: String = if (https) {

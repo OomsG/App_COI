@@ -23,10 +23,12 @@ class IdeationsRecyclerAdapter(
     interface IdeationsSelectionListener {
         fun onIdeationSelected(ideationid: Int, projectId: Int, ideationType: Boolean)
         fun onSurveySelected(surveyId:Int, projectId: Int)
+        fun onShareSelected(id:Int)
     }
 
     class IdeationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.TitleIdeation
+        val share = view.Share
         val button = view.giveIdea
         val IdedeationsIdeaCount = view.IdeationIdeaCount
         val IdeationsVoteCount = view.IdeationVoteCount
@@ -48,6 +50,9 @@ class IdeationsRecyclerAdapter(
 
     override fun onBindViewHolder(p0: IdeationsViewHolder, p1: Int) {
         p0.title.text = ideations[p1].CentralQuestion
+        p0.share.setOnClickListener {
+            selectionListener.onShareSelected(ideations[p1].IdeationId)
+        }
         p0.IdedeationsIdeaCount.text = getIdeaCount(ideations[p1])
         p0.IdeationsVoteCount.text = getIdeationVoteCount(ideations)
         p0.IdeationsShareCount.text = getIdeationShareCount(ideations)

@@ -1,6 +1,7 @@
 package be.kdg.cityofideas.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -14,6 +15,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import be.kdg.cityofideas.R
+import be.kdg.cityofideas.login.LoggedInUserView
+import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Reaction
 import be.kdg.cityofideas.model.ideations.Vote
@@ -52,32 +56,8 @@ fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
             image.setImageBitmap(it)
             image.layoutParams = params
             layout.addView(image)
-
         }
-        it.Url?.let {
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            /* val video = YouTubePlayerView(context)
-             video.id = id
-             val init = object : YouTubePlayer.OnInitializedListener {
-                 override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, p1: YouTubePlayer?, p2: Boolean) {
-                     p1!!.loadVideo(it)
-                 }
 
-                 override fun onInitializationFailure(
-                     p0: YouTubePlayer.Provider?,
-                     p1: YouTubeInitializationResult?
-                 ) {
-                     Toast.makeText(context, "Deze video kan niet worden afgespeeld", Toast.LENGTH_SHORT).show()
-                 }
-             }
-             video.initialize(YOUTUBE_API, init)
-             video.layoutParams = params
-             layout.addView(video)*/
-
-        }
     }
 }
 
@@ -142,7 +122,6 @@ fun getReactionCount(idea: Idea): String? {
 
 class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
-    private var youTubePlayerFragment: YouTubePlayerSupportFragment? = null
     private lateinit var bestReaction: Reaction
     private lateinit var view: View
     private var VoteCounter = 0
@@ -150,6 +129,7 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
 
     interface ideaSelectionListener {
         fun onIdeaSelected(id: Int)
+        fun shareButtonPressed(id: Int, loggedInUser: LoggedInUserView)
     }
 
     var ideas: MutableList<Idea> = arrayListOf()
@@ -187,18 +167,22 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         p0.shareCount.text = getIdeaShareCount(ideas[p1], ShareCounter)
         p0.voteCount.text = getIdeaVoteCount(ideas[p1], VoteCounter)
         p0.voteButton.setOnClickListener {
-            Thread {
-                RestClient(context).createVote(ideas[p1].IdeaId, VoteType.VOTE, "A")
-                Log.d("vote", "Voted")
-            }.start()
-            notifyItemChanged(p1)
+            if (loggedInUser != null) {
+                Thread {
+                    RestClient(context).createVote(ideas[p1].IdeaId, VoteType.VOTE, loggedInUser!!.UserId)
+                    Log.d("vote", "Voted")
+                }.start()
+                notifyItemChanged(p1)
+            } else {
+                Toast.makeText(it.context, "U bent niet ingelogd!", Toast.LENGTH_LONG).show()
+            }
         }
         p0.shareButton.setOnClickListener {
-            Thread {
-                RestClient(context).createVote(ideas[p1].IdeaId, VoteType.SHARE_FB, "JSLMQKSLDMKQD")
-            }.start()
-            notifyItemChanged(p1)
-
+            if (loggedInUser != null) {
+                selectionListener.shareButtonPressed(ideas[p1].IdeaId, loggedInUser!!)
+            } else {
+                Toast.makeText(it.context, "U bent niet ingelogd!", Toast.LENGTH_LONG).show()
+            }
         }
         p0.reactionText.text = getBestReaction(ideas[p1])
         p0.reactionCount.setOnClickListener {

@@ -5,7 +5,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
             android:allowBackup="true"
@@ -24,6 +26,24 @@
                 android:screenOrientation="fullSensor"
                 tools:replace="screenOrientation" />
 
+        <activity
+                android:name=".activities.ShareActivity"
+                android:theme="@style/popUp">
+        </activity>
+
+        <meta-data
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id"/>
+
+        <provider
+                android:name="com.facebook.FacebookContentProvider"
+                android:authorities="com.facebook.app.FacebookContentProvider1038823499646079"
+                android:exported="true"/>
+
+        <activity
+                android:name=".activities.ShareVoteActivity"
+                android:theme="@style/popUp">
+        </activity>
         <activity
                 android:name=".activities.CreateIdeaActivity"
                 android:theme="@style/popUp">

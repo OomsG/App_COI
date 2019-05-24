@@ -33,6 +33,10 @@
     <string name="confirm">Bevestig</string>
     <string name="vraag_1_15">Vraag 1/15</string>
     <string name="dummy_textview">TextView</string>
+    <string name="facebook_app_id">1038823499646079</string>
+    <string name="upload">upload foto</string>
+    <string name="upload_video">gebruik deze video</string>
+    <string name="Take_Picture">neem een foto</string>
 
     <string-array name="spinSexItems">
         <item>--</item>

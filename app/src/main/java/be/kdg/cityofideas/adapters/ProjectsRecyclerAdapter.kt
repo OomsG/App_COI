@@ -20,12 +20,14 @@ class ProjectsRecyclerAdapter(
     RecyclerView.Adapter<ProjectsRecyclerAdapter.ProjectsViewHolder>() {
     interface ProjectsSelectionListener {
         fun onProjectsSelected(id: Int)
+        fun onShareSelected(id:Int)
     }
 
     class ProjectsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.TitleProject
         val Description = view.SmallDescriptionProject
         val picture = view.smallFotoProject
+        val share = view.Share
     }
 
     var projects: Array<Project> = arrayOf()
@@ -45,6 +47,9 @@ class ProjectsRecyclerAdapter(
         p0.title.text = getProjectsOfStatus(projects, status)[p1].ProjectName
         p0.Description.text = getProjectsOfStatus(projects, status)[p1].Description
         p0.picture.setImageBitmap( getProjectsOfStatus(projects, status)[p1].BackgroundIMG)
+        p0.share.setOnClickListener {
+            selectionListener.onShareSelected(getProjectsOfStatus(projects,status)[p1].ProjectId)
+        }
         p0.itemView.setOnClickListener {
             selectionListener.onProjectsSelected(getProjectsOfStatus(projects, status)[p1].ProjectId)
         }

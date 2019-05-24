@@ -6,10 +6,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-<style name="popUp">
-    <item name="android:windowIsTranslucent">true</item>
-    <item name="android:windowCloseOnTouchOutside">true</item>
-</style>
+    <style name="popUp" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+
+    </style>
 
 
 </resources>

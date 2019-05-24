@@ -5,7 +5,7 @@ import java.io.Serializable
 
 data class Vote(
     val VoteId: Int,
-    val Confirmed: Boolean?,
+    val Confirmed: String,
     val VoteType: VoteType?,
     val User: User?,
     val Idea: Idea?

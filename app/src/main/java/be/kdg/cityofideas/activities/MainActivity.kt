@@ -5,17 +5,20 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import be.kdg.cityofideas.*
 import be.kdg.cityofideas.database.DatabaseHelper
 import be.kdg.cityofideas.database.DatabaseManager
 import be.kdg.cityofideas.login.*
 import be.kdg.cityofideas.model.ideations.getBytes
-import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 lateinit var manager: DatabaseManager
 lateinit var helper: DatabaseHelper
@@ -32,6 +35,9 @@ class MainActivity : BaseActivity() {
         manager = DatabaseManager(this)
         helper = manager.dbHelper
 
+        //get Facebook HashKey
+        //printkeyHash()
+
         initialiseDatabase()
 
         pref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -43,6 +49,26 @@ class MainActivity : BaseActivity() {
 
         startProjectsActivity()
     }
+
+    fun printkeyHash() {
+        try {
+            val info = this.getPackageManager().getPackageInfo(
+                "be.kdg.cityofideas",
+                PackageManager.GET_SIGNATURES
+            )
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+
+        } catch (e: NoSuchAlgorithmException) {
+
+        }
+
+    }
+
 
     override fun onDestroy() {
         manager.closeDatabase()

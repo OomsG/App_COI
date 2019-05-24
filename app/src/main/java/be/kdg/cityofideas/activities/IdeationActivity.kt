@@ -19,6 +19,16 @@ const val IDEATION_ID :String = "IdeationId"
 const val SURVEY_ID:String = "SurveyId"
 const val IDEATION_TYPE :String = "IdeationType"
 class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
+    private lateinit var viewPager: ViewPager
+    private lateinit var pagerAdapter: IdeationViewPagerAdapter
+    private lateinit var tabLayout: TabLayout
+
+    override fun onShareSelected(id: Int) {
+        val shareIntent = Intent(this,ShareActivity::class.java)
+        shareIntent.putExtra(IDEATION_ID,id)
+        startActivity(shareIntent)
+    }
+
     override fun onSurveySelected(surveyId: Int, projectId: Int) {
         val surveyIntent = Intent(this,SurveyActivity::class.java)
         surveyIntent.putExtra(SURVEY_ID,surveyId)
@@ -33,12 +43,6 @@ class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
         ideationIntent.putExtra(IDEATION_TYPE,ideationType)
         startActivity(ideationIntent)
     }
-
-    private lateinit var viewPager: ViewPager
-    private lateinit var pagerAdapter: IdeationViewPagerAdapter
-    private lateinit var tabLayout: TabLayout
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ideation)
