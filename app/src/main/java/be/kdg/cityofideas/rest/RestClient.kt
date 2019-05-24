@@ -21,6 +21,7 @@ import java.io.IOException
 import android.util.Base64
 import android.util.Log
 import be.kdg.cityofideas.login.LoggedInUserView
+import be.kdg.cityofideas.model.IoT.IoTSetup
 import be.kdg.cityofideas.model.ideations.*
 import com.google.android.youtube.player.internal.i
 import org.json.JSONObject
@@ -29,13 +30,17 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 class RestClient(private val context: Context?) {
-    //private val host = "34.76.196.101"
-    //private val port = 5000
+    // online
+//    private val host = "34.76.196.101"
+//    private val port = 5000
+//    private val https = false
+
+    // offline
     private val host = "10.0.2.2"
     private val port = 5001
-    private val apistring = "/Api/"
     private val https = true
 
+    private val apistring = "/Api/"
     private val HTTP_PREFIX = "http://"
     private val HTTPS_PREFIX = "https://"
 
@@ -87,8 +92,6 @@ class RestClient(private val context: Context?) {
         }
         return null;
     }
-
-
     //endregion
 
     //region Project
@@ -136,8 +139,8 @@ class RestClient(private val context: Context?) {
         return observable
     }
     //endregion
-
     //endregion
+
     //region Ideation
     //region GET
     fun getIdeations(url: String): Observable<Array<Ideation>> {
@@ -261,8 +264,7 @@ class RestClient(private val context: Context?) {
         return observable
     }
     //endregion
-    //region Post
-
+    //region POST
     fun createReaction(param: String, userId: String, id: Int, element: String) {
         val formBody = FormBody.Builder()
             .add("param", param)
@@ -375,10 +377,31 @@ class RestClient(private val context: Context?) {
             e.printStackTrace()
         }
     }
+    //endregion
 
     //endregion
-//endregion
-//region User
+
+    //region User
+    //region GET
+    fun getUsers(url: String): Observable<Array<User>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<User>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val users = gson.fromJson(response, Array<User>::class.java)
+                it.onNext(users)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+
+
     fun getUser(url: String, username: String, password: String): Observable<User> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
@@ -442,11 +465,13 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
-
+    //endregion
+    //region PUT
     fun updateUser(user: LoggedInUserView) {
         val formBody = FormBody.Builder()
-            .add("Surname", user.Surname.toString())
-            .add("LastName", user.Name.toString())
+            // encode for special characters
+            .add("Surname", Base64.encodeToString(user.Surname.toString().toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
+            .add("LastName", Base64.encodeToString(user.Name.toString().toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
             .add("Sex", user.Sex.toString())
             .add("Age", user.Age.toString())
             .add("ZipCode", user.Zipcode.toString())
@@ -474,6 +499,7 @@ class RestClient(private val context: Context?) {
         }
     }
 
+
     fun getUsers(url: String): Observable<Array<User>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
@@ -492,8 +518,10 @@ class RestClient(private val context: Context?) {
         return observable
     }
 //endregion
-//region Survey
+//endregion
 
+    //region Survey
+    //region GET
     fun getSurveys(url: String): Observable<Array<Survey>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
@@ -529,7 +557,8 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
-
+    //endregion
+    //region POST
     fun postAnswers(url: String, surveyId: Int, answers: MutableMap<Int, Array<String>>) {
         val jsonArray = mutableListOf<JSONObject>()
 
@@ -538,7 +567,7 @@ class RestClient(private val context: Context?) {
                 val formBody = FormBody.Builder()
                     // encode for special characters
                     .add("AnswerText", Base64.encodeToString(it.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
-                    .add("QuestionId", k.toString())
+                    .add("QuestionNr", k.toString())
                     .build()
 
                 val json = JSONObject()
@@ -550,8 +579,6 @@ class RestClient(private val context: Context?) {
                 jsonArray.add(json)
             }
         }
-
-        Log.d("surveyId", surveyId.toString())
 
         val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), jsonArray.toString())
 
@@ -566,9 +593,12 @@ class RestClient(private val context: Context?) {
             e.printStackTrace()
         }
     }
+    //endregion
 
     //endregion
-//region Tag
+
+    //region Tag
+    //region GET
     fun getTags(url: String): Observable<Array<Tag>> {
         val prefix: String = if (https) {
             HTTPS_PREFIX
@@ -586,5 +616,28 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
-//endregion
+
+    //endregion
+    //endregion
+
+    //region IoT
+    fun getIoTSetups(url: String): Observable<Array<IoTSetup>> {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+        val observable = Observable.create<Array<IoTSetup>> {
+            try {
+                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
+                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
+                val gson = GsonBuilder().create()
+                val iotSetups = gson.fromJson(response, Array<IoTSetup>::class.java)
+                it.onNext(iotSetups)
+            } catch (e: IOException) {
+                e.printStackTrace();
+            }
+        }
+        return observable
+    }
+    //endregion
+
 }
