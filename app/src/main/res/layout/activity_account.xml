@@ -10,133 +10,197 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp" android:id="@+id/infoAccount" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="0dp"
+            android:id="@+id/infoAccount"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:gravity="center_horizontal">
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/infoUsername">
+                android:layout_height="wrap_content"
+                android:id="@+id/infoUsername">
+
             <TextView
-                    android:text="Username"
+                    android:text="@string/username_hint"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:labelFor="@id/etUsername"
                     android:id="@+id/tvUsername"/>
+
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
-                    android:text="Username"
+                    android:text="@string/username"
                     android:ems="10"
                     android:id="@+id/etUsername"
-                    android:enabled="false" android:editable="false" android:clickable="false"
-            />
+                    android:enabled="false"
+                    android:editable="false"
+                    android:clickable="false"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o" tools:ignore="Deprecated"/>
         </LinearLayout>
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/infoEmail">
+                android:layout_height="wrap_content"
+                android:id="@+id/infoEmail">
+
             <TextView
-                    android:text="Email"
+                    android:text="@string/email_hint"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:labelFor="@id/etEmail"
                     android:id="@+id/tvEmail"/>
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:text="Email"
+                    android:inputType="textEmailAddress"
+                    android:text="@string/email_hint"
                     android:ems="10"
                     android:id="@+id/etEmail"
-                    android:enabled="false" android:editable="false" android:clickable="false"/>
+                    android:enabled="false"
+                    android:editable="false"
+                    android:clickable="false"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o" tools:ignore="Deprecated"/>
         </LinearLayout>
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/infoSurname">
+                android:layout_height="wrap_content"
+                android:id="@+id/infoSurname">
+
             <TextView
-                    android:text="Voornaam"
+                    android:text="@string/surname"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:labelFor="@id/etSurname"
                     android:id="@+id/tvSurname"/>
+
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:ems="10"
                     android:id="@+id/etSurname"
-                    android:editable="true" android:enabled="true"/>
+                    android:editable="true"
+                    android:enabled="true"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o" tools:ignore="Deprecated"/>
         </LinearLayout>
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/infoLastName">
+                android:layout_height="wrap_content"
+                android:id="@+id/infoLastName">
+
             <TextView
-                    android:text="Achternaam"
+                    android:text="@string/last_name"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:labelFor="@id/etLastName"
                     android:id="@+id/tvLastName"/>
+
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:ems="10"
                     android:id="@+id/etLastName"
-                    android:editable="true" android:enabled="true"/>
+                    android:editable="true"
+                    android:enabled="true"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o" tools:ignore="Deprecated"/>
         </LinearLayout>
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/infoSex">
+                android:layout_height="wrap_content"
+                android:id="@+id/infoSex">
+
             <TextView
-                    android:text="Geslacht"
+                    android:text="@string/sex"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvSex"/>
+
             <Spinner
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/spinSex"
-                    android:spinnerMode="dropdown" android:entries="@array/spinSexItems"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinSex"
+                    android:spinnerMode="dropdown"
+                    android:entries="@array/spinSexItems"
                     android:dropDownWidth="wrap_content"/>
         </LinearLayout>
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/infoAge">
+                android:layout_height="wrap_content"
+                android:id="@+id/infoAge">
+
             <TextView
-                    android:text="Leeftijd"
+                    android:text="@string/age"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:labelFor="@id/etAge"
                     android:id="@+id/tvAge"/>
+
             <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:ems="10"
-                    android:id="@+id/etAge" android:layout_weight="1"/>
+                    android:id="@+id/etAge"
+                    android:layout_weight="1"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
         </LinearLayout>
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/infoZipCode">
+                android:layout_height="wrap_content"
+                android:id="@+id/infoZipCode">
+
             <TextView
-                    android:text="Postcode"
+                    android:text="@string/zip_code"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:labelFor="@id/etZipCode"
                     android:id="@+id/tvZipCode"/>
+
             <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress"
                     android:ems="10"
-                    android:id="@+id/etZipCode" android:layout_weight="1"/>
+                    android:id="@+id/etZipCode"
+                    android:layout_weight="1"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
         </LinearLayout>
+
         <Button
-                android:text="Opslaan"
+                android:text="@string/save"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/btnSaveAccountInfo"
-                android:gravity="center|center_horizontal"/>
+                android:layout_height="wrap_content"
+                android:id="@+id/btnSaveAccountInfo"
+                android:gravity="center|center_horizontal"
+                android:backgroundTint="#027CFF"
+                android:textColor="@color/com_facebook_button_background_color_focused" style="@style/Widget.AppCompat.Button.Colored"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

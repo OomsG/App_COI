@@ -2,7 +2,6 @@
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools"
                                     android:layout_marginBottom="15dp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
@@ -11,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <TextView
-                android:text="Glenn Ooms"
+                android:text="@string/dummy_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/NameReaction"
@@ -22,7 +21,7 @@
                 app:layout_constraintTop_toTopOf="parent"
         />
         <TextView
-                android:text="Wa zijde gij van plan. Ik vind da hier totaal niet gepast zomaar een speeltuin wetten naast een burger king dat is kinderen aanmoedigen om ongezond te eten"
+                android:text="@string/dummy_reaction"
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/TextReaction"
@@ -42,12 +41,13 @@
 
                 app:layout_constraintLeft_toRightOf="@+id/TextReaction"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                android:contentDescription="@string/todo"/>
         <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/LikeCounter"
-                android:text="5"
+                android:text="@string/dummy_likes"
                 android:gravity="center"
                 app:layout_constraintTop_toBottomOf="@+id/LikeButton"
                 app:layout_constraintRight_toRightOf="parent"

@@ -19,7 +19,6 @@ import android.widget.*
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.YOUTUBE_API
 import be.kdg.cityofideas.login.loggedInUser
-import be.kdg.cityofideas.model.ideations.IdeaObject
 import be.kdg.cityofideas.model.ideations.Ideation
 import be.kdg.cityofideas.rest.RestClient
 import com.google.android.gms.maps.MapView
@@ -28,16 +27,14 @@ import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.w3c.dom.Text
-
 
 class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
 
     companion object {
-        private val IMAGE_PICK_CODE = 1000;
-        private val PICK_PERMISSION_CODE = 1001;
-        private val IMAGE_TAKE_CODE = 1002;
-        private val TAKE_PERMISSION_CODE = 1003;
+        private const val IMAGE_PICK_CODE = 1000
+        private const val PICK_PERMISSION_CODE = 1001
+        private const val IMAGE_TAKE_CODE = 1002
+        private const val TAKE_PERMISSION_CODE = 1003
     }
 
     private lateinit var titleText: EditText
@@ -247,7 +244,7 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
     }
 
 
-    fun createImage(layout: LinearLayout, data: Uri?) {
+    private fun createImage(layout: LinearLayout, data: Uri?) {
         val image = ImageView(this)
         image.id = View.generateViewId()
         image.contentDescription = data.toString()

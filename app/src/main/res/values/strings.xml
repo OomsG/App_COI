@@ -26,7 +26,6 @@
     <string name="log_out">Log out</string>
     <string name="prompt_confirm_password">Bevestig wachtwoord</string>
     <string name="prompt_email">E-mail</string>
-    <string name="username">Gebruikersnaam</string>
     <string name="invalid_email">Ongeldige e-mail</string>
     <string name="invalid_confirm_password">Wachtwoorden komen niet overeen</string>
     <string name="qr">QR</string>
@@ -38,10 +37,43 @@
     <string name="upload">upload foto</string>
     <string name="upload_video">gebruik deze video</string>
     <string name="Take_Picture">neem een foto</string>
+    <string name="search_projects">Projecten</string>
+    <string name="search_ideations">Ideations</string>
+    <string name="search_ideas">Ideeën</string>
+    <string name="search_reactions">Reacties</string>
+    <string name="search_results_for">Zoekresultaten voor</string>
     <string name="Load_more">Bekijk meer</string>
-    <string name="share">Share</string>
-    <string name="stem">Stem</string>
     <string name="beste_reactie">Beste reactie</string>
+    <string name="username">Gebruikersnaam</string>
+    <string name="email_hint">E-mail</string>
+    <string name="username_hint">Gebruikersnaam</string>
+    <string name="surname">Voornaam</string>
+    <string name="last_name">Achternaam</string>
+    <string name="sex">Geslacht</string>
+    <string name="age">Leeftijd</string>
+    <string name="zip_code">Postcode</string>
+    <string name="save">Opslaan</string>
+    <string name="title">Titel</string>
+    <string name="send_idea">Verzend Idee</string>
+    <string name="dummy_user">Glenn Ooms</string>
+    <string name="dummy_reactions">5 Reacties</string>
+    <string name="dummy_votes">20 Stemmen</string>
+    <string name="dummy_shares">10 keer gedeeld</string>
+    <string name="vote">Stem</string>
+    <string name="share">Share</string>
+    <string name="post_reactions">Plaats hier je reactie</string>
+    <string name="share_fb">Deel op Facebook</string>
+    <string name="share_tw">Deel op Twitter</string>
+    <string name="dummy_reaction_idea">Hier komt de reactie op een idee</string>
+    <string name="dummy_title_project">Titel van het project</string>
+    <string name="view_idea">Bekijk Idee</string>
+    <string name="dummy_ideas">5 Ideeën</string>
+    <string name="todo">TODO</string>
+    <string name="dummy_reaction">Wa zijde gij van plan. Ik vind da hier totaal niet gepast zomaar een speeltuin wetten
+        naast een burger king dat is kinderen aanmoedigen om ongezond te eten
+    </string>
+    <string name="dummy_likes">5</string>
+    <string name="input">Geef je input!</string>
 
     <string-array name="spinSexItems">
         <item>--</item>

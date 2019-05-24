@@ -1,6 +1,5 @@
 package be.kdg.cityofideas.fragments
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -18,11 +17,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
-
 const val PLATFORM_ID : Int = 1
 
 class ProjectFragment : Fragment() {
-
     private lateinit var listener: ProjectsSelectionListener
     private var status: String = ""
 
@@ -37,7 +34,7 @@ class ProjectFragment : Fragment() {
                 2 -> status = "past"
             }
             args.putString("status", status)
-            fragment.setArguments(args)
+            fragment.arguments = args
             return fragment
         }
     }
@@ -65,7 +62,7 @@ class ProjectFragment : Fragment() {
         rvProjects.layoutManager = LinearLayoutManager(context)
         rvProjects.adapter = ProjectsRecyclerAdapter(context, listener, status)
         RestClient(context)
-            .getProjects("projects/"+ PLATFORM_ID)
+            .getProjects("projects/$PLATFORM_ID")
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {

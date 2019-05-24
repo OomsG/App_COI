@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools" style="@style/CardView.Light"
+        style="@style/CardView.Light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <TextView
-                android:text="Titel van het project"
+                android:text="@string/dummy_title_project"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/TitleIdeation"
@@ -31,7 +31,7 @@
 
         />
         <Button
-                android:text="Bekijk Idee"
+                android:text="@string/view_idea"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/giveIdea"
@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/TitleIdeation"/>
 
         <TextView
-                android:text="5 Ideeën"
+                android:text="@string/dummy_ideas"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/IdeationIdeaCount"
@@ -50,7 +50,7 @@
                 app:layout_constraintRight_toLeftOf="@+id/IdeationVoteCount"
                 app:layout_constraintStart_toStartOf="parent"/>
         <TextView
-                android:text="50 stemmen"
+                android:text="@string/dummy_votes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/IdeationVoteCount"
@@ -61,7 +61,7 @@
 
         />
         <TextView
-                android:text="10 keer gedeeld"
+                android:text="@string/dummy_shares"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/IdeationShareCount"

@@ -6,8 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
-import android.support.v7.widget.Toolbar
-import android.util.Log
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeationViewPagerAdapter
 import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter.IdeationsSelectionListener
@@ -18,6 +16,7 @@ import io.reactivex.schedulers.Schedulers
 const val IDEATION_ID :String = "IdeationId"
 const val SURVEY_ID:String = "SurveyId"
 const val IDEATION_TYPE :String = "IdeationType"
+
 class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
     private lateinit var viewPager: ViewPager
     private lateinit var pagerAdapter: IdeationViewPagerAdapter
@@ -57,7 +56,7 @@ class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
         viewPager.adapter = pagerAdapter
         tabLayout.setupWithViewPager(viewPager)
         RestClient(context)
-            .getPhases("phases/" + id)
+            .getPhases("phases/$id")
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {

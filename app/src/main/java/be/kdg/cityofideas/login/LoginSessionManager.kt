@@ -3,7 +3,6 @@ package be.kdg.cityofideas.login
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import be.kdg.cityofideas.model.users.User
 
 // SharedPref file name
 const val PREF_NAME = "AutoLogin"
