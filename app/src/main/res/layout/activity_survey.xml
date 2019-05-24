@@ -18,7 +18,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/SurveySubmit"
-            />
+            android:layout_marginLeft="8dp" android:layout_marginTop="8dp" android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"/>
 
     <Button
             android:layout_width="0dp"
@@ -28,5 +29,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:text="@string/confirm"/>
+            android:text="@string/confirm" style="@style/Widget.AppCompat.Button.Colored"
+            android:backgroundTint="#027CFF" android:textStyle="normal"/>
 </android.support.constraint.ConstraintLayout>
