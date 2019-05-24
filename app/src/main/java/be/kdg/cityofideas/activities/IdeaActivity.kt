@@ -5,10 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.util.Log
+import android.widget.Toast
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.ideaSelectionListener
 import be.kdg.cityofideas.fragments.IdeaFragment
 import be.kdg.cityofideas.login.LoggedInUserView
+import be.kdg.cityofideas.login.loggedInUser
 
 const val IDEA_ID: String = "idea"
 const val LOGGEDIN_USER: String = "loggedinUser"
@@ -40,10 +43,16 @@ class IdeaActivity : BaseActivity(), ideaSelectionListener {
     fun initialiseViews(context: Context) {
         createIdeaButton = findViewById(R.id.fab)
         createIdeaButton.setOnClickListener {
-            val createIdea = Intent(this, CreateIdeaActivity::class.java)
-            createIdea.putExtra(IDEATION_ID, intent.getIntExtra(IDEATION_ID,1))
-            createIdea.putExtra(PROJECT_ID,intent.getIntExtra(PROJECT_ID, 1))
-            startActivity(createIdea)
+            if (loggedInUser != null) {
+                Log.d("ideationId->ideaA",intent.getIntExtra(IDEATION_ID, 1).toString())
+                Log.d("projectId->ideaA",intent.getIntExtra(PROJECT_ID, 1).toString())
+                val createIdea = Intent(context, CreateIdeaActivity::class.java)
+                createIdea.putExtra(IDEATION_ID, intent.getIntExtra(IDEATION_ID, 1))
+                createIdea.putExtra(PROJECT_ID, intent.getIntExtra(PROJECT_ID, 1))
+                startActivity(createIdea)
+            }else{
+                Toast.makeText(this,"U bent niet aangemeld!",Toast.LENGTH_LONG).show()
+            }
         }
         val fragment = supportFragmentManager.findFragmentById(R.id.IdeaFragment) as IdeaFragment
         fragment.setId(intent.getIntExtra(IDEATION_ID, 1), intent.getIntExtra(PROJECT_ID, 1))

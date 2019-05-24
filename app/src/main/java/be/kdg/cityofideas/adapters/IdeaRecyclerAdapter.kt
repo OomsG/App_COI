@@ -16,22 +16,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import be.kdg.cityofideas.R
+import be.kdg.cityofideas.activities.helper
+import be.kdg.cityofideas.activities.manager
 import be.kdg.cityofideas.login.LoggedInUserView
 import be.kdg.cityofideas.login.loggedInUser
 import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Reaction
 import be.kdg.cityofideas.model.ideations.Vote
 import be.kdg.cityofideas.model.ideations.VoteType
+import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import kotlinx.android.synthetic.main.ideas_list.view.*
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 
+/* needed to play youtube video*/
 const val YOUTUBE_API: String = "AIzaSyAyyohq9ZDQT-bnC_E50ZcU-iA8efhXMjY"
-/* Deze klasse zorgt ervoor dat alle ideen in een lijst getoond worden*/
 
 //region toplevel Functions
 
-
+/*gets ideaObjects en places them on the layout*/
 fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
     idea.IdeaObjects?.forEach {
         val id = it.IdeaObjectId
@@ -61,49 +64,26 @@ fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
     }
 }
 
-fun getIdeaShareCount(idea: Idea, counted: Int): String? {
+fun getIdeaShareCount(idea: Idea): String? {
     var counter = 0
     idea.Votes?.forEach {
         if (it.VoteType == VoteType.SHARE_FB || it.VoteType == VoteType.SHARE_TW) {
             counter++
         }
     }
-    counter = counted + counter
     return counter.toString() + " keer gedeeld"
 }
 
-fun getIdeaVoteCount(idea: Idea, counted: Int): String? {
+fun getIdeaVoteCount(idea: Idea): String? {
     var counter = 0
     idea.Votes?.forEach {
         if (it.VoteType == VoteType.VOTE) {
             counter++
         }
     }
-    counter = counted + counter
     return counter.toString() + " Stemmen"
 }
 
-fun getBestReaction(idea: Idea): String? {
-    /* var a: Int = 0
-     idea.Reaction.forEach {
-         try {
-             val b = it.Like.size
-             if (b.compareTo(a) < 0) {
-                 a = b
-                 BestReaction = it
-             }
-         } catch (e: Error) {
-             e.printStackTrace()
-         }
-
-     }*/
-    val reactions: Array<Reaction> = idea.Reactions!!.toTypedArray()
-    if (reactions.isEmpty()) {
-        return "Er zijn geen reacties om weer te geven"
-    } else {
-        return idea.Reactions.first().ReactionText
-    }
-}
 
 fun getReactionCount(idea: Idea): String? {
     val size = idea.Reactions?.size
@@ -118,14 +98,65 @@ fun getReactionCount(idea: Idea): String? {
     }
     return null
 }
+
+/*Gets all votes from user from database*/
+fun getVotes(): ArrayList<Vote> {
+    val votes: ArrayList<Vote> = arrayListOf()
+    manager.openDatabase()
+    val c = manager.getDetails(
+        helper.getVoteEntry().TBL_VOTE
+        , null
+        , "${helper.getUserEntry().USER_ID} = ?"
+        , arrayOf(loggedInUser!!.UserId)
+        , null
+        , null
+        , null
+
+    )
+    if (c.moveToFirst()) {
+        votes.add(
+            Vote(
+                c.getInt(c.getColumnIndex(helper.getVoteEntry().VOTE_ID)),
+                c.getString(c.getColumnIndex(helper.getVoteEntry().VOTE_CONFIRMED)),
+                c.getInt(c.getColumnIndex(helper.getVoteEntry().VOTE_VOTE_TYPE)) as VoteType,
+                null,
+                Idea(
+                    c.getInt(c.getColumnIndex(helper.getIdeaEntry().IDEA_ID)),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                )
+            )
+        )
+    }
+    c.close()
+    return votes
+}
+
+/*Checks id user already voted*/
+fun validVote(idea: Idea): Boolean {
+    val votes = getVotes()
+    var state: Boolean = false
+    votes.forEach {
+        if (it.VoteType == VoteType.VOTE || it.Idea!!.IdeaId == idea.IdeaId) {
+            state = true
+        }
+    }
+    return state
+}
 //endregion
 
 class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSelectionListener) :
     RecyclerView.Adapter<IdeaRecyclerAdapter.IdeaViewHolder>() {
     private lateinit var bestReaction: Reaction
     private lateinit var view: View
-    private var VoteCounter = 0
-    private var ShareCounter = 0
 
     interface ideaSelectionListener {
         fun onIdeaSelected(id: Int)
@@ -148,11 +179,12 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         val shareButton = view.IdeaShareButton
         val reactionName = view.IdeaReactionNameFirst
         val reactionText = view.IdeaReactionTextFirst
+        val showMore = view.showMore
         val layout = view.LinearLayoutIdea
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): IdeaViewHolder {
-        val ideaView = LayoutInflater.from(p0.context).inflate(be.kdg.cityofideas.R.layout.ideas_list, p0, false)
+        val ideaView = LayoutInflater.from(p0.context).inflate(R.layout.ideas_list, p0, false)
         view = ideaView
         return IdeaViewHolder(ideaView)
     }
@@ -164,15 +196,16 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
         p0.title.text = ideas[p1].Title
         getIdeaDetails(ideas[p1], context, p0.layout)
         p0.reactionCount.text = getReactionCount(ideas[p1])
-        p0.shareCount.text = getIdeaShareCount(ideas[p1], ShareCounter)
-        p0.voteCount.text = getIdeaVoteCount(ideas[p1], VoteCounter)
+        p0.shareCount.text = getIdeaShareCount(ideas[p1])
+        p0.voteCount.text = getIdeaVoteCount(ideas[p1])
         p0.voteButton.setOnClickListener {
             if (loggedInUser != null) {
-                Thread {
-                    RestClient(context).createVote(ideas[p1].IdeaId, VoteType.VOTE, loggedInUser!!.UserId)
-                    Log.d("vote", "Voted")
-                }.start()
-                notifyItemChanged(p1)
+                if (validVote(ideas[p1])) {
+                    Thread {
+                        RestClient(context).createVote(ideas[p1].IdeaId, VoteType.VOTE, loggedInUser!!.UserId)
+                    }.start()
+                    Toast.makeText(it.context, "U heeft gestemd!", Toast.LENGTH_LONG).show()
+                }
             } else {
                 Toast.makeText(it.context, "U bent niet ingelogd!", Toast.LENGTH_LONG).show()
             }
@@ -185,11 +218,37 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
             }
         }
         p0.reactionText.text = getBestReaction(ideas[p1])
-        p0.reactionCount.setOnClickListener {
-            if (ideas[p1].Reactions?.size != 0) {
-                selectionListener.onIdeaSelected(ideas[p1].IdeaId)
-            } else
-                Toast.makeText(it.context, "Er zijn geen reacties om te tonen", Toast.LENGTH_LONG).show()
+        if (!getBestReaction(ideas[p1]).isNullOrBlank()) {
+            p0.reactionName.text = getBestReactionName(ideas[p1])
+        } else {
+            p0.reactionName.visibility = View.GONE
+        }
+        p0.showMore.setOnClickListener {
+            selectionListener.onIdeaSelected(ideas[p1].IdeaId)
         }
     }
+
+    /*returns most liked reaction*/
+    fun getBestReaction(idea: Idea): String? {
+        val reactions: Array<Reaction> = idea.Reactions!!.toTypedArray()
+        reactions.sortedBy { reaction -> reaction.Likes?.size }
+        if (reactions.isEmpty()) {
+            return "Er zijn geen reacties om weer te geven"
+        } else {
+            return idea.Reactions.first().ReactionText
+        }
+
+    }
+
+    fun getBestReactionName(idea: Idea): String? {
+        val reactions: Array<Reaction> = idea.Reactions!!.toTypedArray()
+        reactions.sortedBy { reaction -> reaction.Likes?.size }
+        if (reactions.isEmpty()) {
+            return ""
+        } else {
+            return idea.Reactions.first().User?.Name
+        }
+
+    }
+
 }
