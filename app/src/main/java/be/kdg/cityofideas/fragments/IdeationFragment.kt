@@ -28,7 +28,6 @@ import java.lang.Exception
 
 
 class IdeationFragment : Fragment() {
-
     private lateinit var listener: IdeationsSelectionListener
     private var phaseNr: Int = 0
     private var projectId: Int = 0
@@ -39,7 +38,7 @@ class IdeationFragment : Fragment() {
             val args = Bundle()
             args.putInt("phaseNr", phaseNr)
             args.putInt("projectId", projectId)
-            fragment.setArguments(args)
+            fragment.arguments = args
             return fragment
         }
     }

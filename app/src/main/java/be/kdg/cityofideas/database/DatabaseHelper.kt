@@ -9,7 +9,7 @@ import android.provider.BaseColumns
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
         // increment when you changed db schema
-        private const val DB_VERSION: Int = 30
+        private const val DB_VERSION: Int = 31
         private const val DB_NAME: String = "CityOfIdeasApp"
 
         //region Datatypes
@@ -388,6 +388,22 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
 
         //endregion
         //endregion
+
+        //region IoT
+        object IoTEntry : BaseColumns {
+            const val TBL_IOT = "iot_table"
+            const val IOT_CODE = "IoTCode"
+        }
+
+        private const val TABLE_DROP_IOT = "DROP TABLE IF EXISTS ${IoTEntry.TBL_IOT}"
+
+        private const val TABLE_CREATE_IOT =
+                "CREATE TABLE ${IoTEntry.TBL_IOT} (" +
+                        "${IoTEntry.IOT_CODE} TEXT PRIMARY KEY," +
+                        "${PositionEntry.POSITION_ID} INTEGER," +
+                        "${IdeaEntry.IDEA_ID} INTEGER," +
+                        "${QuestionEntry.QUESTION_ID} INTEGER)"
+        //endregion
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -409,6 +425,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.execSQL(TABLE_CREATE_SURVEY)
         db.execSQL(TABLE_CREATE_QUESTION)
         db.execSQL(TABLE_CREATE_ANSWER)
+        db.execSQL(TABLE_CREATE_IOT)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -430,6 +447,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.execSQL(TABLE_DROP_SURVEY)
         db.execSQL(TABLE_DROP_QUESTION)
         db.execSQL(TABLE_DROP_ANSWER)
+        db.execSQL(TABLE_DROP_IOT)
         onCreate(db)
     }
 
@@ -734,6 +752,18 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
 
     fun getAnswerEntry(): AnswerEntry {
         return AnswerEntry
+    }
+    //endregion
+
+    //region IoT
+    fun getIoTContentValues(code: String): ContentValues {
+        return ContentValues().apply {
+            put(IoTEntry.IOT_CODE, code)
+        }
+    }
+
+    fun getIoTEntry(): IoTEntry {
+        return IoTEntry
     }
     //endregion
 }

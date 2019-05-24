@@ -19,6 +19,16 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning"
             tools:targetApi="m">
+        <activity android:name=".activities.SearchResultsActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".activities.BaseActivity" />
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activities.QrActivity">
         </activity>
         <activity
@@ -71,7 +81,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.BaseActivity"/>
+        <activity android:name=".activities.BaseActivity">
+            <meta-data
+                    android:name="android.app.default_searchable"
+                    android:value=".SearchResultsActivity" />
+        </activity>
     </application>
 
 </manifest>

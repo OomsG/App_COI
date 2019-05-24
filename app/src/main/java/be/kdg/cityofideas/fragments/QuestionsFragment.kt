@@ -69,9 +69,9 @@ class QuestionsFragment : Fragment() {
                             is EditText -> {
                                 if (questions[i - 1].QuestionType == QuestionType.EMAIL) {
                                     if (Patterns.EMAIL_ADDRESS.matcher(answer.text.toString()).matches())
-                                        answers[questions[i - 1].QuestionId] = arrayOf(answer.text.toString())
+                                        answers[questions[i - 1].QuestionNr] = arrayOf(answer.text.toString())
                                 } else if (!answer.text.isNullOrBlank()) {
-                                    answers[questions[i - 1].QuestionId] = arrayOf(answer.text.toString())
+                                    answers[questions[i - 1].QuestionNr] = arrayOf(answer.text.toString())
                                 }
 
                                 answer.text.clear()
@@ -79,7 +79,7 @@ class QuestionsFragment : Fragment() {
 
                             is RadioGroup -> {
                                 if (answer.checkedRadioButtonId != -1) {
-                                    answers[questions[i - 1].QuestionId] =
+                                    answers[questions[i - 1].QuestionNr] =
                                         arrayOf(mView.findViewById<RadioButton>(answer.checkedRadioButtonId).text.toString())
                                 }
 
@@ -88,17 +88,17 @@ class QuestionsFragment : Fragment() {
 
                             is CheckBox -> {
                                 if (answer.isChecked) {
-                                    if (answers[questions[i - 1].QuestionId] != null)
-                                        answers[questions[i - 1].QuestionId] =
-                                            answers[questions[i - 1].QuestionId]!!.plus(arrayOf(answer.text.toString()))
+                                    if (answers[questions[i - 1].QuestionNr] != null)
+                                        answers[questions[i - 1].QuestionNr] =
+                                            answers[questions[i - 1].QuestionNr]!!.plus(arrayOf(answer.text.toString()))
                                     else
-                                        answers[questions[i - 1].QuestionId] = arrayOf(answer.text.toString())
+                                        answers[questions[i - 1].QuestionNr] = arrayOf(answer.text.toString())
                                 }
 
                                 answer.isChecked = false
                             }
 
-                            is Spinner -> answers[questions[i - 1].QuestionId] = arrayOf(answer.selectedItem.toString())
+                            is Spinner -> answers[questions[i - 1].QuestionNr] = arrayOf(answer.selectedItem.toString())
 
                             else -> return false
                         }
