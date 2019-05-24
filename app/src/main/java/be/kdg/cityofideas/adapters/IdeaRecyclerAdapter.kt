@@ -84,7 +84,6 @@ fun getIdeaVoteCount(idea: Idea): String? {
     return counter.toString() + " Stemmen"
 }
 
-
 fun getReactionCount(idea: Idea): String? {
     val size = idea.Reactions?.size
     if (size == 0) {
