@@ -28,6 +28,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-    />
+            app:tabIndicatorColor="@color/colorPrimary"/>
 
 </android.support.constraint.ConstraintLayout>

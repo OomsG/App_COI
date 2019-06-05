@@ -1,6 +1,7 @@
 package be.kdg.cityofideas.activities
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.Toast
 import be.kdg.cityofideas.R
@@ -15,6 +16,17 @@ class SurveyActivity : BaseActivity() {
         setContentView(R.layout.activity_survey)
         initialiseViews()
         addEventHandlers()
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == android.R.id.home)
+            this.finish()
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initialiseViews() {

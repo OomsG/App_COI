@@ -69,7 +69,7 @@ class MainActivity : BaseActivity() {
 
 
     override fun onDestroy() {
-        manager.closeDatabase()
+//        manager.closeDatabase()
         super.onDestroy()
     }
 

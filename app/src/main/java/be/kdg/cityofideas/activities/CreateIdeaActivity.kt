@@ -14,6 +14,7 @@ import android.support.annotation.RequiresApi
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import be.kdg.cityofideas.R
@@ -29,7 +30,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
-
     companion object {
         private const val IMAGE_PICK_CODE = 1000
         private const val PICK_PERMISSION_CODE = 1001
@@ -52,6 +52,17 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         Log.d("projectId->create",intent.getIntExtra(PROJECT_ID, 1).toString())
         getIdeation()
         //createLayout()
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == android.R.id.home)
+            this.finish()
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initialiseViews(ideation: Ideation) {
@@ -88,7 +99,6 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         }
     }
 
-
     private fun validateData(layout: LinearLayout, ideation: Ideation, title: String): Boolean {
         val parameters = mutableMapOf<String, Array<String>>()
         for (i in 1..layout.childCount) {
@@ -103,7 +113,7 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
 
                 }
                 is com.google.android.youtube.player.YouTubePlayerView -> {
-                    parameters["video"] = arrayOf(url)
+                    parameters["video"] = arrayOf(url.substringAfter("watch?v="))
                 }
                 is MapView -> {
                 }

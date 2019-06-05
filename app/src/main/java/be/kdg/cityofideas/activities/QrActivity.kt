@@ -3,6 +3,7 @@ package be.kdg.cityofideas.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.widget.Toast
 import be.kdg.cityofideas.R
 import com.google.zxing.integration.android.IntentIntegrator
@@ -17,11 +18,17 @@ class QrActivity : BaseActivity() {
         // Comment for testing
         qrScanIntegrator = IntentIntegrator(this)
         qrScanIntegrator.setOrientationLocked(false)
+        qrScanIntegrator.addExtra("SCAN_WIDTH", 800)
+        qrScanIntegrator.addExtra("SCAN_HEIGHT", 200)
         qrScanIntegrator.initiateScan()
 
         // Uncomment for testing
 //        testNavigationToIdea()
 //        testNavigationToSurvey()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return super.onCreateOptionsMenu(menu)
     }
 
     //region Tests

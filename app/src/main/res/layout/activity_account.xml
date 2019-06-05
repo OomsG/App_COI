@@ -22,108 +22,80 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:gravity="center_horizontal">
 
-        <LinearLayout
-                android:orientation="horizontal"
+        <TextView
+                android:text="@string/username_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/infoUsername">
-
-            <TextView
-                    android:text="@string/username_hint"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@id/etUsername"
-                    android:id="@+id/tvUsername"/>
-
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:text="@string/username"
-                    android:ems="10"
-                    android:id="@+id/etUsername"
-                    android:enabled="false"
-                    android:editable="false"
-                    android:clickable="false"
-                    android:importantForAutofill="no"
-                    tools:targetApi="o" tools:ignore="Deprecated"/>
-        </LinearLayout>
-
-        <LinearLayout
-                android:orientation="horizontal"
+                android:labelFor="@id/etUsername"
+                android:id="@+id/tvUsername" android:textSize="20sp" android:textStyle="bold"
+                android:layout_margin="8dp"/>
+        <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/infoEmail">
-
-            <TextView
-                    android:text="@string/email_hint"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@id/etEmail"
-                    android:id="@+id/tvEmail"/>
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:text="@string/email_hint"
-                    android:ems="10"
-                    android:id="@+id/etEmail"
-                    android:enabled="false"
-                    android:editable="false"
-                    android:clickable="false"
-                    android:importantForAutofill="no"
-                    tools:targetApi="o" tools:ignore="Deprecated"/>
-        </LinearLayout>
-
-        <LinearLayout
-                android:orientation="horizontal"
+                android:inputType="textPersonName"
+                android:text="@string/username_hint"
+                android:ems="10"
+                android:id="@+id/etUsername"
+                android:enabled="false"
+                android:editable="false"
+                android:clickable="false"
+                android:importantForAutofill="no"
+                tools:targetApi="o" tools:ignore="Deprecated"
+                android:layout_marginEnd="8dp" android:layout_marginBottom="16dp" android:layout_marginStart="8dp"/>
+        <TextView
+                android:text="@string/email_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/infoSurname">
-
-            <TextView
-                    android:text="@string/surname"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@id/etSurname"
-                    android:id="@+id/tvSurname"/>
-
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:ems="10"
-                    android:id="@+id/etSurname"
-                    android:editable="true"
-                    android:enabled="true"
-                    android:importantForAutofill="no"
-                    tools:targetApi="o" tools:ignore="Deprecated"/>
-        </LinearLayout>
-
-        <LinearLayout
-                android:orientation="horizontal"
+                android:labelFor="@id/etEmail"
+                android:id="@+id/tvEmail" android:textSize="20sp" android:textStyle="bold"
+                android:layout_margin="8dp"/>
+        <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/infoLastName">
-
-            <TextView
-                    android:text="@string/last_name"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@id/etLastName"
-                    android:id="@+id/tvLastName"/>
-
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:ems="10"
-                    android:id="@+id/etLastName"
-                    android:editable="true"
-                    android:enabled="true"
-                    android:importantForAutofill="no"
-                    tools:targetApi="o" tools:ignore="Deprecated"/>
-        </LinearLayout>
+                android:inputType="textEmailAddress"
+                android:text="@string/email_hint"
+                android:ems="10"
+                android:id="@+id/etEmail"
+                android:enabled="false"
+                android:editable="false"
+                android:clickable="false"
+                android:importantForAutofill="no"
+                tools:targetApi="o" tools:ignore="Deprecated" android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" android:layout_marginBottom="16dp"/>
+        <TextView
+                android:text="@string/surname_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvSurname" android:textSize="20sp" android:textStyle="bold"
+                android:layout_margin="8dp"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/etSurname"
+                android:editable="true"
+                android:enabled="true"
+                android:importantForAutofill="no"
+                tools:targetApi="o" tools:ignore="Deprecated" android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" android:layout_marginBottom="16dp" android:hint="@string/surname"/>
+        <TextView
+                android:text="@string/last_name_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvLastName" android:textSize="20sp" android:textStyle="bold"
+                android:layout_margin="8dp"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/etLastName"
+                android:editable="true"
+                android:enabled="true"
+                android:importantForAutofill="no"
+                tools:targetApi="o" tools:ignore="Deprecated" android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" android:layout_marginBottom="16dp" android:hint="@string/last_name"/>
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -132,18 +104,21 @@
                 android:id="@+id/infoSex">
 
             <TextView
-                    android:text="@string/sex"
-                    android:layout_width="100dp"
+                    android:text="@string/sex_label"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tvSex"/>
-
+                    android:id="@+id/tvSex" android:textStyle="bold" android:textSize="20sp"
+                    android:layout_marginStart="8dp" android:layout_marginTop="8dp" android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"/>
             <Spinner
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/spinSex"
                     android:spinnerMode="dropdown"
                     android:entries="@array/spinSexItems"
-                    android:dropDownWidth="wrap_content"/>
+                    android:dropDownWidth="wrap_content" android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp" android:layout_marginEnd="8dp" android:layout_marginBottom="16dp"
+            />
         </LinearLayout>
 
         <LinearLayout
@@ -153,12 +128,13 @@
                 android:id="@+id/infoAge">
 
             <TextView
-                    android:text="@string/age"
-                    android:layout_width="100dp"
+                    android:text="@string/age_label"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:labelFor="@id/etAge"
-                    android:id="@+id/tvAge"/>
-
+                    android:id="@+id/tvAge" android:textSize="20sp" android:textStyle="bold"
+                    android:layout_marginStart="8dp" android:layout_marginTop="8dp" android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"/>
             <EditText
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -167,7 +143,8 @@
                     android:id="@+id/etAge"
                     android:layout_weight="1"
                     android:importantForAutofill="no"
-                    tools:targetApi="o"/>
+                    tools:targetApi="o" android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp" android:layout_marginBottom="16dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -177,11 +154,13 @@
                 android:id="@+id/infoZipCode">
 
             <TextView
-                    android:text="@string/zip_code"
-                    android:layout_width="100dp"
+                    android:text="@string/zip_code_label"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:labelFor="@id/etZipCode"
-                    android:id="@+id/tvZipCode"/>
+                    android:id="@+id/tvZipCode" android:textSize="20sp" android:textStyle="bold"
+                    android:layout_marginStart="8dp" android:layout_marginTop="8dp" android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"/>
 
             <EditText
                     android:layout_width="0dp"
@@ -191,7 +170,8 @@
                     android:id="@+id/etZipCode"
                     android:layout_weight="1"
                     android:importantForAutofill="no"
-                    tools:targetApi="o"/>
+                    tools:targetApi="o" android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp" android:layout_marginEnd="8dp"/>
         </LinearLayout>
 
         <Button
@@ -201,6 +181,8 @@
                 android:id="@+id/btnSaveAccountInfo"
                 android:gravity="center|center_horizontal"
                 android:backgroundTint="#027CFF"
-                android:textColor="@color/com_facebook_button_background_color_focused" style="@style/Widget.AppCompat.Button.Colored"/>
+                android:textColor="@color/com_facebook_button_background_color_focused"
+                style="@style/Widget.AppCompat.Button.Colored" android:textSize="20sp" android:textStyle="bold"
+                android:layout_margin="8dp" android:padding="16dp"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

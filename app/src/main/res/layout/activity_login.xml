@@ -94,7 +94,8 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/confirmPassword"
             app:layout_constraintVertical_bias="0.25" style="@style/Widget.AppCompat.Button.Colored"
-            android:backgroundTint="#027CFF" android:textColor="@color/com_facebook_button_background_color_focused"/>
+            android:backgroundTint="#027CFF" android:textColor="@color/com_facebook_button_background_color_focused"
+            android:textSize="20sp" android:textStyle="bold" android:padding="16sp"/>
 
     <TextView
             android:text="@string/no_account"
@@ -103,7 +104,9 @@
             android:id="@+id/CreateAccountText" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintTop_toBottomOf="@+id/login" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp" android:textColor="@color/com_facebook_device_auth_text"/>
+            android:layout_marginTop="8dp"
+            android:textColor="@color/com_facebook_button_background_color_focused_disabled"
+            android:clickable="true" android:focusable="true" android:textSize="18sp"/>
 
     <ProgressBar
             android:id="@+id/loginLoading"

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
 import be.kdg.cityofideas.R
@@ -34,6 +35,17 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         manager = DatabaseManager(this)
         helper = manager.dbHelper
         getIdea(this)
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == android.R.id.home)
+            this.finish()
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initialiseViews(idea: Idea) {

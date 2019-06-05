@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeaRecyclerAdapter.ideaSelectionListener
@@ -37,6 +38,17 @@ class IdeaActivity : BaseActivity(), ideaSelectionListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_idea)
         initialiseViews(this)
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == android.R.id.home)
+            this.finish()
+        return super.onOptionsItemSelected(item)
     }
 
     @SuppressLint("CheckResult")

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.view.MenuItem
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeationViewPagerAdapter
 import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter.IdeationsSelectionListener
@@ -42,10 +43,22 @@ class IdeationActivity : BaseActivity(), IdeationsSelectionListener {
         ideationIntent.putExtra(IDEATION_TYPE,ideationType)
         startActivity(ideationIntent)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ideation)
         initialiseViews(this, intent.getIntExtra(PROJECT_ID,1))
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == android.R.id.home)
+            this.finish()
+        return super.onOptionsItemSelected(item)
     }
 
     @SuppressLint("CheckResult")
