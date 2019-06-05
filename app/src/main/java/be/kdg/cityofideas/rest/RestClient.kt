@@ -351,18 +351,22 @@ class RestClient(private val context: Context?) {
 
     }
 
-    fun createLike(reactionId: Int,userId: String){
+    fun createLike(reactionId: Int, userId: String) {
+        val json = JSONObject()
         val formBody = FormBody.Builder()
             .add("userId", userId)
             .add("id", reactionId.toString())
             .build()
-        val gson = Gson().toJson(formBody)
-        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson)
+        for (i in 0 until formBody.size()) {
+            json.put(formBody.encodedName(i), formBody.encodedValue(i))
+        }
+
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString())
         val request = Request.Builder()
             .url(HTTPS_PREFIX + host + ":" + port + apistring + "like")
             //headers post the data
             .header("reactionId", reactionId.toString())
-            .header("userId", userId)
+            .header("userId",userId)
             //body is needed for rider to know it's a post request
             .post(body)
             .build()
@@ -396,7 +400,6 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
-
 
     fun getUser(url: String, username: String, password: String): Observable<User> {
         val prefix: String = if (https) {
@@ -461,6 +464,7 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
+
     //endregion
     //region PUT
     fun updateUser(user: LoggedInUserView) {
@@ -495,23 +499,6 @@ class RestClient(private val context: Context?) {
         }
     }
 
-    fun getUsers(url: String): Observable<Array<User>> {
-        val prefix: String = if (https) {
-            HTTPS_PREFIX
-        } else HTTP_PREFIX
-        val observable = Observable.create<Array<User>> {
-            try {
-                val request = Request.Builder().url(prefix + host + ":" + port + apistring + url).build()
-                val response = getClient()?.newCall(request)?.execute()?.body()?.string()
-                val gson = GsonBuilder().create()
-                val users = gson.fromJson(response, Array<User>::class.java)
-                it.onNext(users)
-            } catch (e: IOException) {
-                e.printStackTrace();
-            }
-        }
-        return observable
-    }
 //endregion
 //endregion
 

@@ -1,20 +1,17 @@
 package be.kdg.cityofideas.adapters
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.media.session.MediaControllerCompat.setMediaController
-import android.support.v7.app.AppCompatActivity
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.v7.widget.RecyclerView
-import android.system.Os.remove
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.activities.helper
 import be.kdg.cityofideas.activities.manager
@@ -24,10 +21,9 @@ import be.kdg.cityofideas.model.ideations.Idea
 import be.kdg.cityofideas.model.ideations.Reaction
 import be.kdg.cityofideas.model.ideations.Vote
 import be.kdg.cityofideas.model.ideations.VoteType
-import be.kdg.cityofideas.model.users.User
 import be.kdg.cityofideas.rest.RestClient
 import kotlinx.android.synthetic.main.ideas_list.view.*
-import com.google.android.youtube.player.YouTubePlayerSupportFragment
+import java.time.LocalDateTime
 
 /* needed to play youtube video*/
 const val YOUTUBE_API: String = "AIzaSyAyyohq9ZDQT-bnC_E50ZcU-iA8efhXMjY"
@@ -139,14 +135,21 @@ fun getVotes(): ArrayList<Vote> {
     return votes
 }
 
+
 /*Checks id user already voted*/
 fun validVote(idea: Idea): Boolean {
     val votes = getVotes()
     var state: Boolean = false
+    Log.d("votes",votes.toString())
     votes.forEach {
-        if (it.VoteType == VoteType.VOTE || it.Idea!!.IdeaId == idea.IdeaId) {
+        if (it.VoteType == VoteType.VOTE && it.Idea!!.IdeaId == idea.IdeaId) {
+            state = false
+        }else{
             state = true
         }
+    }
+    if (votes.isNullOrEmpty()){
+        state=true
     }
     return state
 }
@@ -170,7 +173,6 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
 
     class IdeaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.IdeaTitle
-        val name = view.IdeaUserName
         val voteCount = view.IdeaVoteCount
         val reactionCount = view.IdeaReactionCount
         val shareCount = view.IdeaShareCount
@@ -190,8 +192,8 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
 
     override fun getItemCount() = ideas.size
 
+
     override fun onBindViewHolder(p0: IdeaViewHolder, p1: Int) {
-        //p0.name.text = ideas[p1].User!!.Name
         p0.title.text = ideas[p1].Title
         getIdeaDetails(ideas[p1], context, p0.layout)
         p0.reactionCount.text = getReactionCount(ideas[p1])
@@ -204,6 +206,9 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
                         RestClient(context).createVote(ideas[p1].IdeaId, VoteType.VOTE, loggedInUser!!.UserId)
                     }.start()
                     Toast.makeText(it.context, "U heeft gestemd!", Toast.LENGTH_LONG).show()
+                }
+                else{
+                    Toast.makeText(it.context, "U hebt al op deze manier gestemd!", Toast.LENGTH_LONG).show()
                 }
             } else {
                 Toast.makeText(it.context, "U bent niet ingelogd!", Toast.LENGTH_LONG).show()
