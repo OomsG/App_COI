@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -103,6 +104,15 @@ class QuestionsFragment : Fragment() {
                         }
                     }
                 }
+            }
+        }
+
+        Log.d("questions size", questions.size.toString())
+        Log.d("answers size", answers.size.toString())
+
+        answers.forEach {
+            it.value.forEach {
+                Log.d("answer", it)
             }
         }
 

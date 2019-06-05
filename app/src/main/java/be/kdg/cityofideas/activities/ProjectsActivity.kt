@@ -32,10 +32,10 @@ class ProjectsActivity : BaseActivity(), ProjectsSelectionListener {
         initialiseViews()
     }
 
-    override fun onResume() {
-        invalidateOptionsMenu()
-        super.onResume()
-    }
+//    override fun onResume() {
+//        invalidateOptionsMenu()
+//        super.onResume()
+//    }
 
     private fun initialiseViews() {
         tabLayout = findViewById(R.id.ProjectsTab)

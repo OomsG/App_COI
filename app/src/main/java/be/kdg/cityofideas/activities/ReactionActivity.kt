@@ -100,6 +100,8 @@ class ReactionActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
                                 "idea"
                             )
                     }.start()
+
+                    recreate()
                 }
             } else {
                 Toast.makeText(this, "U bent niet aangemeld", Toast.LENGTH_SHORT).show()

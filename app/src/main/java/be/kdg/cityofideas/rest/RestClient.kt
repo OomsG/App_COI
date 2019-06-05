@@ -26,14 +26,14 @@ import javax.net.ssl.X509TrustManager
 
 class RestClient(private val context: Context?) {
     // online
-//    private val host = "cityofideas.gq"
-//    private val port = 5000
-//    private val https = false
+    private val host = "cityofideas.gq"
+    private val port = 5000
+    private val https = false
 
     // offline
-    private val host = "10.0.2.2"
-    private val port = 5001
-    private val https = true
+//    private val host = "10.0.2.2"
+//    private val port = 5001
+//    private val https = true
 
     private val apistring = "/Api/"
     private val HTTP_PREFIX = "http://"
@@ -625,7 +625,7 @@ class RestClient(private val context: Context?) {
                 val response = getClient()?.newCall(request)?.execute()?.body()?.string()
                 val gson = GsonBuilder().create()
                 val iotSetups = gson.fromJson(response, Array<IoTSetup>::class.java)
-//                it.onNext(iotSetups)
+                it.onNext(iotSetups)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

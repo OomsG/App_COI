@@ -133,6 +133,7 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
     fun saveObjects(parameters: MutableMap<String, Array<String>>, ideation: Ideation) {
         Thread {
             RestClient(this).createIdea(parameters, ideation.IdeationId, loggedInUser!!.UserId)
+            recreate()
         }.start()
     }
 
