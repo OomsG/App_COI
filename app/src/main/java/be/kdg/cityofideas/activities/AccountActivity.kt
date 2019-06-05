@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -33,6 +34,17 @@ class AccountActivity : AppCompatActivity() {
 
         initialiseViews()
         addEventHandlers()
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == android.R.id.home)
+            this.finish()
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initialiseViews() {

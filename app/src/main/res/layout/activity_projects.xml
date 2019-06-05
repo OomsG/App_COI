@@ -17,14 +17,14 @@
             app:tabGravity="fill"
 
             app:layout_constraintTop_toTopOf="parent"
-            />
+            app:tabIndicatorColor="@color/colorPrimary"/>
 
     <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
-            android:layout_height="625dp"
+            android:layout_height="0dp"
             android:id="@+id/ProjectsPager"
             app:layout_constraintTop_toBottomOf="@+id/ProjectsTab"
-    />
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </android.support.constraint.ConstraintLayout>

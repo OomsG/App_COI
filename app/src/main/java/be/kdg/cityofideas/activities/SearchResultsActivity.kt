@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
+import android.view.MenuItem
 import android.widget.RelativeLayout
 import android.widget.TextView
 import be.kdg.cityofideas.R
@@ -29,6 +30,17 @@ class SearchResultsActivity : AppCompatActivity() {
         initialiseViews()
         handleIntent(intent)
         addEventHandlers()
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == android.R.id.home)
+            this.finish()
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onNewIntent(intent: Intent) {

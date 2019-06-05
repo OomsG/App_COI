@@ -17,7 +17,9 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/twShare"
 
-    />
+            android:backgroundTint="#027CFF" style="@style/Widget.AppCompat.Button.Colored"
+            android:drawablePadding="16dp" android:drawableBottom="@drawable/com_facebook_button_icon_white"
+            android:textStyle="bold"/>
     <Button
             android:id="@+id/twShare"
             android:layout_width="0dp"
@@ -26,5 +28,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/fbShare"/>
+            app:layout_constraintLeft_toRightOf="@id/fbShare" android:backgroundTint="#027CFF"
+            style="@style/Widget.AppCompat.Button.Colored" android:drawableBottom="@drawable/ic_twitter"
+            android:textStyle="bold"/>
 </android.support.constraint.ConstraintLayout>

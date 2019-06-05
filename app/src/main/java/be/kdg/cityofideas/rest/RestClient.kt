@@ -26,14 +26,14 @@ import javax.net.ssl.X509TrustManager
 
 class RestClient(private val context: Context?) {
     // online
-//    private val host = "cityofideas.gq"
-//    private val port = 5000
-//    private val https = false
+    private val host = "cityofideas.gq"
+    private val port = 5000
+    private val https = false
 
     // offline
-    private val host = "10.0.2.2"
-    private val port = 5001
-    private val https = true
+//    private val host = "10.0.2.2"
+//    private val port = 5001
+//    private val https = true
 
     private val apistring = "/Api/"
     private val HTTP_PREFIX = "http://"
@@ -261,6 +261,9 @@ class RestClient(private val context: Context?) {
     //endregion
     //region POST
     fun createReaction(param: String, userId: String, id: Int, element: String) {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
         val formBody = FormBody.Builder()
             .add("param", param)
             .add("userId", userId)
@@ -269,7 +272,7 @@ class RestClient(private val context: Context?) {
         val gson = Gson().toJson(formBody)
         val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson)
         val request = Request.Builder()
-            .url(HTTPS_PREFIX + host + ":" + port + apistring + "reaction")
+            .url(prefix + host + ":" + port + apistring + "reaction")
             //headers post the data
             .header("param", param)
             .header("userId", userId)
@@ -286,6 +289,9 @@ class RestClient(private val context: Context?) {
     }
 
     fun createVote(ideaId: Int, voteType: VoteType, userId: String) {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
         val formBody = FormBody.Builder()
             .add("userId", userId)
             .add("id", ideaId.toString())
@@ -293,7 +299,7 @@ class RestClient(private val context: Context?) {
         val gson = Gson().toJson(formBody)
         val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson)
         val request = Request.Builder()
-            .url(HTTPS_PREFIX + host + ":" + port + apistring + "vote")
+            .url(prefix + host + ":" + port + apistring + "vote")
             //headers post the data
             .header("id", ideaId.toString())
             .header("vote", voteType.toString())
@@ -310,6 +316,9 @@ class RestClient(private val context: Context?) {
     }
 
     fun createIdea(parameters: MutableMap<String, Array<String>>, ideationId: Int, id: String) {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
 
         val jsonArray = mutableListOf<JSONObject>()
 
@@ -331,7 +340,7 @@ class RestClient(private val context: Context?) {
 
         val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), jsonArray.toString())
         val request = Request.Builder()
-            .url(HTTPS_PREFIX + host + ":" + port + apistring + "createidea")
+            .url(prefix + host + ":" + port + apistring + "createidea")
             //headers post the data
             .header("ideationid", ideationId.toString())
             .header("userId", id)
@@ -347,6 +356,10 @@ class RestClient(private val context: Context?) {
     }
 
     fun createLike(reactionId: Int, userId: String) {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+
         val json = JSONObject()
         val formBody = FormBody.Builder()
             .add("userId", userId)
@@ -358,7 +371,7 @@ class RestClient(private val context: Context?) {
 
         val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString())
         val request = Request.Builder()
-            .url(HTTPS_PREFIX + host + ":" + port + apistring + "like")
+            .url(prefix + host + ":" + port + apistring + "like")
             //headers post the data
             .header("reactionId", reactionId.toString())
             .header("userId",userId)
@@ -462,6 +475,10 @@ class RestClient(private val context: Context?) {
     //endregion
     //region PUT
     fun updateUser(user: LoggedInUserView) {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+
         val formBody = FormBody.Builder()
             // encode for special characters
             .add("Surname", Base64.encodeToString(user.Surname.toString().toByteArray(Charsets.UTF_8), Base64.NO_WRAP).toString())
@@ -479,7 +496,7 @@ class RestClient(private val context: Context?) {
         val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), json.toString())
 
         val request = Request.Builder()
-            .url(HTTPS_PREFIX + host + ":" + port + apistring + "users/update")
+            .url(prefix + host + ":" + port + apistring + "users/update")
             //headers post the data
             .header("Username", user.UserName)
             //body is needed for rider to know it's a post request
@@ -535,6 +552,10 @@ class RestClient(private val context: Context?) {
     //endregion
     //region POST
     fun postAnswers(url: String, surveyId: Int, answers: MutableMap<Int, Array<String>>) {
+        val prefix: String = if (https) {
+            HTTPS_PREFIX
+        } else HTTP_PREFIX
+
         val jsonArray = mutableListOf<JSONObject>()
 
         for ((k, v) in answers) {
@@ -558,7 +579,7 @@ class RestClient(private val context: Context?) {
         val body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), jsonArray.toString())
 
         val request = Request.Builder()
-            .url(HTTPS_PREFIX + host + ":" + port + apistring + url)
+            .url(prefix + host + ":" + port + apistring + url)
             .header("SurveyId", surveyId.toString())
             .post(body)
             .build()
@@ -604,7 +625,7 @@ class RestClient(private val context: Context?) {
                 val response = getClient()?.newCall(request)?.execute()?.body()?.string()
                 val gson = GsonBuilder().create()
                 val iotSetups = gson.fromJson(response, Array<IoTSetup>::class.java)
-                it.onNext(iotSetups)
+//                it.onNext(iotSetups)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

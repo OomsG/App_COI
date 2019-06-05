@@ -1,11 +1,15 @@
 package be.kdg.cityofideas.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.activities.helper
 import be.kdg.cityofideas.activities.manager
@@ -35,6 +39,7 @@ fun getIdeaDetails(idea: Idea, context: Context?, layout: LinearLayout) {
             val text = TextView(context)
             text.id = id
             text.text = it
+            text.textSize = 18F
             text.layoutParams = params
             layout.addView(text)
         }
