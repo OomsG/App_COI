@@ -5,11 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
-import android.database.sqlite.SQLiteOpenHelper
-import android.database.sqlite.SQLiteQueryBuilder
 import android.util.Log
-import android.widget.Toast
-import java.lang.IllegalStateException
 
 class DatabaseManager(context: Context) {
     private lateinit var db: SQLiteDatabase
@@ -27,18 +23,20 @@ class DatabaseManager(context: Context) {
         return db.rawQuery(query, null)
     }
 
-    fun getDetails(table: String,
-                   projection: Array<String>? = null,
-                   selection: String,
-                   selectionArgs: Array<String>,
-                   group: String? = null,
-                   filter: String? = null,
-                   order: String? = null) : Cursor {
+    fun getDetails(
+        table: String,
+        projection: Array<String>? = null,
+        selection: String,
+        selectionArgs: Array<String>,
+        group: String? = null,
+        filter: String? = null,
+        order: String? = null
+    ): Cursor {
         return db.query(table, projection, selection, selectionArgs, group, filter, order)
     }
 
     fun insert(tblName: String, values: ContentValues): Boolean {
-        var inserted: Long = -1;
+        var inserted: Long = -1
         try {
             inserted = db.insert(tblName, null, values)
 
@@ -50,7 +48,7 @@ class DatabaseManager(context: Context) {
         } catch (e: SQLiteException) {
 //            e.printStackTrace()
         }
-        return inserted.toInt() != -1;
+        return inserted.toInt() != -1
     }
 
     fun delete(tblName: String): Boolean {
@@ -63,8 +61,7 @@ class DatabaseManager(context: Context) {
     }
 
     fun update(tblName: String, values: ContentValues, selection: String, selectionargs: Array<String>): Int {
-        val count = db.update(tblName, values, selection, selectionargs)
-        return count
+        return db.update(tblName, values, selection, selectionargs)
     }
 
     fun querySearch(
@@ -72,12 +69,6 @@ class DatabaseManager(context: Context) {
         selection: String,
         selectionArgs: Array<String>
     ): Cursor {
-        val cursor: Cursor = SQLiteQueryBuilder().run {
-            tables = table
-            query(db, null, selection, selectionArgs, null, null, null)
-        }
-
-        return cursor
+        return db.query(table, null, selection, selectionArgs, null, null, null)
     }
-
 }

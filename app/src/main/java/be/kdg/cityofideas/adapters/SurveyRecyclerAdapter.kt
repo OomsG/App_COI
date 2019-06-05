@@ -10,7 +10,11 @@ import android.widget.TextView
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.model.surveys.Survey
 
-class SurveyRecyclerAdapter(val context: Context?, val selectionListener: IdeationsRecyclerAdapter.IdeationsSelectionListener, val projectsId: Int) : RecyclerView.Adapter<SurveyRecyclerAdapter.SurveyViewHolder>() {
+class SurveyRecyclerAdapter(
+    val context: Context?,
+    private val selectionListener: IdeationsRecyclerAdapter.IdeationsSelectionListener,
+    private val projectsId: Int
+) : RecyclerView.Adapter<SurveyRecyclerAdapter.SurveyViewHolder>() {
     var surveys: Array<Survey> = arrayOf()
         set(question) {
             field = question
@@ -19,8 +23,8 @@ class SurveyRecyclerAdapter(val context: Context?, val selectionListener: Ideati
 
 
     class SurveyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title = view.findViewById<TextView>(R.id.TitleSurvey)
-        val button = view.findViewById<Button>(R.id.answerSurvey)
+        val title: TextView = view.findViewById(R.id.TitleSurvey)
+        val button: Button = view.findViewById(R.id.answerSurvey)
     }
 
 
@@ -34,8 +38,8 @@ class SurveyRecyclerAdapter(val context: Context?, val selectionListener: Ideati
 
     override fun onBindViewHolder(p0: SurveyViewHolder, p1: Int) {
         p0.title.text = surveys[p1].Title
-        p0.button.setOnClickListener{
-            selectionListener.onSurveySelected(surveys[p1].SurveyId,projectsId)
+        p0.button.setOnClickListener {
+            selectionListener.onSurveySelected(surveys[p1].SurveyId, projectsId)
         }
     }
 }

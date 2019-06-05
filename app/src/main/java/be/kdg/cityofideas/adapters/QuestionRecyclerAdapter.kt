@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,9 +24,9 @@ class QuestionRecyclerAdapter(val context: Context?) :
         }
 
     class SurveyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val question = view.findViewById<TextView>(R.id.QuestionText)
-        val questionNr = view.findViewById<TextView>(R.id.QuestionNr)
-        val layout = view.findViewById<LinearLayout>(R.id.LinearLayoutQuestion)
+        val question: TextView = view.findViewById(R.id.QuestionText)
+        val questionNr: TextView = view.findViewById(R.id.QuestionNr)
+        val layout: LinearLayout = view.findViewById(R.id.LinearLayoutQuestion)
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): SurveyViewHolder {
@@ -80,7 +79,7 @@ class QuestionRecyclerAdapter(val context: Context?) :
         question.Answers!!.forEach {
             val radioButton = RadioButton(context)
             radioButton.id = it.AnswerId
-            radioButton.setText(it.AnswerText)
+            radioButton.text = it.AnswerText
             radioButton.layoutParams = params
             radioGroup.addView(radioButton)
         }

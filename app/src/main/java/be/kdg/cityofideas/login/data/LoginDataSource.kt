@@ -10,15 +10,11 @@ import java.io.IOException
 class LoginDataSource {
     @SuppressLint("CheckResult")
     fun login(loggedInUser: User): Result<User> {
-        try {
-            return Result.Success(loggedInUser)
+        return try {
+            Result.Success(loggedInUser)
         } catch (e: Throwable) {
-            return Result.Error(IOException("Error logging in", e))
+            Result.Error(IOException("Error logging in", e))
         }
-    }
-
-    fun logout() {
-        // TODO: revoke authentication
     }
 }
 

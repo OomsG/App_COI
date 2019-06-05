@@ -1,31 +1,21 @@
 package be.kdg.cityofideas.fragments
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter
-import be.kdg.cityofideas.adapters.ProjectsRecyclerAdapter
-
 import be.kdg.cityofideas.adapters.IdeationsRecyclerAdapter.IdeationsSelectionListener
 import be.kdg.cityofideas.adapters.SurveyRecyclerAdapter
-
 import be.kdg.cityofideas.rest.RestClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_ideation.*
-import kotlinx.android.synthetic.main.fragment_project.*
-import java.lang.Exception
-
 
 class IdeationFragment : Fragment() {
     private lateinit var listener: IdeationsSelectionListener
@@ -71,10 +61,10 @@ class IdeationFragment : Fragment() {
         rvSurveys.layoutManager = LinearLayoutManager(context)
         rvSurveys.adapter = SurveyRecyclerAdapter(context,listener,projectId)
         RestClient(context)
-            .getIdeations("ideations/" + projectId)
+            .getIdeations("ideations/$projectId")
             .map {
                 it.filter {
-                    it.Phase!!.PhaseNr!!.equals(phaseNr)
+                    it.Phase!!.PhaseNr!! == phaseNr
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
@@ -83,10 +73,10 @@ class IdeationFragment : Fragment() {
                 (rvIdeation.adapter as IdeationsRecyclerAdapter).ideations = it.toTypedArray()
             }
         RestClient(context)
-            .getSurveys("surveys/" + projectId)
+            .getSurveys("surveys/$projectId")
             .map {
                 it.filter {
-                    it.Phase!!.PhaseNr!!.equals(phaseNr)
+                    it.Phase!!.PhaseNr!! == phaseNr
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())

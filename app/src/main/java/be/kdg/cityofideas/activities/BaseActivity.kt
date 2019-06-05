@@ -1,16 +1,15 @@
-package be.kdg.cityofideas.activities;
+package be.kdg.cityofideas.activities
 
 import android.app.SearchManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
-import be.kdg.cityofideas.*
+import be.kdg.cityofideas.R
 import be.kdg.cityofideas.login.LoginActivity
 import be.kdg.cityofideas.login.LoginSessionManager
 import be.kdg.cityofideas.login.loggedInUser
@@ -43,10 +42,6 @@ open class BaseActivity : AppCompatActivity() {
                 signIn()
                 true
             }
-//            R.id.search -> {
-//                search()
-//                true
-//            }
             R.id.account -> {
                 showAccountInfo()
                 true
@@ -66,10 +61,6 @@ open class BaseActivity : AppCompatActivity() {
     private fun signIn() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun search() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun showAccountInfo() {

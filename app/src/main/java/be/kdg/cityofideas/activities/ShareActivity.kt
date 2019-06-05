@@ -2,24 +2,18 @@ package be.kdg.cityofideas.activities
 
 import android.content.Intent
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.print.PrintAttributes
+import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.widget.Button
-import android.widget.Toast
 import be.kdg.cityofideas.R
-import be.kdg.cityofideas.model.ideations.Vote
-import be.kdg.cityofideas.model.ideations.VoteType
-import be.kdg.cityofideas.rest.RestClient
 import com.facebook.CallbackManager
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 
 class ShareActivity : AppCompatActivity() {
-
     private val host = "10.0.2.2"
     private val port = 5001
     private val HTTPS_PREFIX = "https://"

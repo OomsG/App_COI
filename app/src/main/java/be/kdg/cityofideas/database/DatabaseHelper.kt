@@ -9,7 +9,7 @@ import android.provider.BaseColumns
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
         // increment when you changed db schema
-        private const val DB_VERSION: Int = 31
+        private const val DB_VERSION: Int = 35
         private const val DB_NAME: String = "CityOfIdeasApp"
 
         //region Datatypes
@@ -79,7 +79,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
             const val PLATFORM_NAME = "PlatformName"
             const val PLATFORM_LOGO = "Logo"
             const val PLATFORM_PHONENUMBER = "PhoneNumber"
-            const val PLATFORM_DESCRIPTION = "Description"
+            const val PLATFORM_DESCRIPTION = "description"
             const val PLATFORM_BACKGROUND_IMAGE = "BackgroundImage"
         }
 
@@ -106,7 +106,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
             const val PROJECT_STARTDATE = "StartDate"
             const val PROJECT_ENDDATE = "EndDate"
             const val PROJECT_OBJECTIVE = "Objective"
-            const val PROJECT_DESCRIPTION = "Description"
+            const val PROJECT_DESCRIPTION = "description"
             const val PROJECT_STATUS = "Status"
             const val PROJECT_BACKGROUND_IMAGE = "BackgroundImage"
         }
@@ -134,7 +134,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
             const val PHASE_ID = "PhaseId"
             const val PHASE_NR = "PhaseNr"
             const val PHASE_NAME = "PhaseName"
-            const val PHASE_DESCRIPTION = "Description"
+            const val PHASE_DESCRIPTION = "description"
             const val PHASE_STARTDATE = "StartDate"
             const val PHASE_ENDDATE = "EndDate"
         }

@@ -1,17 +1,11 @@
 package be.kdg.cityofideas.adapters
 
 import android.content.Context
-import android.os.Build
-import android.support.annotation.RequiresApi
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import be.kdg.cityofideas.R
 import be.kdg.cityofideas.activities.helper
 import be.kdg.cityofideas.activities.manager
@@ -23,7 +17,6 @@ import be.kdg.cityofideas.model.ideations.Vote
 import be.kdg.cityofideas.model.ideations.VoteType
 import be.kdg.cityofideas.rest.RestClient
 import kotlinx.android.synthetic.main.ideas_list.view.*
-import java.time.LocalDateTime
 
 /* needed to play youtube video*/
 const val YOUTUBE_API: String = "AIzaSyAyyohq9ZDQT-bnC_E50ZcU-iA8efhXMjY"
@@ -113,7 +106,7 @@ fun getVotes(): ArrayList<Vote> {
             Vote(
                 c.getInt(c.getColumnIndex(helper.getVoteEntry().VOTE_ID)),
                 c.getString(c.getColumnIndex(helper.getVoteEntry().VOTE_CONFIRMED)),
-                c.getInt(c.getColumnIndex(helper.getVoteEntry().VOTE_VOTE_TYPE)) as VoteType,
+                VoteType.values()[c.getInt(c.getColumnIndex(helper.getVoteEntry().VOTE_VOTE_TYPE))],
                 null,
                 Idea(
                     c.getInt(c.getColumnIndex(helper.getIdeaEntry().IDEA_ID)),
@@ -139,8 +132,7 @@ fun getVotes(): ArrayList<Vote> {
 /*Checks id user already voted*/
 fun validVote(idea: Idea): Boolean {
     val votes = getVotes()
-    var state: Boolean = false
-    Log.d("votes",votes.toString())
+    var state = false
     votes.forEach {
         if (it.VoteType == VoteType.VOTE && it.Idea!!.IdeaId == idea.IdeaId) {
             state = false
@@ -191,7 +183,6 @@ class IdeaRecyclerAdapter(val context: Context?, val selectionListener: ideaSele
     }
 
     override fun getItemCount() = ideas.size
-
 
     override fun onBindViewHolder(p0: IdeaViewHolder, p1: Int) {
         p0.title.text = ideas[p1].Title

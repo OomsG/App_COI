@@ -11,7 +11,7 @@
             android:id="@+id/fbShare"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="Deel op Facebook"
+            android:text="@string/share_fb"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -22,10 +22,9 @@
             android:id="@+id/twShare"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="Deel op Twitter"
+            android:text="@string/share_tw"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@id/fbShare"/>
-
 </android.support.constraint.ConstraintLayout>
