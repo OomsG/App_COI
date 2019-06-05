@@ -15,44 +15,44 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/NameReaction"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/TextReaction"
                 app:layout_constraintTop_toTopOf="parent"
-        />
+                android:layout_marginStart="8dp"/>
         <TextView
                 android:text="@string/dummy_reaction"
-                android:layout_width="265dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/TextReaction"
-                android:layout_marginStart="15dp"
-                android:layout_marginBottom="15dp"
                 app:layout_constraintTop_toTopOf="@+id/NameReaction"
                 app:layout_constraintLeft_toRightOf="@id/NameReaction"
                 app:layout_constraintRight_toLeftOf="@id/LikeButton"
-        />
+                android:layout_marginStart="8dp"/>
 
         <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
                 android:id="@+id/LikeButton"
                 android:src="@drawable/likeicon"
                 android:scaleType="fitCenter"
-
+                app:layout_constraintBottom_toTopOf="@id/LikeCounter"
                 app:layout_constraintLeft_toRightOf="@+id/TextReaction"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:contentDescription="@string/todo"/>
+                android:contentDescription="@string/todo"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp" android:layout_marginLeft="8dp" android:tint="#FFFFFF"
+                android:backgroundTint="#027CFF"/>
         <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/LikeCounter"
                 android:text="@string/dummy_likes"
                 android:gravity="center"
-                app:layout_constraintTop_toBottomOf="@+id/LikeButton"
+                app:layout_constraintTop_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/TextReaction"
 
-        />
+                app:layout_constraintBottom_toBottomOf="parent"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
