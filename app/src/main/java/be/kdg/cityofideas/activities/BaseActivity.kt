@@ -15,6 +15,11 @@ import be.kdg.cityofideas.login.LoginSessionManager
 import be.kdg.cityofideas.login.loggedInUser
 
 open class BaseActivity : AppCompatActivity() {
+    override fun onResume() {
+        invalidateOptionsMenu()
+        super.onResume()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu, menu)

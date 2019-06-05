@@ -38,6 +38,7 @@ class ReactionRecyclerAdapter(val context: Context?) :
     override fun getItemCount() = reactions.size
 
     override fun onBindViewHolder(p0: ReactionsViewHolder, p1: Int) {
+//        p0.name.text = reactions[p1].User?.UserName
         p0.text.text = reactions[p1].ReactionText
         p0.submitLike.setOnClickListener {
             if (loggedInUser != null) {
