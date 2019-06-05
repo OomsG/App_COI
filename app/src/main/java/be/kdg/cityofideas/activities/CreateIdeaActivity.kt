@@ -265,9 +265,7 @@ class CreateIdeaActivity : BaseActivity(), YouTubePlayer.OnInitializedListener {
         button.setOnClickListener {
             if (editText.text.isNotBlank()) {
                 url = editText.text.toString()
-
                 val fragmentTransaction = supportFragmentManager.beginTransaction()
-
                 val fragment = YouTubePlayerSupportFragment()
                 fragmentTransaction.add(R.id.LinearLayoutCreateIdea, fragment).commit()
                 fragment.initialize(YOUTUBE_API, this)

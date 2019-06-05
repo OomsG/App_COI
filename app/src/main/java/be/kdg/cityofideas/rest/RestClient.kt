@@ -325,7 +325,6 @@ class RestClient(private val context: Context?) {
                     }
                     jsonArray.add(json)
                 }
-
             }
 
         Log.d("jsonarray",jsonArray.toString())
@@ -362,6 +361,7 @@ class RestClient(private val context: Context?) {
             .url(HTTPS_PREFIX + host + ":" + port + apistring + "like")
             //headers post the data
             .header("reactionId", reactionId.toString())
+            .header("userId",userId)
             //body is needed for rider to know it's a post request
             .post(body)
             .build()
@@ -458,6 +458,7 @@ class RestClient(private val context: Context?) {
         }
         return observable
     }
+
     //endregion
     //region PUT
     fun updateUser(user: LoggedInUserView) {
@@ -491,8 +492,8 @@ class RestClient(private val context: Context?) {
             e.printStackTrace()
         }
     }
-    //endregion
-    //endregion
+//endregion
+//endregion
 
     //region Survey
     //region GET
