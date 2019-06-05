@@ -15,7 +15,7 @@
             android:labelFor="@id/editIdeaTitle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" android:textStyle="bold" android:textSize="20sp"
-            android:layout_marginTop="8dp" android:layout_marginLeft="8dp"/>
+            android:layout_marginTop="8dp" android:layout_marginStart="8dp"/>
 
     <EditText
             android:layout_width="0dp"
@@ -27,8 +27,8 @@
             app:layout_constraintTop_toTopOf="@id/IdeaTitle"
             app:layout_constraintLeft_toRightOf="@+id/IdeaTitle"
             app:layout_constraintRight_toRightOf="parent"
-            android:importantForAutofill="no" tools:targetApi="o" android:layout_marginLeft="16dp"
-            android:layout_marginRight="8dp" app:layout_constraintBottom_toTopOf="@+id/PossibleFields"
+            android:importantForAutofill="no" tools:targetApi="o" android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp" app:layout_constraintBottom_toTopOf="@+id/PossibleFields"
             android:layout_marginBottom="16dp"/>
 
     <android.support.v7.widget.AppCompatSpinner
